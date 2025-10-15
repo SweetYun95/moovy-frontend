@@ -1,0 +1,40 @@
+// moovy-frontend/src/styles/globals.scss
+// 전역 기본값
+:root {
+  --color-bg: #ffffff;
+  --color-fg: #111111;
+  --color-primary: #1976d2; // MUI 기본 블루와 맞춤
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  line-height: 1.5;
+}
+
+// 유틸
+.container-narrow {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 0 1rem;
+}
+
+// 다크 테마(선택): body에 .theme-dark 붙이면 적용
+.theme-dark {
+  --color-bg: #0b0f14;
+  --color-fg: #e6e6e6;
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
