@@ -1,22 +1,30 @@
-// src/routes/guards/AdminOnly.tsx
+// moovy-frontend/src/routes/guards/AdminOnly.tsx
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAppSelector } from '../../app/hooks'
+import { useAppSelector } from '@/app/hooks'
+import Spinner from '../../components/common/Spinner'
 import { isGuardBypassed } from './guardUtils'
+import { PATHS } from '../paths'
 
 export default function AdminOnly() {
    const { isAuthenticated, user, loading, hydrated } = useAppSelector((s) => s.auth)
    const role = user?.role ?? 'GUEST'
    const location = useLocation()
 
-   if (isGuardBypassed()) return <Outlet /> // 개발 모드 우회
+   // 개발/테스트 우회
+   if (isGuardBypassed()) return <Outlet />
 
-   if (!hydrated || loading) return null // 하이드레이션/로딩 중엔 대기
+   // 초기 세션 동기화/로딩 중엔 대기
+   if (!hydrated || loading) return <Spinner />
 
+   // 비로그인 → 로그인으로
    if (!isAuthenticated) {
-      return <Navigate to="/login" replace state={{ from: location }} />
+      return <Navigate to={PATHS.login} replace state={{ from: location }} />
    }
+
+   // 권한 부족 → 유저 홈으로
    if (role !== 'ADMIN') {
-      return <Navigate to="/user" replace state={{ from: location }} />
+      return <Navigate to={PATHS.userHome} replace state={{ from: location }} />
    }
+
    return <Outlet />
 }
