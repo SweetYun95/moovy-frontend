@@ -1,0 +1,291 @@
+// Moovy 컴포넌트 라이브러리 - 날짜 셀렉터 컴포넌트
+// ==========================================
+
+@import '../../../styles/globals';
+
+.moovy-date-selector {
+  &.year-only {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+
+    .date-field {
+      width: 100%;
+      position: relative;
+      
+      .date-trigger {
+        height: $spacing-6; // 56px
+        border: 1px solid white;
+        background-color: rgba($color: #ffffff, $alpha: 0.1);
+        color: $white;
+        border-radius: $border-radius;
+        padding: $padding-md $padding-lg $padding-md $padding-sm;
+        font-size: $body-normal-size;
+        line-height: $body-normal-line-height;
+        font-family: $font-family-base;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: $transition-base;
+
+        &:hover {
+          border-color: $primary-color;
+        }
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+          outline: 0;
+        }
+
+        &.open {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+        }
+
+        .placeholder {
+          color: $gray3;
+        }
+
+        .selected {
+          color: $white;
+        }
+
+        i {
+          color: $gray3;
+          transition: transform 0.2s ease;
+          position: absolute;
+          right: $spacing-2; // 16px
+          font-size: $icon-md;
+          
+          &.rotated {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .date-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: $black2;
+        border: 1px solid $gray1;
+        border-radius: $border-radius;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        margin-top: $margin-xs; // 8px
+
+        .date-option {
+          padding: $padding-xs $padding-sm; // 8px 16px
+          color: $white;
+          font-size: $body-normal-size;
+          line-height: $body-normal-line-height;
+          font-family: $font-family-base;
+          cursor: pointer;
+          transition: $transition-base;
+          border-bottom: 1px solid $gray1;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background-color: $black3;
+            color: $primary-color;
+          }
+
+          &.selected {
+            background-color: rgba($primary-color, 0.1);
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .date-selector-group {
+    display: flex;
+    gap: $margin-sm; // 16px
+    align-items: start;
+    
+    .date-field {
+      flex: 1;
+      position: relative;
+      
+      .date-trigger {
+        height: $spacing-6; // 56px
+        border: 1px solid white;
+        background-color: rgba($color: #ffffff, $alpha: 0.1);
+        color: $white;
+        border-radius: $border-radius;
+        padding: $padding-md $padding-lg $padding-md $padding-sm;
+        font-size: $body-normal-size;
+        line-height: $body-normal-line-height;
+        font-family: $font-family-base;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: $transition-base;
+
+        &:hover {
+          border-color: $primary-color;
+        }
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+          outline: 0;
+        }
+
+        &.open {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+        }
+
+        .placeholder {
+          color: $gray3;
+        }
+
+        .selected {
+          color: $white;
+        }
+
+        i {
+          color: $gray3;
+          transition: transform 0.2s ease;
+          position: absolute;
+          right: $spacing-2; // 16px
+          font-size: $icon-md;
+          
+          &.rotated {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .date-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: $black2;
+        border: 1px solid $gray1;
+        border-radius: $border-radius;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        margin-top: $margin-xs; // 8px
+
+        .date-option {
+          padding: $padding-xs $padding-sm; // 8px 16px
+          color: $white;
+          font-size: $body-normal-size;
+          line-height: $body-normal-line-height;
+          font-family: $font-family-base;
+          cursor: pointer;
+          transition: $transition-base;
+          border-bottom: 1px solid $gray1;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background-color: $black3;
+            color: $primary-color;
+          }
+
+          &.selected {
+            background-color: rgba($primary-color, 0.1);
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 라이트 테마
+.moovy-date-selector.light-theme {
+  .date-field {
+    .date-trigger {
+      height: 36px;
+      border: 1px solid $gray4;
+      background-color: $white;
+      color: $gray1;
+      border-radius: $border-radius-lg;
+      padding: $padding-xs $padding-sm; // 8px 16px
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:hover {
+        border-color: $primary-color;
+      }
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+        outline: none;
+      }
+
+      &.open {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+      }
+
+      .placeholder {
+        color: $gray3;
+      }
+
+      .selected {
+        color: $gray1;
+      }
+
+      i {
+        color: $gray2;
+        font-size: $icon-sm;
+        margin-left: auto;
+      }
+    }
+
+    .date-dropdown {
+      background-color: $white;
+      border: 1px solid $gray4;
+      border-radius: $border-radius-sm;
+      box-shadow: $box-shadow-md;
+
+      .date-option {
+        color: $gray1;
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        border-bottom: 1px solid $gray5;
+        padding: $padding-xs $padding-sm; // 8px 16px
+        cursor: pointer;
+        transition: $transition-base;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: $gray5;
+          color: $primary-color;
+        }
+
+        &.selected {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}

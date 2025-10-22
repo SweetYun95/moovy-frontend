@@ -1,0 +1,156 @@
+@import '../../../styles/globals';
+
+.tabs {
+  width: 100%;
+  
+  &__list {
+    display: flex;
+    position: relative;
+  }
+  
+  &__tab {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: $body-normal-size; // 16px
+    font-weight: $font-weight-normal;
+    transition: $transition-base;
+    position: relative;
+    white-space: nowrap;
+    
+    &:focus {
+      outline: none;
+    }
+    
+    &--disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+  
+  // 언더라인 스타일 (기본)
+  &--underline {
+    .tabs__list {
+      display: flex;
+    }
+    
+    .tabs__tab {
+      padding: $spacing-2 $spacing-3; // 16px 24px
+      color: $gray4;
+      width: 120px;
+      text-align: center;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: $gray4; // 비활성화 시 회색
+        transition: background-color 0.3s ease;
+      }
+      
+      &:hover:not(&--disabled):not(&--active) {
+        color: $white;
+      }
+      
+      &--active {
+        color: $white;
+        font-weight: $font-weight-bold;
+        
+        &::after {
+          background-color: $primary-color; // 활성화 시 보라색
+        }
+      }
+    }
+  }
+  
+  // 버튼 스타일
+  &--button {
+    .tabs__list {
+      gap: $spacing-1; // 8px
+    }
+    
+    .tabs__tab {
+      padding: $spacing-1 $spacing-3; // 8px 24px
+      border-radius: $border-radius; // 8px
+      border: 1px solid $gray3;
+      color: $white;
+      background-color: transparent;
+      
+      &:hover:not(&--disabled):not(&--active) {
+        background-color: rgba($white, 0.05);
+        border-color: $gray4;
+      }
+      
+      &--active {
+        background-color: $primary-color;
+        border-color: $primary-color;
+        color: $white;
+        font-weight: $font-weight-bold;
+      }
+    }
+  }
+  
+  // 반응형 - 태블릿 (크기만 줄이기)
+  @media (max-width: 991px) and (min-width: 768px) {
+    &__tab {
+      font-size: 0.9375rem; // 15px
+    }
+    
+    &--underline {
+      .tabs__tab {
+        padding: $spacing-1 $spacing-2; // 8px 16px
+        width: 110px;
+      }
+    }
+  }
+  
+  // 반응형 - 모바일 (width 100%로 맞추기)
+  @media (max-width: 767px) {
+    &__tab {
+      font-size: $body-small-size; // 14px
+    }
+    
+    &--underline {
+      .tabs__list {
+        width: 100%;
+      }
+      
+      .tabs__tab {
+        padding: $spacing-1 $spacing-2; // 8px 16px
+        flex: 1; 
+        width: auto;
+      }
+    }
+    
+    &--button {
+      .tabs__list {
+        gap: 0.375rem; // 6px
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        
+        &::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        &::-webkit-scrollbar-track {
+          background: $black2;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+          background: $gray3;
+          border-radius: 2px;
+        }
+      }
+      
+      .tabs__tab {
+        padding: 0.375rem $spacing-2; // 6px 16px
+        font-size: $body-small-size; // 14px
+        flex-shrink: 0; // 스크롤 시 축소 방지
+      }
+    }
+  }
+}
+

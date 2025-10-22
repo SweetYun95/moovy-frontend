@@ -1,0 +1,187 @@
+// Moovy 컴포넌트 라이브러리 - 평점 선택기 컴포넌트
+// ==========================================
+
+@import '../../../styles/globals';
+
+.rating-picker-wrapper {
+  position: relative;
+  width: 100%;
+
+  .rating-picker-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: $spacing-6; // 56px
+    border: 1px solid white;
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    color: $white;
+    border-radius: $border-radius;
+    padding: $padding-md $padding-lg $padding-md $padding-sm;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+      outline: none;
+    }
+
+    .rating-text {
+      font-size: $body-normal-size;
+      line-height: $body-normal-line-height;
+      font-family: $font-family-base;
+      color: $white;
+      flex: 1;
+    }
+
+    .rating-icon {
+      font-size: $icon-md;
+      color: $gray3;
+      transition: transform 0.2s ease;
+      position: absolute;
+      right: 0.75rem;
+
+      &.open {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .rating-picker-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: $black2;
+    border: 1px solid $gray1;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 0.25rem;
+    overflow: hidden;
+
+    .rating-options {
+      padding: $padding-xs; // 8px
+      max-height: 200px;
+      overflow-y: auto;
+
+      .rating-option {
+        display: flex;
+        align-items: center;
+        padding: $padding-sm $padding-sm; // 16px 16px
+        cursor: pointer;
+        border-radius: $border-radius-sm;
+        transition: $transition-base;
+        font-size: $body-normal-size;
+        line-height: $body-normal-line-height;
+        font-family: $font-family-base;
+        color: $white;
+        border-bottom: 1px solid $gray1;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: $black3;
+          color: $primary-color;
+        }
+
+        &.selected {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// 라이트 테마
+.rating-picker-wrapper.light-theme {
+  .rating-picker-trigger {
+    height: 36px;
+    border: 1px solid $gray4;
+    background-color: $white;
+    color: $gray1;
+    border-radius: $border-radius-lg;
+    padding: $padding-xs $padding-sm; // 8px 16px
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+      outline: none;
+    }
+
+    &.open {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+    }
+
+    .rating-text {
+      color: $gray3;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+
+      &.selected {
+        color: $gray1;
+      }
+    }
+
+    .rating-icon {
+      color: $gray2;
+      font-size: $icon-sm;
+      margin-left: auto;
+    }
+  }
+
+  .rating-picker-dropdown {
+    background-color: $white;
+    border: 1px solid $gray4;
+    border-radius: $border-radius-sm;
+    box-shadow: $box-shadow-md;
+
+    .rating-options {
+      .rating-option {
+        color: $gray1;
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        border-bottom: 1px solid $gray5;
+        padding: $padding-xs $padding-sm; // 8px 16px
+        cursor: pointer;
+        transition: $transition-base;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: $gray5;
+          color: $primary-color;
+        }
+
+        &.selected {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}

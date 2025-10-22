@@ -1,0 +1,257 @@
+// Moovy 컴포넌트 라이브러리 - 관리자 필터 컴포넌트
+// ==========================================
+
+@import '../../../styles/globals';
+
+// 관리자 필터 확장/축소 애니메이션
+@keyframes contentExpand {
+  from {
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    padding-top: $spacer;
+    padding-bottom: $spacer;
+  }
+}
+
+@keyframes contentCollapse {
+  from {
+    opacity: 1;
+    padding-top: $spacer;
+    padding-bottom: $spacer;
+  }
+  to {
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.admin-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+  box-shadow: $box-shadow-sm;
+  color: $gray1;
+
+  .filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 50px;
+    border-radius: $border-radius-lg;
+    padding: $padding-xs; // 8px
+    margin-bottom: $spacer;
+    background-color: $gray5;
+
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: $margin-xs; // 8px
+
+      .drag-handle,
+      .expand-toggle {
+        background: none;
+        border: none;
+        color: $gray2;
+        cursor: pointer;
+        padding: $padding-xs; // 8px
+        border-radius: $border-radius-lg;
+        width: $spacing-3; // 24px
+        height: $spacing-3; // 24px
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: rgba($gray1, 0.05);
+          color: $gray1;
+        }
+
+        i {
+          font-size: $icon-sm;
+        }
+      }
+    }
+
+    .filter-title {
+      margin: 0;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      font-weight: 600;
+      color: #333;
+      flex: 1;
+      text-align: center;
+    }
+
+    .search-button {
+      background-color: $primary-color;
+      color: $white;
+      border: none;
+      border-radius: $border-radius;
+      padding: $padding-xs $padding-sm; // 8px 16px
+      font-weight: 600;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      cursor: pointer;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $margin-xs; // 8px
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+
+      i {
+        font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .unified-search-wrapper {
+      position: relative;
+      display: inline-block;
+      min-width: 200px;
+
+      .unified-search-input {
+        height: 36px;
+        border: 1px solid $gray4;
+        background-color: $white;
+        color: $gray1;
+        border-radius: $border-radius-lg;
+        padding: $padding-xs $padding-lg $padding-xs $padding-sm; // 8px 32px 8px 16px
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        width: 100%;
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+          outline: none;
+        }
+
+        &::placeholder {
+          color: $gray3;
+        }
+      }
+
+      .unified-search-icon {
+        position: absolute;
+        right: $margin-xs; // 8px
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: $gray3;
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        cursor: pointer;
+        padding: $padding-xs; // 8px
+        transition: $transition-base;
+        z-index: 2;
+
+        &:hover {
+          color: $primary-color;
+        }
+
+        &:focus {
+          outline: none;
+          color: $primary-color;
+        }
+
+        i {
+          font-size: $icon-sm;
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .filter-content {
+    background-color: $gray5;
+    border-radius: $border-radius-lg;
+    padding: $spacer;
+    animation: contentExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .filter-rows {
+      .filter-row {
+        display: flex;
+        gap: $spacer;
+        margin-bottom: $spacer;
+        flex-wrap: wrap;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .filter-field {
+          flex: 1;
+          min-width: 200px;
+
+          .field-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: $margin-xs; // 8px
+            color: $gray1;
+            font-size: $body-small-size;
+            line-height: $body-small-line-height;
+            font-family: $font-family-base;
+          }
+
+          .number-range-field,
+          .date-range-field,
+          .rating-range-field {
+            display: flex;
+            align-items: center;
+            gap: $margin-xs; // 8px
+
+            .range-separator {
+              color: $gray1;
+              font-weight: 500;
+              min-width: $spacing-2; // 16px
+              text-align: center;
+              font-size: $body-small-size;
+              line-height: $body-small-line-height;
+              font-family: $font-family-base;
+            }
+
+            .form-control,
+            .date-picker-wrapper,
+            .rating-select {
+              flex: 1;
+              min-width: 0;
+            }
+          }
+
+          // 관리자 필터에서 사용되는 컴포넌트들의 기본 레이아웃 설정
+          .form-control,
+          .date-picker-wrapper,
+          .moovy-selector-wrapper,
+          .moovy-date-selector,
+          .rating-picker-wrapper {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
