@@ -1,0 +1,148 @@
+// Moovy 컴포넌트 라이브러리 - 입력 컴포넌트
+// ==========================================
+
+@import '../../../styles/globals';
+
+// 커스텀 입력 스타일
+.moovy-input {
+  height: $spacing-6; // 56px
+  border: 1px solid white;
+  background-color: rgba($color: #ffffff, $alpha: 0.1);
+  color: $white;
+  border-radius: $border-radius;
+  padding: $padding-sm $padding-md; // 16px 24px
+  font-size: $body-normal-size;
+  line-height: $body-normal-line-height;
+  font-family: $font-family-base;
+  transition: $transition-base;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    outline: 0;
+  }
+
+  &.moovy-input-success { border-color: $success-color; }
+  &.moovy-input-warning { border-color: $warning-color; }
+  &.moovy-input-error { border-color: $danger-color; }
+}
+
+// 아이콘을 위한 입력 래퍼
+.moovy-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  .moovy-input {
+    padding-right: $spacing-6; // 56px - Make space for icon
+  }
+
+  .password-toggle-icon {
+    position: absolute;
+    right: $spacing-2; // 16px
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $primary-color;
+    font-size: $icon-md;
+    cursor: pointer;
+    padding: $padding-xs; // 8px
+    transition: $transition-base;
+    z-index: 2;
+
+    &:hover {
+      color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      color: $primary-color;
+    }
+  }
+
+  .right-button-wrapper {
+    position: absolute;
+    right: $margin-sm; // 16px
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+}
+
+// 폼 라벨
+label {
+  font-weight: $font-weight-bold;
+  font-size: $body-small-size;
+  line-height: $body-small-line-height;
+  font-family: $font-family-base;
+  margin-bottom: $margin-xs; // 8px
+}
+
+// 폼 유효성 검사 메시지
+.form-text {
+  font-size: $body-small-size;
+  line-height: $body-small-line-height;
+  font-family: $font-family-base;
+  margin-top: $margin-xs; // 8px
+
+  &.text-success {
+    color: $success-color;
+  }
+
+  &.text-warning {
+    color: $warning-color;
+  }
+
+  &.text-danger {
+    color: $danger-color;
+  }
+}
+
+// 라이트 테마
+.moovy-input.light-theme {
+  height: 2.25rem; // 36px
+  border: 1px solid $gray4;
+  background-color: $white;
+  color: $gray1;
+  border-radius: $border-radius-lg;
+  padding: $padding-xs $padding-sm; // 8px 16px
+  font-size: $body-small-size;
+  line-height: $body-small-line-height;
+  font-family: $font-family-base;
+  transition: $transition-base;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+    background-color: $white;
+    outline: 0;
+  }
+
+  &::placeholder {
+    color: $gray3;
+  }
+
+  &.moovy-input-success { border-color: $success-color; }
+  &.moovy-input-warning { border-color: $warning-color; }
+  &.moovy-input-error { border-color: $danger-color; }
+}
+
+.moovy-input-wrapper.light-theme {
+  .moovy-input {
+    padding-right: $spacing-6; // 56px - Make space for icon
+  }
+
+  .password-toggle-icon {
+    color: $primary-color;
+
+    &:hover {
+      color: $gray2;
+    }
+
+    &:focus {
+      color: $primary-color;
+    }
+  }
+}

@@ -1,0 +1,108 @@
+// Moovy 컴포넌트 라이브러리 - 체크박스 컴포넌트
+// =============================================
+
+@import '../../../styles/globals';
+
+// 커스텀 체크박스 스타일
+.moovy-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: $margin-sm; // 16px
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .checkmark {
+    position: relative;
+    display: inline-block;
+    width: $icon-live-area; // 20px
+    height: $icon-live-area; // 20px
+    background-color: white;
+    border: 2px solid $gray4;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: $transition-base;
+    flex-shrink: 0;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  input[type="checkbox"]:checked + .checkmark {
+    background-color: $primary-color;
+    border-color: $primary-color;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  input[type="checkbox"]:checked + .checkmark:after {
+    display: block;
+  }
+
+  .checkbox-label {
+    font-size: $font-size-base;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+// 체크박스 아이템 컨테이너
+.checkbox-item {
+  display: flex;
+  flex-direction: column;
+  gap: $margin-xs; // 8px
+}
+
+// 체크박스 상태
+.moovy-checkbox {
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    .checkmark {
+      cursor: not-allowed;
+    }
+
+    .checkbox-label {
+      cursor: not-allowed;
+    }
+  }
+
+  &.error {
+    .checkmark {
+      border-color: $danger-color;
+    }
+  }
+
+  &.success {
+    .checkmark {
+      border-color: $success-color;
+    }
+  }
+}
+
+// 체크박스 설명
+.checkbox-description {
+  font-size: $body-small-size; // 14px
+  color: $secondary-color;
+  margin-top: $margin-xs; // 8px
+  margin-left: 28px; // 체크박스 + 간격 (20px + 8px)
+}

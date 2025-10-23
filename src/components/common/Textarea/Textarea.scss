@@ -1,0 +1,68 @@
+// Moovy 컴포넌트 라이브러리 - 텍스트 영역 컴포넌트
+// ==========================================
+
+@import '../../../styles/globals';
+
+// 텍스트 영역 전체 너비 클래스
+.textarea-full-width {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// 텍스트 영역 래퍼
+.moovy-textarea-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  .moovy-textarea {
+    width: 100%;
+    min-height: $spacing-9; // 96px
+    border: 1px solid white;
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    color: $white;
+    border-radius: $border-radius;
+    padding: $padding-sm $padding-md; // 16px 24px
+    font-size: $body-normal-size;
+    line-height: $body-normal-line-height;
+    font-family: $font-family-base;
+    transition: $transition-base;
+    resize: vertical;
+    margin-bottom: 0; // 카운터를 위한 공간
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+      outline: 0;
+    }
+
+    &::placeholder {
+      color: $gray3;
+    }
+
+    &.moovy-textarea-success { border-color: $success-color; }
+    &.moovy-textarea-warning { border-color: $warning-color; }
+    &.moovy-textarea-error { border-color: $danger-color; }
+
+    &:disabled {
+      background-color: rgba($color: #ffffff, $alpha: 0.05);
+      color: $gray4;
+      cursor: not-allowed;
+    }
+  }
+
+  .textarea-counter {
+    display: block;
+    text-align: right;
+    margin-top: $margin-xs; // 8px
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+    color: $gray3;
+    padding: 0;
+
+    .warning {
+      color: $warning-color;
+    }
+  }
+}
