@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Input.scss';
-import { Button } from '../Button/Button';
+import { Button } from '../Button/ButtonStyle';
 import { Icon } from '@iconify/react';
 
 /**
@@ -81,9 +81,8 @@ export const Input: React.FC<InputProps> = ({
   const inputType = type === 'password' && showPassword ? 'text' : type;
 
   const inputClasses = [
-    'form-control',
     'moovy-input',
-    state && `moovy-input-${state}`,
+    state && `moovy-input--${state}`,
     theme === 'light' && 'light-theme',
     className,
   ].filter(Boolean).join(' ');

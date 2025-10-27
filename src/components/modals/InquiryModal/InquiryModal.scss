@@ -1,0 +1,22 @@
+@import '../../../styles/variables';
+
+.inquiry-modal {
+  &__field {
+    margin-bottom: 24px;
+
+    &:last-of-type {
+      margin-bottom: 32px;
+    }
+    
+    .moovy-textarea {
+      width: 100%;
+      max-width: 1110px;
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 12px;
+  }
+}
+

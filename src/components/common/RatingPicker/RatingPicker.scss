@@ -1,7 +1,8 @@
 // Moovy 컴포넌트 라이브러리 - 평점 선택기 컴포넌트
 // ==========================================
 
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .rating-picker-wrapper {
   position: relative;
@@ -16,7 +17,7 @@
     background-color: rgba($color: #ffffff, $alpha: 0.1);
     color: $white;
     border-radius: $border-radius;
-    padding: $padding-md $padding-lg $padding-md $padding-sm;
+    padding: $spacing-3 $spacing-4 $spacing-3 $spacing-2;
     cursor: pointer;
     transition: $transition-base;
 
@@ -65,14 +66,14 @@
     overflow: hidden;
 
     .rating-options {
-      padding: $padding-xs; // 8px
+      padding: $spacing-1; // 8px
       max-height: 200px;
       overflow-y: auto;
 
       .rating-option {
         display: flex;
         align-items: center;
-        padding: $padding-sm $padding-sm; // 16px 16px
+        padding: $spacing-2 $spacing-2; // 16px 16px
         cursor: pointer;
         border-radius: $border-radius-sm;
         transition: $transition-base;
@@ -108,7 +109,7 @@
     background-color: $white;
     color: $gray1;
     border-radius: $border-radius-lg;
-    padding: $padding-xs $padding-sm; // 8px 16px
+    padding: $spacing-1 $spacing-2; // 8px 16px
     font-size: $body-small-size;
     line-height: $body-small-line-height;
     font-family: $font-family-base;
@@ -164,7 +165,7 @@
         line-height: $body-small-line-height;
         font-family: $font-family-base;
         border-bottom: 1px solid $gray5;
-        padding: $padding-xs $padding-sm; // 8px 16px
+        padding: $spacing-1 $spacing-2; // 8px 16px
         cursor: pointer;
         transition: $transition-base;
 

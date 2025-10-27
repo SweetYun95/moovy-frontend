@@ -1,14 +1,15 @@
 // Moovy 컴포넌트 라이브러리 - 체크박스 컴포넌트
 // =============================================
 
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 // 커스텀 체크박스 스타일
 .moovy-checkbox {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: $margin-sm; // 16px
+  gap: $spacing-2; // 16px
   cursor: pointer;
 
   input[type="checkbox"] {
@@ -68,7 +69,7 @@
 .checkbox-item {
   display: flex;
   flex-direction: column;
-  gap: $margin-xs; // 8px
+  gap: $spacing-1; // 8px
 }
 
 // 체크박스 상태
@@ -103,6 +104,6 @@
 .checkbox-description {
   font-size: $body-small-size; // 14px
   color: $secondary-color;
-  margin-top: $margin-xs; // 8px
+  margin-top: $spacing-1; // 8px
   margin-left: 28px; // 체크박스 + 간격 (20px + 8px)
 }

@@ -1,20 +1,21 @@
 // Moovy 컴포넌트 라이브러리 - 이미지 업로드 컴포넌트
 // ==========================================
 
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .moovy-image-upload {
   .image-upload-header {
-    margin-bottom: $margin-sm; // 16px
+    margin-bottom: $spacing-2; // 16px
     
     .upload-label {
       display: inline-flex;
       align-items: center;
-      gap: $margin-xs; // 8px
+      gap: $spacing-1; // 8px
       font-weight: $font-weight-bold;
       color: $white;
       cursor: pointer;
-      padding: $padding-xs $padding-sm; // 8px 16px
+      padding: $spacing-1 $spacing-2; // 8px 16px
       border: 1px solid $gray1;
       border-radius: $border-radius;
       background-color: rgba($color: #ffffff, $alpha: 0.1);
@@ -38,7 +39,7 @@
   .image-preview-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: $margin-sm; // 16px
+    gap: $spacing-2; // 16px
     
     .image-preview-item {
       position: relative;
@@ -97,7 +98,7 @@
       
       i {
         font-size: $heading-6-size; // 20px (similar to 1.5rem for default 16px base)
-        margin-bottom: $margin-xs; // 8px
+        margin-bottom: $spacing-1; // 8px
       }
       
       span {

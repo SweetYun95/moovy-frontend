@@ -2,18 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import './DatePicker.scss';
 import { Icon } from '@iconify/react';
 
-/**
- * DatePicker Props:
- * - value?: string (선택된 날짜 문자열)
- * - onChange?: (date: string) => void (날짜 변경 핸들러)
- * - placeholder?: string (플레이스홀더 텍스트)
- * - className?: string (추가 CSS 클래스)
- * - id?: string (요소 ID)
- * - theme?: 'dark' | 'light' (테마)
- * - isOpen?: boolean (달력 열림 상태)
- * - onOpenChange?: (isOpen: boolean) => void (달력 열림 상태 변경 핸들러)
- */
-
 export interface DatePickerProps {
   value?: string;
   onChange?: (date: string) => void;
@@ -21,8 +9,6 @@ export interface DatePickerProps {
   className?: string;
   id?: string;
   theme?: 'dark' | 'light';
-  isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
@@ -32,11 +18,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   className = '',
   id,
   theme = 'dark',
-  isOpen: externalIsOpen,
-  onOpenChange,
 }) => {
-  const [internalIsOpen, setInternalIsOpen] = useState(false);
-  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -56,11 +39,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     const dateString = formatDate(date);
     setSelectedDate(dateString);
     onChange?.(dateString);
-    if (onOpenChange) {
-      onOpenChange(false);
-    } else {
-      setInternalIsOpen(false);
-    }
+    setIsOpen(false);
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -116,14 +95,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     <div ref={wrapperRef} className={`date-picker-wrapper ${theme === 'light' ? 'light-theme' : ''} ${className}`} id={id}>
       <div
         className={`date-picker-trigger ${isOpen ? 'open' : ''}`}
-        onClick={() => {
-          const newIsOpen = !isOpen;
-          if (onOpenChange) {
-            onOpenChange(newIsOpen);
-          } else {
-            setInternalIsOpen(newIsOpen);
-          }
-        }}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <span className={selectedDate ? 'selected' : 'placeholder'}>
           {selectedDate || placeholder}

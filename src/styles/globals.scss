@@ -1,260 +1,33 @@
-// Brand Colors
-$primary-color: #7B61FF;
-$secondary-color: #FF3C67;
-$success-color: #00C896;
-$danger-color: #FF4C4C;
-$warning-color: #FFD60A;
-$info-color: #00AEEF;
+// Import shared styles
+@import 'variables';
+@import 'mixins';
+@import 'base';
 
-// Neutral Palette (Dark Theme)
-$black1: #121212; // background
-$black2: #1E1E1E;
-$black3: #2C2C2C;
-$gray1: #3A3A3A;
-$gray2: #707070;
-$gray3: #A1A1A1;
-$gray4: #D9D9D9;
-$gray5: #F5F5F5;
-$white: #FFFFFF;
-
-// Legacy aliases (for existing references)
-$light-color: $gray5;
-$dark-color: $gray1;
-
-// Social Colors
-$kakao-yellow: #FFD60A;
-$google-white: #FFFFFF;
-
-// Typography
-$font-family-base: 'Pretendard', sans-serif;
-$font-weight-normal: 400;
-$font-weight-bold: 700;
-
-// Heading Typography (Pretendard)
-$heading-1-size: 56px;
-$heading-1-line-height: 61.6px; // 1.1 x font size
-$heading-2-size: 48px;
-$heading-2-line-height: 52.8px; // 1.1 x font size
-$heading-3-size: 40px;
-$heading-3-line-height: 44px; // 1.1 x font size
-$heading-4-size: 32px;
-$heading-4-line-height: 35.2px; // 1.1 x font size
-$heading-5-size: 24px;
-$heading-5-line-height: 26.4px; // 1.1 x font size
-$heading-6-size: 20px;
-$heading-6-line-height: 22px; // 1.1 x font size
-
-// Body Typography (Pretendard)
-$body-large-size: 20px;
-$body-large-line-height: 28px; // 1.4 x font size
-$body-medium-size: 18px;
-$body-medium-line-height: 25.2px; // 1.4 x font size
-$body-normal-size: 16px;
-$body-normal-line-height: 22.4px; // 1.4 x font size
-$body-small-size: 14px;
-$body-small-line-height: 19.6px; // 1.4 x font size
-
-// font-size-base
-$font-size-base: $body-normal-size;
-
-// Spacing System (Design System Guidelines)
-// ==========================================
-
-// Base spacing unit
-$spacer: 1rem;  //16px
-
-// Spacing Levels (8px, 16px, 24px, 32px, 40px, 56px, 72px, 80px, 96px, 120px)
-$spacing-1: 0.5rem;   // 8px
-$spacing-2: 1rem;     // 16px  
-$spacing-3: 1.5rem;   // 24px
-$spacing-4: 2rem;     // 32px
-$spacing-5: 2.5rem;   // 40px
-$spacing-6: 3.5rem;   // 56px
-$spacing-7: 4.5rem;   // 72px
-$spacing-8: 5rem;     // 80px
-$spacing-9: 6rem;     // 96px
-$spacing-10: 7.5rem;  // 120px
-
-// Padding System
-// ==============
-$padding-xs: $spacing-1;    // 8px
-$padding-sm: $spacing-2;    // 16px
-$padding-md: $spacing-3;    // 24px
-$padding-lg: $spacing-4;    // 32px
-$padding-xl: $spacing-5;    // 40px
-$padding-xxl: $spacing-6;   // 56px
-
-// Margin System
-// =============
-$margin-xs: $spacing-1;     // 8px
-$margin-sm: $spacing-2;     // 16px
-$margin-md: $spacing-3;     // 24px
-$margin-lg: $spacing-4;     // 32px
-$margin-xl: $spacing-5;     // 40px
-$margin-xxl: $spacing-6;    // 56px
-
-// Component-specific spacing
-$component-padding-sm: $spacing-1;   // 8px
-$component-padding-md: $spacing-2;   // 16px
-$component-padding-lg: $spacing-3;   // 24px
-$component-margin-sm: $spacing-1;    // 8px
-$component-margin-md: $spacing-2;    // 16px
-$component-margin-lg: $spacing-3;    // 24px
-
-// Border
-// Base radius used by most components
-$border-radius: 0.5rem;  //8px
-
-// Size variants
-$border-radius-sm: 0.25rem; // 4px
-$border-radius-lg: 1rem;  //16px
-
-// Shadows
-$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-$box-shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-
-// Transitions
-$transition-base: all 0.15s ease-in-out;
-$transition-fast: all 0.1s ease-in-out;
-
-// Iconography
-$icon-live-area: 20px;
-$icon-save-area: 2px;
-$icon-full-size: 24px;
-
-// Icon sizes
-$icon-sm: 18px;
-$icon-md: 24px;
-$icon-lg: 40px;
-
-// Z-index
-$z-index-dropdown: 1000;
-$z-index-sticky: 1020;
-$z-index-fixed: 1030;
-$z-index-modal-backdrop: 1040;
-$z-index-modal: 1050;
-$z-index-popover: 1060;
-$z-index-tooltip: 1070;
 
 // 전역 기본값
 :root {
-  --color-bg: #ffffff;
-  --color-fg: #111111;
-  --color-primary: #1976d2; // MUI 기본 블루와 맞춤
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  --color-bg: #{$white};
+  --color-fg: #{$black1};
+  --color-primary: #{$primary-color};
 }
 
 html, body, #root {
   height: 100%;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--color-bg);
-  color: var(--color-fg);
-  font-family: $font-family-base;
-  line-height: 1.5;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 // 유틸
 .container-narrow {
   max-width: 960px;
   margin-inline: auto;
-  padding: 0 1rem;
+  padding: 0 $spacing-2;
 }
 
 // 다크 테마(선택): body에 .theme-dark 붙이면 적용
 .theme-dark {
-  --color-bg: #0b0f14;
-  --color-fg: #e6e6e6;
+  --color-bg: #{$black1};
+  --color-fg: #{$gray3};
   background: var(--color-bg);
   color: var(--color-fg);
 }
 
-// 유틸리티 클래스
-.text-primary {
-  color: $primary-color;
-}
 
-.text-success {
-  color: $success-color;
-}
-
-.text-danger {
-  color: $danger-color;
-}
-
-.text-warning {
-  color: $warning-color;
-}
-
-.text-muted {
-  color: $gray2;
-}
-
-// 다크 테마용 폼 요소 기본 스타일
-.form-control,
-.btn,
-.list-group-item,
-.card,
-.dropdown-menu {
-  background-color: $black3;
-  color: $white;
-  border-color: $gray1;
-}
-
-.form-control::placeholder {
-  color: $gray2;
-}
-
-.btn-outline-secondary,
-.btn-outline-dark,
-.btn-outline-danger,
-.btn-outline-success,
-.btn-outline-info {
-  background-color: transparent;
-  color: $white;
-  border-color: $gray2;
-}
-
-.btn-outline-secondary:hover,
-.btn-outline-dark:hover,
-.btn-outline-danger:hover,
-.btn-outline-success:hover,
-.btn-outline-info:hover {
-  border-color: $white;
-}
-
-// 공통 버튼 스타일
-.btn {
-  border: 0;                
-  border-radius: $border-radius; 
-  box-shadow: none;          
-  transition: $transition-base, transform 0.15s ease;
-  font-weight: $font-weight-bold;
-
-  &:hover {
-    filter: brightness(1.05);
-    transform: scale(1.01);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: none;  
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: none;
-  }
-}

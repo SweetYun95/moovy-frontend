@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+
+.confirm-modal {
+  text-align: center;
+
+  &__message {
+    font-size: 16px;
+    color: $gray3;
+    margin-bottom: $spacing-4;
+    line-height: 1.5;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+

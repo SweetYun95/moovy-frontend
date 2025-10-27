@@ -1,0 +1,53 @@
+@import '../../../styles/variables';
+
+.report-modal {
+  &__header {
+    text-align: center;
+    margin-bottom: 24px;
+
+    h3 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-1;
+    }
+  }
+
+  &__icon {
+    color: $danger-color;
+    font-size: 24px;
+  }
+
+  &__target {
+    background: $black1;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  &__target-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__target-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: $white;
+  }
+
+  &__target-count {
+    font-size: 14px;
+    color: $danger-color;
+  }
+
+  &__field {
+    margin-bottom: 24px;
+  }
+
+  &__actions {
+    flex-direction: column;
+  }
+}
+

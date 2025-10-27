@@ -1,31 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './CommentCard.scss';
 import { Icon } from '@iconify/react';
-
-/**
- * CommentCard Props:
- * - username: string (사용자 닉네임)
- * - movieTitle: string (영화 제목)
- * - comment: string (코멘트 내용)
- * - rating: number (평점)
- * - likes: number (좋아요 수)
- * - replies: number (댓글 수)
- * - profileImageUrl?: string (프로필 이미지 URL)
- * - movieImageUrl?: string (영화 이미지 URL)
- * - className?: string (추가 CSS 클래스)
- * - onLikeClick?: () => void (좋아요 버튼 클릭 핸들러)
- * - onReplyClick?: () => void (댓글 버튼 클릭 핸들러)
- */
+import { getCommentCards, type CommentCard as CommentCardType } from '../../../services/api/commentApi';
 
 export interface CommentCardProps {
   username: string;
-  movieTitle: string;
   comment: string;
   rating: number;
   likes: number;
   replies: number;
   profileImageUrl?: string;
-  movieImageUrl?: string;
   className?: string;
   onLikeClick?: () => void;
   onReplyClick?: () => void;
@@ -33,13 +17,11 @@ export interface CommentCardProps {
 
 export const CommentCard: React.FC<CommentCardProps> = ({
   username,
-  movieTitle,
   comment,
   rating,
   likes,
   replies,
   profileImageUrl,
-  movieImageUrl,
   className = '',
   onLikeClick,
   onReplyClick,
@@ -71,25 +53,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
         </div>
       </div>
       
-      <div className="comment-card__main-content">
-        <div className="comment-card__movie-image">
-          {movieImageUrl ? (
-            <img 
-              src={movieImageUrl} 
-              alt={movieTitle}
-              className="comment-card__movie-poster"
-            />
-          ) : (
-            <div className="comment-card__movie-placeholder">
-              <Icon icon="mdi:image" width="40" height="40" />
-            </div>
-          )}
-        </div>
-        
-        <div className="comment-card__content">
-          <h4 className="comment-card__movie-title">{movieTitle}</h4>
-          <p className="comment-card__text">{comment}</p>
-        </div>
+      <div className="comment-card__content">
+        <p className="comment-card__text">{comment}</p>
       </div>
       
       <div className="comment-card__actions">
@@ -128,3 +93,71 @@ export const CommentCard: React.FC<CommentCardProps> = ({
 };
 
 export default CommentCard;
+
+// Demo wrapper
+export function SimpleCommentCardComponent() {
+  const [commentCards, setCommentCards] = useState<CommentCardType[]>([]);
+
+  useEffect(() => {
+    // TODO: 백엔드 API 연동 시 주석 해제
+    // getCommentCards().then(setCommentCards);
+    
+    // 임시 하드코딩 데이터
+    const tempData: CommentCardType[] = [
+      {
+        id: 1,
+        username: '유저닉네임1',
+        comment: '정말 재미있는 영화였어요! 케이팝 아이돌들이 액션 히어로로 나오는 설정이 신선하고, 스토리도 탄탄해서 끝까지 몰입해서 봤습니다.',
+        rating: 4.5,
+        likes: 102,
+        replies: 2,
+      },
+      {
+        id: 2,
+        username: '영화매니아',
+        comment: '예상보다 훨씬 재미있었습니다! 스토리 전개가 빠르고 긴장감이 계속 유지되어서 지루할 틈이 없었어요.',
+        rating: 4.0,
+        likes: 89,
+        replies: 5,
+      },
+      {
+        id: 3,
+        username: '드라마러버',
+        comment: '정치 드라마치고는 정말 현실적이고 몰입도가 높았습니다. 배우들의 연기도 훌륭하고, 스토리도 정치적 상황을 잘 반영한 것 같아요.',
+        rating: 4.8,
+        likes: 156,
+        replies: 8,
+      },
+      {
+        id: 4,
+        username: '시네마팬',
+        comment: '연출과 촬영이 정말 훌륭했습니다. 특히 조명과 색감이 영화의 분위기를 잘 살려주었어요. 강력 추천!',
+        rating: 5.0,
+        likes: 234,
+        replies: 12,
+      },
+    ];
+    setCommentCards(tempData);
+  }, []);
+
+  return (
+    <div className="component-demo">
+      <h4>Simple Comment Card Components</h4>
+      <div className="row">
+        {commentCards.map((commentCard) => (
+          <div key={commentCard.id} className="col-12 col-md-6 col-lg-3 mb-4">
+            <CommentCard
+              username={commentCard.username}
+              comment={commentCard.comment}
+              rating={commentCard.rating}
+              likes={commentCard.likes}
+              replies={commentCard.replies}
+              onLikeClick={() => alert('좋아요 클릭!')}
+              onReplyClick={() => alert('댓글 클릭!')}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

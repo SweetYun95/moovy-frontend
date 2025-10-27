@@ -1,0 +1,78 @@
+import React, { useEffect } from 'react';
+import './Modal.scss';
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title?: React.ReactNode;
+  titleAlign?: 'left' | 'center';
+  showCloseButton?: boolean;
+  size?: '360px' | '480px' | '870px' | '994px';
+  noResponsive?: boolean;
+  className?: string;
+}
+
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  title,
+  titleAlign = 'left',
+  showCloseButton = true,
+  size = '480px',
+  noResponsive = false,
+  className = '',
+}) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={handleBackdropClick}>
+      <div className={`modal-container modal-${size} ${noResponsive ? 'modal-no-responsive' : ''} ${className}`}>
+        {(title || showCloseButton) && (
+          <div className="modal-header">
+            {title && <h2 className={`modal-title modal-title--${titleAlign}`}>{title}</h2>}
+            {showCloseButton && (
+              <button className="modal-close" onClick={onClose}>
+                X
+              </button>
+            )}
+          </div>
+        )}
+        <div className="modal-content">{children}</div>
+      </div>
+    </div>
+  );
+};
+
+export default Modal;
+

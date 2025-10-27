@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { initGSAP } from "./utils/gsapSetup";
 import { store } from "./app/store";
 import App from "./App";
+import TestApp from "./TestApp";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/globals.scss";
@@ -17,7 +18,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <TestApp />
       </BrowserRouter>
     </Provider>
   </StrictMode>,
