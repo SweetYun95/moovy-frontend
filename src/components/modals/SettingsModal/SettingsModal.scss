@@ -18,6 +18,12 @@
   max-height: 70vh;
   overflow-y: auto;
   
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
   &__section {
     margin-bottom: $spacing-3; // 24px
 

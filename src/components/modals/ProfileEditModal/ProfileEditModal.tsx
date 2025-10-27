@@ -1,33 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
 import { Button } from '../../common/Button/ButtonStyle';
+import { ActionButton } from '../../common/Button/Button';
 import { Input } from '../../common/Input/InputStyle';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import { 
   updateProfile, 
   checkNickname, 
-  withdraw, 
+  getProfile,
   getAdminUserProfile,
   updateAdminUserProfile,
   forceWithdrawUser,
+  getUserSanctions,
   type UserProfile
 } from '../../../services/api/userApi';
 import './ProfileEditModal.scss';
 
+export interface ProfileEditModalComponentProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
 /**
  사용법
 
-// 일반 사용자
+// 일반 사용자 모드
 <ProfileEditModalComponent 
   isOpen={isOpen} 
   onClose={onClose} 
-  mode="user"
 />
 
-// 관리자
-<AdminProfileEditModalComponent 
+// 관리자 모드
+<ProfileEditModal 
   isOpen={isOpen} 
   onClose={onClose}
-  userId={123}
+  mode="admin"
+  userData={{ name: '이름', nickname: '닉네임', email: 'email@example.com', profileImage: 'url', reportCount: 5 }}
+  onSubmit={(data) => console.log(data)}
+  onWithdraw={() => console.log('강제탈퇴')}
 />
  */
 
@@ -39,31 +50,51 @@ export interface ProfileEditModalProps {
     nickname: string;
     email: string;
     profileImage?: string;
+    password?: string;
   }) => void;
-  initialData?: {
+  title?: string;
+  mode?: 'user' | 'admin';
+  userData?: {
     name: string;
     nickname: string;
     email: string;
     profileImage?: string;
+    reportCount?: number;
   };
-  reportCount?: number;
   onWithdraw?: () => void;
   onCheckNickname?: (nickname: string) => Promise<boolean>;
+  onDetailClick?: () => void;
 }
 
 const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
-  initialData = { name: '', nickname: '', email: '' },
-  reportCount = 0,
+  title,
+  mode = 'user',
+  userData,
   onWithdraw,
   onCheckNickname,
+  onDetailClick,
 }) => {
-  const [name, setName] = useState(initialData.name);
-  const [nickname, setNickname] = useState(initialData.nickname);
-  const [email, setEmail] = useState(initialData.email);
-  const [profileImage, setProfileImage] = useState(initialData.profileImage);
+  const defaultTitle = mode === 'admin' ? '프로필 관리' : '프로필 수정';
+  
+  const [name, setName] = useState(userData?.name || '');
+  const [nickname, setNickname] = useState(userData?.nickname || '');
+  const [email, setEmail] = useState(userData?.email || '');
+  const [profileImage, setProfileImage] = useState(userData?.profileImage || '');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  // userData가 변경되면 state 업데이트
+  useEffect(() => {
+    if (userData) {
+      setName(userData.name || '');
+      setNickname(userData.nickname || '');
+      setEmail(userData.email || '');
+      setProfileImage(userData.profileImage || '');
+    }
+  }, [userData]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -82,7 +113,32 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     if (!name.trim() || !nickname.trim() || !email.trim()) {
       return;
     }
-    onSubmit({ name, nickname, email, profileImage });
+    
+    // 비밀번호 변경이 있는 경우 검증 (비밀번호나 확인 입력이 하나라도 있으면 검증)
+    if (mode === 'user' && (password || passwordConfirm)) {
+      if (!password) {
+        alert('비밀번호를 입력하세요.');
+        return;
+      }
+      if (password.length < 8) {
+        alert('비밀번호는 8자 이상이어야 합니다.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+    }
+    
+    const submitData: any = { name, nickname, email, profileImage };
+    // 비밀번호가 입력된 경우에만 포함
+    if (password && password.trim()) {
+      submitData.password = password;
+    }
+    onSubmit(submitData);
+    // 비밀번호 필드 초기화
+    setPassword('');
+    setPasswordConfirm('');
     onClose();
   };
 
@@ -92,95 +148,154 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    // 필드 초기화
+    setPassword('');
+    setPasswordConfirm('');
+    onClose();
+  };
+
+  const modalTitle = title || defaultTitle;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="480px" showCloseButton={true} titleAlign="center">
+    <Modal isOpen={isOpen} onClose={handleClose} size="480px" showCloseButton={true} titleAlign="center" title={modalTitle}>
       <div className="profile-edit-modal">
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__avatar">
-          <label htmlFor="profile-image-input" className="profile-edit-modal__avatar-wrapper">
-            {profileImage ? (
-              <img src={profileImage} alt="Profile" className="profile-edit-modal__avatar-img" />
-            ) : (
-              <div className="profile-edit-modal__avatar-placeholder">
-                <span>👤</span>
+              <label htmlFor="profile-image-input" className="profile-edit-modal__avatar-wrapper">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="profile-edit-modal__avatar-img" />
+                ) : (
+                  <div className="profile-edit-modal__avatar-placeholder">
+                    <span>👤</span>
+                  </div>
+                )}
+              </label>
+              {mode === 'user' && (
+                <input
+                  type="file"
+                  id="profile-image-input"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <div className="profile-edit-modal__field">
+              <label className="profile-edit-modal__label">이름</label>
+              <Input placeholder="유저 이름" value={name} onChange={setName} />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <div className="profile-edit-modal__field">
+              <label className="profile-edit-modal__label">닉네임</label>
+              <Input
+                placeholder="유저 닉네임"
+                value={nickname}
+                onChange={setNickname}
+                rightButton={
+                  mode === 'user' && onCheckNickname
+                    ? {
+                        text: '중복확인',
+                        onClick: handleCheckNickname,
+                        variant: 'primary',
+                        size: 'sm',
+                      }
+                    : undefined
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <div className="profile-edit-modal__field">
+              <label className="profile-edit-modal__label">이메일</label>
+              <Input
+                type="email"
+                placeholder="유저 이메일"
+                value={email}
+                onChange={setEmail}
+              />
+            </div>
+          </div>
+        </div>
+
+        {mode === 'user' && (
+          <>
+            <div className="row">
+              <div className="col-12">
+                <div className="profile-edit-modal__field">
+                  <label className="profile-edit-modal__label">비밀번호</label>
+                  <Input
+                    type="password"
+                    placeholder="비밀번호를 입력하세요."
+                    value={password}
+                    onChange={setPassword}
+                  />
+                </div>
               </div>
-            )}
-          </label>
-          <input
-            type="file"
-            id="profile-image-input"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ display: 'none' }}
-          />
+            </div>
+
+            <div className="row">
+              <div className="col-12">
+                <div className="profile-edit-modal__field">
+                  <label className="profile-edit-modal__label">비밀번호 확인</label>
+                  <Input
+                    type="password"
+                    placeholder="비밀번호를 다시 입력하세요."
+                    value={passwordConfirm}
+                    onChange={setPasswordConfirm}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {mode === 'admin' && (
+          <div className="row">
+            <div className="col-12">
+              <div className="profile-edit-modal__info">
+                <div className="profile-edit-modal__info-left">
+                  <div className="profile-edit-modal__info-row">
+                    <span className="profile-edit-modal__label">관리자 경고</span>
+                    <span className="profile-edit-modal__report-count">{userData?.reportCount || 0}회</span>
+                  </div>
+                  <div 
+                    className="profile-edit-modal__info-detail" 
+                    onClick={onDetailClick}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    상세보기
+                  </div>
+                </div>
+                {onWithdraw && (
+                  <Button variant="danger" onClick={onWithdraw} size="md">
+                    탈퇴
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="row">
           <div className="col-12">
-            <div className="profile-edit-modal__field">
-          <label className="profile-edit-modal__label">이름</label>
-          <Input placeholder="유저 이름" value={name} onChange={setName} />
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
-            <div className="profile-edit-modal__field">
-          <label className="profile-edit-modal__label">닉네임</label>
-          <Input
-            placeholder="유저 닉네임"
-            value={nickname}
-            onChange={setNickname}
-            rightButton={
-              onCheckNickname
-                ? {
-                    text: '중복확인',
-                    onClick: handleCheckNickname,
-                    variant: 'primary',
-                    size: 'sm',
-                  }
-                : undefined
-            }
-          />
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-12">
-            <div className="profile-edit-modal__field">
-          <label className="profile-edit-modal__label">이메일</label>
-          <Input
-            type="email"
-            placeholder="유저 이메일"
-            value={email}
-            onChange={setEmail}
-          />
-        </div>
-
-        <div className="profile-edit-modal__info">
-          <div className="profile-edit-modal__info-left">
-            <div className="profile-edit-modal__info-row">
-              <span className="profile-edit-modal__label">관리자 경고</span>
-              <span className="profile-edit-modal__report-count">{reportCount}회</span>
-            </div>
-            <div className="profile-edit-modal__info-detail">상세보기</div>
-          </div>
-          {onWithdraw && (
-            <Button variant="danger" onClick={onWithdraw} size="md">
-              탈퇴
-            </Button>
-          )}
-        </div>
-
-        <div className="profile-edit-modal__actions">
-          <Button variant="primary" onClick={handleSubmit} fullWidth>
-            수정
-          </Button>
+            <div className="profile-edit-modal__actions">
+              <ActionButton action="confirm" onClick={handleSubmit}>
+                {mode === 'admin' ? '수정' : '수정'}
+              </ActionButton>
             </div>
           </div>
         </div>
@@ -191,25 +306,67 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
 export default ProfileEditModal;
 
-// Component wrapper with API integration
-export function ProfileEditModalComponent({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+// Component wrapper with API integration - 일반 사용자용
+export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: ProfileEditModalComponentProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState<{
+    name: string;
+    nickname: string;
+    email: string;
+    profileImage?: string;
+  } | null>(null);
+
+  // 사용자 프로필 데이터 로드
+  useEffect(() => {
+    if (isOpen) {
+      loadProfile();
+    }
+  }, [isOpen]);
+
+  const loadProfile = async () => {
+    try {
+      const data = await getProfile();
+      setUserData({
+        name: data.name,
+        nickname: data.nickname,
+        email: data.email,
+        profileImage: data.avatarUrl,
+      });
+    } catch (error) {
+      console.error('프로필 로드 실패:', error);
+      // TestApp용 mock 데이터
+      setUserData({
+        name: '홍길동',
+        nickname: '길동이',
+        email: 'gildong@example.com',
+        profileImage: undefined,
+      });
+    }
+  };
 
   const handleSubmit = async (data: {
     name: string;
     nickname: string;
     email: string;
     profileImage?: string;
+    password?: string;
   }) => {
     setIsLoading(true);
     try {
-      await updateProfile({
+      const updateData: any = {
         name: data.name,
         nickname: data.nickname,
         email: data.email,
         profileImage: data.profileImage,
-      });
+      };
+      if (data.password) {
+        updateData.password = data.password;
+      }
+      await updateProfile(updateData);
       onClose();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error('프로필 수정 실패:', error);
       // TODO: 에러 토스트 메시지 표시
@@ -228,34 +385,17 @@ export function ProfileEditModalComponent({ isOpen, onClose }: { isOpen: boolean
     }
   };
 
-  const handleWithdraw = async () => {
-    if (window.confirm('정말 탈퇴하시겠습니까?')) {
-      setIsLoading(true);
-      try {
-        await withdraw();
-        onClose();
-        // TODO: 로그아웃 처리 및 홈으로 이동
-      } catch (error) {
-        console.error('회원 탈퇴 실패:', error);
-        // TODO: 에러 토스트 메시지 표시
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
+  if (!userData) {
+    return null; // 로딩 중
+  }
 
   return (
     <ProfileEditModal
       isOpen={isOpen}
       onClose={onClose}
+      mode="user"
       onSubmit={handleSubmit}
-      initialData={{
-        name: '유저 이름',
-        nickname: '유저 닉네임',
-        email: 'user@example.com',
-      }}
-      reportCount={0}
-      onWithdraw={handleWithdraw}
+      userData={userData}
       onCheckNickname={handleCheckNickname}
     />
   );
@@ -265,28 +405,79 @@ export function ProfileEditModalComponent({ isOpen, onClose }: { isOpen: boolean
 export function AdminProfileEditModalComponent({ 
   isOpen, 
   onClose,
-  userId
+  userId,
+  onWithdrawClick,
+  onSanctionData
 }: { 
   isOpen: boolean
   onClose: () => void
   userId: number
+  onWithdrawClick?: () => void
+  onSanctionData?: (data: Array<{ id: number; reason: string }>) => void
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [initialData, setInitialData] = useState<UserProfile | null>(null);
+  const [userData, setUserData] = useState<{
+    name: string;
+    nickname: string;
+    email: string;
+    profileImage?: string;
+    reportCount?: number;
+  } | null>(null);
+  
+  const [sanctionCount, setSanctionCount] = useState<number>(0);
+  const [sanctions, setSanctions] = useState<Array<{ id: number; reason: string }>>([]);
 
   // 사용자 데이터 로드
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen && userId) {
       loadUserData();
+      loadSanctionCount();
     }
   }, [isOpen, userId]);
 
   const loadUserData = async () => {
     try {
       const data = await getAdminUserProfile(userId);
-      setInitialData(data);
+      setUserData({
+        name: data.name,
+        nickname: data.nickname,
+        email: data.email,
+        profileImage: data.avatarUrl,
+        reportCount: data.reportCount,
+      });
     } catch (error) {
       console.error('사용자 데이터 로드 실패:', error);
+      // TestApp용 mock 데이터
+      setUserData({
+        name: '김철수',
+        nickname: '철수형',
+        email: 'cheolsu@example.com',
+        profileImage: undefined,
+        reportCount: 5,
+      });
+    }
+  };
+
+  const loadSanctionCount = async () => {
+    try {
+      const sanctionsData = await getUserSanctions(userId);
+      setSanctions(sanctionsData);
+      setSanctionCount(sanctionsData.length);
+      // reportCount도 업데이트
+      setUserData(prev => prev ? { ...prev, reportCount: sanctionsData.length } : null);
+    } catch (error) {
+      console.error('제제 이력 로드 실패:', error);
+      // Mock 데이터
+      const mockSanctions = [
+        { id: 1, reason: '부적절한 언어 사용' },
+        { id: 2, reason: '광고글' },
+        { id: 3, reason: '도배글' },
+        { id: 4, reason: '스팸 댓글' },
+        { id: 5, reason: '비매너 행위' }
+      ];
+      setSanctions(mockSanctions);
+      setSanctionCount(mockSanctions.length);
+      setUserData(prev => prev ? { ...prev, reportCount: mockSanctions.length } : null);
     }
   };
 
@@ -305,6 +496,7 @@ export function AdminProfileEditModalComponent({
         profileImage: data.profileImage,
       });
       onClose();
+      // TODO: 성공 토스트 메시지
     } catch (error) {
       console.error('프로필 수정 실패:', error);
       // TODO: 에러 토스트 메시지 표시
@@ -313,23 +505,13 @@ export function AdminProfileEditModalComponent({
     }
   };
 
-  const handleForceWithdraw = async () => {
-    if (window.confirm('정말 강제 탈퇴 처리하시겠습니까?')) {
-      setIsLoading(true);
-      try {
-        await forceWithdrawUser(userId, '관리자에 의한 강제 탈퇴');
-        onClose();
-        // TODO: 사용자 목록 새로고침
-      } catch (error) {
-        console.error('강제 탈퇴 실패:', error);
-        // TODO: 에러 토스트 메시지 표시
-      } finally {
-        setIsLoading(false);
-      }
+  const handleForceWithdraw = () => {
+    if (onWithdrawClick) {
+      onWithdrawClick();
     }
   };
 
-  if (!initialData) {
+  if (!userData) {
     return null; // 로딩 중
   }
 
@@ -337,16 +519,18 @@ export function AdminProfileEditModalComponent({
     <ProfileEditModal
       isOpen={isOpen}
       onClose={onClose}
+      mode="admin"
       onSubmit={handleSubmit}
-      initialData={{
-        name: initialData.name,
-        nickname: initialData.nickname,
-        email: initialData.email,
-        profileImage: initialData.avatarUrl,
-      }}
-      reportCount={initialData.reportCount}
+      userData={{
+        ...userData,
+        reportCount: sanctionCount || userData?.reportCount
+      } as any}
       onWithdraw={handleForceWithdraw}
-      // 관리자는 닉네임 중복 확인 불필요
+      onDetailClick={() => {
+        if (onSanctionData) {
+          onSanctionData(sanctions);
+        }
+      }}
     />
   );
 }

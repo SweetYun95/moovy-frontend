@@ -1,53 +1,38 @@
 @import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .report-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: $spacing-1;
+
   &__header {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: $spacing-3;
 
     h3 {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       gap: $spacing-1;
     }
   }
 
   &__icon {
     color: $danger-color;
-    font-size: 24px;
+    font-size: $icon-md;
   }
 
-  &__target {
-    background: $black1;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 24px;
-  }
-
-  &__target-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  &__target-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: $white;
-  }
-
-  &__target-count {
-    font-size: 14px;
-    color: $danger-color;
+  &__label {
+    @include text-base($body-normal-size, $font-weight-bold);
+    display: block;
+    margin-bottom: $spacing-1;
   }
 
   &__field {
-    margin-bottom: 24px;
+    margin-bottom: $spacing-3;
   }
 
   &__actions {
-    flex-direction: column;
+    @include flex-center;
   }
 }
 

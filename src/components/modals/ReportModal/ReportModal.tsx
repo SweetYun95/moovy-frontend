@@ -1,61 +1,100 @@
 import React, { useState } from 'react';
 import Modal from '../Modal/Modal';
-import { Button } from '../../common/Button/ButtonStyle';
-import { Selector } from '../../common/Selector/SelectorStyle';
-import type { SelectorOption } from '../../common/Selector/SelectorStyle';
+import { ActionButton } from '../../common/Button/Button';
+import { ReportSelector, SanctionLevelSelector, ReportStatusSelector } from '../../common/Selector/SelectorComponents';
+import { Textarea } from '../../common/Textarea/TextareaStyle';
+import { UserProfileCard } from '../../common/UserProfileCard/UserProfileCard';
 import { createReport, type ReportCategory } from '../../../services/api/commentApi';
 import './ReportModal.scss';
 import { Icon } from '@iconify/react';
 
 /**
  사용법
- <ReportModalComponent 
-   isOpen={isOpen} 
-   onClose={onClose} 
-   targetType="user"
-   targetId={123}
-   targetUser={{ name: '홍길동', reportCount: 5 }}
- />
+
+// 일반 사용자 모드
+<ReportModalComponent 
+  isOpen={isOpen} 
+  onClose={onClose} 
+  targetType="user"
+  targetId={123}
+  targetUser={{ name: '홍길동', reportCount: 5 }}
+/>
+
+// 관리자 모드
+<ReportModal 
+  isOpen={isOpen} 
+  onClose={onClose}
+  mode="admin"
+  reportData={{ category: 'spam', content: '신고 내용', targetUser: { name: '홍길동', reportCount: 5, avatar: 'url' } }}
+  onSubmit={(data) => console.log(data)}
+/>
  */
 
 export interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (category: string) => void;
+  onSubmit: (data: { category: string; content?: string; sanctionLevel?: string; notification?: string }) => void;
+  title?: string;
+  mode?: 'user' | 'admin';
+  reportData?: {
+    category: string;
+    content: string;
+    targetUser?: {
+      name: string;
+      reportCount: number;
+      avatar?: string;
+    };
+  };
   targetUser?: {
     name: string;
     reportCount: number;
   };
+  onReportCountClick?: (data: Array<{ id: number; reason: string }>) => void;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  title,
+  mode = 'user',
+  reportData,
   targetUser,
+  onReportCountClick,
 }) => {
-  const [category, setCategory] = useState('');
-
-  const categoryOptions: SelectorOption[] = [
-    { value: 'spam', label: '스팸' },
-    { value: 'abuse', label: '욕설/비방' },
-    { value: 'inappropriate', label: '부적절한 콘텐츠' },
-    { value: 'copyright', label: '저작권 침해' },
-    { value: 'other', label: '기타' },
-  ];
+  const defaultTitle = mode === 'admin' ? '신고관리' : '신고하기';
+  
+  const [category, setCategory] = useState(reportData?.category || '');
+  const [content, setContent] = useState(reportData?.content || '');
+  const [sanctionLevel, setSanctionLevel] = useState('');
+  const [notification, setNotification] = useState('');
 
   const handleSubmit = () => {
     if (!category) {
       return;
     }
-    onSubmit(category);
+    
+    const submitData: any = { category };
+    if (mode === 'admin') {
+      submitData.content = content;
+      submitData.sanctionLevel = sanctionLevel;
+      submitData.notification = notification;
+    }
+    
+    onSubmit(submitData);
     handleClose();
   };
 
   const handleClose = () => {
     setCategory('');
+    setContent('');
+    setSanctionLevel('');
+    setNotification('');
     onClose();
   };
+
+  const modalTitle = title || defaultTitle;
+  const displayTargetUser = reportData?.targetUser || targetUser;
 
   return (
     <Modal 
@@ -66,22 +105,20 @@ const ReportModal: React.FC<ReportModalProps> = ({
       titleAlign="center"
       title={
         <>
-          신고하기 <Icon icon="mdi:alert" className="report-modal__icon" />
+          {modalTitle} <Icon icon="mdi:alert" className="report-modal__icon" />
         </>
       }
     >
       <div className="report-modal">
-        {targetUser && (
+        {displayTargetUser && (
           <div className="row">
             <div className="col-12">
-              <div className="report-modal__target">
-                <div className="report-modal__target-info">
-                  <span className="report-modal__target-name">{targetUser.name}</span>
-                  <span className="report-modal__target-count">
-                    관리자 경고 {targetUser.reportCount}회
-                  </span>
-                </div>
-              </div>
+              <UserProfileCard
+                name={displayTargetUser.name}
+                reportCount={displayTargetUser.reportCount}
+                avatar={reportData?.targetUser?.avatar}
+                onReportCountClick={onReportCountClick}
+              />
             </div>
           </div>
         )}
@@ -89,8 +126,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="report-modal__field">
-              <Selector
-                options={categoryOptions}
+              <label className="report-modal__label">분류</label>
+              <ReportSelector
                 value={category}
                 onChange={setCategory}
                 placeholder="분류"
@@ -99,12 +136,58 @@ const ReportModal: React.FC<ReportModalProps> = ({
           </div>
         </div>
 
+        {mode === 'admin' && (
+          <>
+            <div className="row">
+              <div className="col-12">
+                <div className="report-modal__field">
+                  <label className="report-modal__label">신고내용을 적어주세요.</label>
+                  <Textarea
+                    placeholder="신고내용을 적어주세요."
+                    value={content}
+                    onChange={setContent}
+                    rows={6}
+                    maxLength={10000}
+                    showCounter
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-12">
+                <div className="report-modal__field">
+                  <label className="report-modal__label">제재강도</label>
+                  <SanctionLevelSelector
+                    value={sanctionLevel}
+                    onChange={setSanctionLevel}
+                    placeholder="제제단계"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-12">
+                <div className="report-modal__field">
+                  <label className="report-modal__label">신고한 유저 알림 메시지</label>
+                  <ReportStatusSelector
+                    value={notification}
+                    onChange={setNotification}
+                    placeholder="처리 상태"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="row">
           <div className="col-12">
             <div className="report-modal__actions">
-              <Button variant="primary" onClick={handleSubmit} fullWidth>
+              <ActionButton action="confirm" onClick={handleSubmit}>
                 확인
-              </Button>
+              </ActionButton>
             </div>
           </div>
         </div>
@@ -121,7 +204,8 @@ export function ReportModalComponent({
   onClose,
   targetType,
   targetId,
-  targetUser 
+  targetUser,
+  onReportCountClick
 }: { 
   isOpen: boolean
   onClose: () => void
@@ -131,10 +215,11 @@ export function ReportModalComponent({
     name: string
     reportCount: number
   }
+  onReportCountClick?: (data: Array<{ id: number; reason: string }>) => void
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (category: string) => {
+  const handleSubmit = async (data: { category: string; content?: string; sanctionLevel?: string; notification?: string }) => {
     if (!targetType || !targetId) {
       console.error('신고 대상이 지정되지 않았습니다.');
       return;
@@ -143,7 +228,7 @@ export function ReportModalComponent({
     setIsLoading(true);
     try {
       await createReport({
-        category: category as ReportCategory,
+        category: data.category as ReportCategory,
         targetType: targetType,
         targetId: targetId,
       });
@@ -163,6 +248,7 @@ export function ReportModalComponent({
       onClose={onClose}
       onSubmit={handleSubmit}
       targetUser={targetUser}
+      onReportCountClick={onReportCountClick}
     />
   );
 }

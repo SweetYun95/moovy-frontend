@@ -1,0 +1,62 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.sanction-history-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: $spacing-1;
+
+  &__list {
+    margin-bottom: $spacing-3;
+  }
+
+  &__empty {
+    @include text-base($body-normal-size);
+    text-align: center;
+    padding: $spacing-6;
+    color: $gray3;
+  }
+
+  &__item {
+    padding: $spacing-2;
+    margin-bottom: $spacing-2;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__header {
+    @include text-base($body-normal-size, $font-weight-bold);
+    color: $white;
+    margin-bottom: $spacing-1;
+  }
+
+  &__body {
+    @include flex-between;
+    align-items: flex-start;
+  }
+
+  &__reason {
+    @include text-base($body-normal-size, $font-weight-normal);
+    color: $white;
+  }
+
+  &__detail-link {
+    @include text-base($body-small-size, $font-weight-normal);
+    color: $warning-color;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: opacity $transition-base;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__actions {
+    @include flex-center;
+    margin-top: $spacing-3;
+  }
+}
+

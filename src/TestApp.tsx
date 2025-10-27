@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/globals.scss';
 import './TestApp.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header/Header';
 import { ContentCardComponent } from './components/movies/ContentCard/ContentCard';
 import { MovieCardComponent } from './components/Home/MovieCard/MovieCard';
 import { ImageCommentCardComponent } from './components/Home/ImageCommentCard/ImageCommentCard';
 import { SimpleCommentCardComponent } from './components/movies/CommentCard/CommentCard';
 import {
-  ConfirmModalComponent,
+  DeleteModalComponent,
   InquiryModalComponent,
   ReportModalComponent,
   CommentEditModalComponent,
@@ -16,6 +16,12 @@ import {
   SettingsModalComponent,
   TopicManagementModalComponent,
 } from './components/modals';
+import { AdminProfileEditModalComponent } from './components/modals/ProfileEditModal/ProfileEditModal';
+import InquiryModal from './components/modals/InquiryModal/InquiryModal';
+import ReportModal from './components/modals/ReportModal/ReportModal';
+import { SanctionHistoryModal, WithdrawalConfirmModal } from './components/modals';
+import ConfirmModal from './components/modals/ConfirmModal/ConfirmModal';
+import { forceWithdrawUser } from './services/api/userApi';
 import { Button } from './components/common/Button/ButtonStyle';
 import { LoginButton, StatusButton, ActionButton, WideButton } from './components/common/Button/Button';
 import { DatePicker } from './components/common/DatePicker/DatePicker';
@@ -298,11 +304,20 @@ function SelectorExamples() {
 
 function TestApp() {
   // 모달 상태 관리
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showInquiryModal, setShowInquiryModal] = useState(false);
+  const [showInquiryAdminModal, setShowInquiryAdminModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showReportAdminModal, setShowReportAdminModal] = useState(false);
+  const [showSanctionHistoryModal, setShowSanctionHistoryModal] = useState(false);
+  const [sanctionHistories, setSanctionHistories] = useState<Array<{ id: number; reason: string }>>([]);
+  const [showWithdrawalUserModal, setShowWithdrawalUserModal] = useState(false);
+  const [showWithdrawalAdminModal, setShowWithdrawalAdminModal] = useState(false);
+  const [withdrawalUserId, setWithdrawalUserId] = useState<number | null>(null);
   const [showCommentEditModal, setShowCommentEditModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+  const [showAdminProfileEditModal, setShowAdminProfileEditModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showTopicModal, setShowTopicModal] = useState(false);
 
@@ -404,28 +419,86 @@ function TestApp() {
               <div className="component-demo">
                 <h4>Modal Components</h4>
                 <div className="row">
-                  <div className="col-md-12">
-                    <div className="mb-3">
-                      <Button variant="primary" onClick={() => setShowConfirmModal(true)} className="mr-2 mb-2">
-                        확인 모달
+                  <div className="col-md-6">
+                    <h4>코멘트삭제, 환경설정모달</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowDeleteModal(true)} className="mr-2 mb-2">
+                        코멘트삭제
                       </Button>
-                      <Button variant="primary" onClick={() => setShowInquiryModal(true)} className="mr-2 mb-2">
-                        1:1 문의하기
+                      <Button variant="primary" size='md' onClick={() => setShowSettingsModal(true)} className="mr-2 mb-2">
+                        환경설정
                       </Button>
-                      <Button variant="primary" onClick={() => setShowReportModal(true)} className="mr-2 mb-2">
-                        신고하기
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <h4>탈퇴모달(유저, 관리자)</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowWithdrawalUserModal(true)} className="mr-2 mb-2">
+                        유저
                       </Button>
-                      <Button variant="primary" onClick={() => setShowCommentEditModal(true)} className="mr-2 mb-2">
-                        코멘트 작성
+                      <Button variant="primary" size='md' onClick={() => setShowWithdrawalAdminModal(true)} className="mr-2 mb-2">
+                        관리자
                       </Button>
-                      <Button variant="primary" onClick={() => setShowProfileEditModal(true)} className="mr-2 mb-2">
-                        프로필 편집
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col-md-6">
+                    <h4>1:1 문의모달(유저, 관리자)</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowInquiryModal(true)} className="mr-2 mb-2">
+                        유저
                       </Button>
-                      <Button variant="primary" onClick={() => setShowSettingsModal(true)} className="mr-2 mb-2">
-                        설정
+                      <Button variant="primary" size='md' onClick={() => setShowInquiryAdminModal(true)} className="mr-2 mb-2">
+                        관리자
                       </Button>
-                      <Button variant="primary" onClick={() => setShowTopicModal(true)} className="mr-2 mb-2">
-                        토픽관리
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <h4>신고모달(유저, 관리자)</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowReportModal(true)} className="mr-2 mb-2">
+                        유저
+                      </Button>
+                      <Button variant="primary" size='md' onClick={() => setShowReportAdminModal(true)} className="mr-2 mb-2">
+                        관리자
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col-md-6">
+                    <h4>코멘트작성모달</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowCommentEditModal(true)} className="mr-2 mb-2">
+                        코멘트작성
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <h4>프로필편집, 유저관리(관리자)모달</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowProfileEditModal(true)} className="mr-2 mb-2">
+                        프로필편집
+                      </Button>
+                      <Button variant="primary" size='md' onClick={() => setShowAdminProfileEditModal(true)} className="mr-2 mb-2">
+                        유저관리
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col-md-6">
+                    <h4>토픽관리모달</h4>
+                    <div className="mt-2">
+                      <Button variant="primary" size='md' onClick={() => setShowTopicModal(true)} className="mr-2 mb-2">
+                        토픽생성
                       </Button>
                     </div>
                   </div>
@@ -433,13 +506,121 @@ function TestApp() {
               </div>
 
               {/* Modal Components */}
-              <ConfirmModalComponent isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)} />
+              <DeleteModalComponent isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
               <InquiryModalComponent isOpen={showInquiryModal} onClose={() => setShowInquiryModal(false)} />
-              <ReportModalComponent isOpen={showReportModal} onClose={() => setShowReportModal(false)} />
+              <InquiryModal
+                isOpen={showInquiryAdminModal}
+                onClose={() => setShowInquiryAdminModal(false)}
+                mode="admin"
+                inquiryData={{
+                  category: 'general',
+                  content: '어쩌구 저쩌구 문의 사항입니다.',
+                  initialReply: '답변내용을 적어주세요.'
+                }}
+                onSubmit={(data) => {
+                  console.log('답변 저장:', data);
+                  setShowInquiryAdminModal(false);
+                }}
+                onReport={() => {
+                  console.log('신고 처리');
+                }}
+              />
+              <ReportModalComponent 
+                isOpen={showReportModal} 
+                onClose={() => setShowReportModal(false)}
+                targetType="user"
+                targetId={1}
+                targetUser={{ name: '홍길동', reportCount: 5 }}
+                onReportCountClick={(data) => {
+                  setSanctionHistories(data);
+                  setShowSanctionHistoryModal(true);
+                }}
+              />
+              <ReportModal 
+                isOpen={showReportAdminModal}
+                onClose={() => setShowReportAdminModal(false)}
+                mode="admin"
+                reportData={{
+                  category: 'spam',
+                  content: '스팸 신고 내용입니다.',
+                  targetUser: {
+                    name: 'Natali Craig',
+                    reportCount: 5,
+                    avatar: 'https://picsum.photos/48/48?random=1'
+                  }
+                }}
+                onSubmit={(data) => {
+                  console.log('신고 처리:', data);
+                  setShowReportAdminModal(false);
+                }}
+                onReportCountClick={(data) => {
+                  setSanctionHistories(data);
+                  setShowSanctionHistoryModal(true);
+                }}
+              />
+              <SanctionHistoryModal
+                isOpen={showSanctionHistoryModal}
+                onClose={() => setShowSanctionHistoryModal(false)}
+                histories={sanctionHistories}
+                onDetailClick={(id) => console.log('상세 신고내역:', id)}
+              />
               <CommentEditModalComponent isOpen={showCommentEditModal} onClose={() => setShowCommentEditModal(false)} />
-              <ProfileEditModalComponent isOpen={showProfileEditModal} onClose={() => setShowProfileEditModal(false)} />
+              <ProfileEditModalComponent 
+                isOpen={showProfileEditModal} 
+                onClose={() => setShowProfileEditModal(false)}
+                onSuccess={() => setShowConfirmModal(true)}
+              />
+              <ConfirmModal
+                isOpen={showConfirmModal}
+                onClose={() => setShowConfirmModal(false)}
+                message="수정되었습니다."
+              />
+              <AdminProfileEditModalComponent 
+                isOpen={showAdminProfileEditModal} 
+                onClose={() => setShowAdminProfileEditModal(false)}
+                userId={1}
+                onWithdrawClick={() => {
+                  setWithdrawalUserId(1);
+                  setShowAdminProfileEditModal(false);
+                  setShowWithdrawalAdminModal(true);
+                }}
+                onSanctionData={(data) => {
+                  setSanctionHistories(data);
+                  setShowSanctionHistoryModal(true);
+                }}
+              />
               <SettingsModalComponent isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
               <TopicManagementModalComponent isOpen={showTopicModal} onClose={() => setShowTopicModal(false)} />
+              <WithdrawalConfirmModal
+                isOpen={showWithdrawalUserModal}
+                onClose={() => setShowWithdrawalUserModal(false)}
+                mode="user"
+                userName="홍길동"
+                onConfirm={() => {
+                  console.log('유저 탈퇴');
+                  setShowWithdrawalUserModal(false);
+                }}
+              />
+              <WithdrawalConfirmModal
+                isOpen={showWithdrawalAdminModal}
+                onClose={() => setShowWithdrawalAdminModal(false)}
+                mode="admin"
+                userName="홍길동"
+                reportCount={3}
+                onConfirm={async () => {
+                  if (withdrawalUserId !== null) {
+                    try {
+                      await forceWithdrawUser(withdrawalUserId, '관리자에 의한 강제 탈퇴');
+                      console.log('관리자 강제 탈퇴 완료');
+                      setShowWithdrawalAdminModal(false);
+                      setWithdrawalUserId(null);
+                    } catch (error) {
+                      console.error('강제 탈퇴 실패:', error);
+                      // TODO: 에러 토스트 메시지 표시
+                    }
+                  }
+                }}
+              />
             </div>
           </div>
         </div>

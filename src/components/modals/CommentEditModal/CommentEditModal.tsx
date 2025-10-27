@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from '../Modal/Modal';
-import { Button } from '../../common/Button/ButtonStyle';
+import { ActionButton } from '../../common/Button/Button';
 import { Toggle } from '../../common/Toggle/Toggle';
 import { Textarea } from '../../common/Textarea/TextareaStyle';
 import { createComment, updateComment } from '../../../services/api/commentApi';
@@ -68,7 +68,7 @@ const CommentEditModal: React.FC<CommentEditModalProps> = ({
       <div className="comment-edit-modal">
         <div className="row">
           <div className="col-12">
-            <div className="comment-edit-modal__spoiler">
+            <div className="comment-edit-modal__spoiler mb-2">
               <span className="comment-edit-modal__spoiler-label">스포일러</span>
               <Toggle checked={isSpoiler} onChange={setSpoiler} />
             </div>
@@ -93,9 +93,9 @@ const CommentEditModal: React.FC<CommentEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="comment-edit-modal__actions">
-              <Button variant="primary" onClick={handleSubmit} fullWidth>
+              <ActionButton action="confirm" onClick={handleSubmit}>
                 확인
-              </Button>
+              </ActionButton>
             </div>
           </div>
         </div>

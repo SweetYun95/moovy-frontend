@@ -11,6 +11,7 @@ export interface ModalProps {
   size?: '360px' | '480px' | '870px' | '994px';
   noResponsive?: boolean;
   className?: string;
+  zIndex?: number;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -23,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({
   size = '480px',
   noResponsive = false,
   className = '',
+  zIndex,
 }) => {
   useEffect(() => {
     if (isOpen) {
@@ -56,7 +58,11 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={handleBackdropClick}>
+    <div 
+      className="modal-overlay" 
+      onClick={handleBackdropClick}
+      style={zIndex ? { zIndex } : undefined}
+    >
       <div className={`modal-container modal-${size} ${noResponsive ? 'modal-no-responsive' : ''} ${className}`}>
         {(title || showCloseButton) && (
           <div className="modal-header">

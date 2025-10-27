@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Modal from '../Modal/Modal';
-import { Button } from '../../common/Button/ButtonStyle';
+import { ActionButton } from '../../common/Button/Button';
 import { Input } from '../../common/Input/InputStyle';
 import { Textarea } from '../../common/Textarea/TextareaStyle';
-import { Selector } from '../../common/Selector/SelectorStyle';
-import type { SelectorOption } from '../../common/Selector/SelectorStyle';
+import { AgeRatingSelector, TopicGenreSelector } from '../../common/Selector/SelectorComponents';
 import { ImageUpload } from '../../common/ImageUpload/ImageUpload';
 import { DateSelector } from '../../common/DateSelector/DateSelector';
 import { createTopic, updateTopic, uploadTopicImages } from '../../../services/api/topicApi';
@@ -62,24 +61,6 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({
   );
   const [genre, setGenre] = useState(initialData?.genre || '');
 
-  const ageRatingOptions: SelectorOption[] = [
-    { value: 'all', label: '전체 관람가' },
-    { value: '12', label: '12세 관람가' },
-    { value: '15', label: '15세 관람가' },
-    { value: '18', label: '청소년 관람불가' },
-  ];
-
-  const genreOptions: SelectorOption[] = [
-    { value: 'action', label: '액션' },
-    { value: 'comedy', label: '코미디' },
-    { value: 'drama', label: '드라마' },
-    { value: 'horror', label: '공포' },
-    { value: 'romance', label: '로맨스' },
-    { value: 'sf', label: 'SF' },
-    { value: 'thriller', label: '스릴러' },
-    { value: 'animation', label: '애니메이션' },
-  ];
-
   const handleSubmit = () => {
     if (!title.trim() || !runtime || !ageRating || !synopsis.trim() || !genre) {
       return;
@@ -133,18 +114,16 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({
           <div className="col-12 col-lg-6">
             <div className="topic-management-modal__field">
               <label className="topic-management-modal__label">장르</label>
-              <Selector
-                options={genreOptions}
+              <TopicGenreSelector
                 value={genre}
                 onChange={setGenre}
-                placeholder="분류"
+                placeholder="장르"
               />
             </div>
 
             <div className="topic-management-modal__field">
               <label className="topic-management-modal__label">시청연령</label>
-              <Selector
-                options={ageRatingOptions}
+              <AgeRatingSelector
                 value={ageRating}
                 onChange={setAgeRating}
                 placeholder="시청연령"
@@ -167,12 +146,9 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({
 
         {/* 맨 아래: 액션 버튼 */}
         <div className="topic-management-modal__actions">
-          <Button variant="primary" onClick={handleSubmit} fullWidth>
+          <ActionButton action="confirm" onClick={handleSubmit}>
             확인
-          </Button>
-          <Button variant="secondary" onClick={handleClose} fullWidth>
-            취소
-          </Button>
+          </ActionButton>
         </div>
       </div>
     </Modal>

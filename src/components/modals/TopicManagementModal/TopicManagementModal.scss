@@ -4,6 +4,12 @@
   max-height: 70vh;
   overflow-y: auto;
   
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
   .row {
     margin-bottom: $spacing-3;
   }
@@ -60,6 +66,11 @@
     flex-direction: row;
     gap: $spacing-2;
     margin-top: $spacing-3;
+    
+    @media (max-height: 730px) {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
   }
 }
 

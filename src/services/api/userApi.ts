@@ -13,6 +13,12 @@ export type UserProfile = {
   updatedAt: string
 }
 
+export type SanctionRecord = {
+  id: number
+  reason: string
+  createdAt: string
+}
+
 export type UpdateProfileRequest = {
   name?: string
   nickname?: string
@@ -131,5 +137,11 @@ export async function forceWithdrawUser(userId: number, reason?: string) {
     data: { reason }
   })
   return res.data
+}
+
+/** 사용자 제제 이력 조회 (관리자) */
+export async function getUserSanctions(userId: number) {
+  const res = await moovy.get(`/admin/users/${userId}/sanctions`)
+  return res.data as SanctionRecord[]
 }
 

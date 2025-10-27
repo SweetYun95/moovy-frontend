@@ -94,7 +94,7 @@ export const StatusButton: React.FC<StatusButtonProps> = ({
 };
 
 export interface ActionButtonProps extends Omit<ButtonProps, 'variant' | 'size' | 'children'> {
-  action: 'edit' | 'delete' | 'cancel';
+  action: 'confirm' | 'edit' | 'delete' | 'cancel';
   text?: string;
   children?: React.ReactNode;
 }
@@ -109,9 +109,9 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   let defaultText: string;
 
   switch (action) {
-    case 'edit':
+    case 'confirm':
       variant = 'primary';
-      defaultText = '수정';
+      defaultText = '확인';
       break;
     case 'delete':
       variant = 'secondary';

@@ -1,5 +1,6 @@
 // moovy-frontend/src/services/api/inquiryApi.ts
 import moovy from './http'
+import type { SelectorOption } from '../../components/common/Selector/SelectorStyle'
 
 export type Inquiry = {
   id: number
@@ -53,4 +54,28 @@ export async function deleteInquiry(id: number) {
   const res = await moovy.delete(`/inquiry/${id}`)
   return res.data
 }
+
+/** 문의 카테고리 목록 조회 */
+export async function getInquiryCategories(): Promise<SelectorOption[]> {
+  try {
+    // TODO: API 엔드포인트가 준비되면 다음처럼 사용
+    // const res = await moovy.get('/inquiry/categories')
+    // return res.data
+    
+    // API가 없으면 기본값 반환
+    return INQUIRY_CATEGORY_OPTIONS
+  } catch (error) {
+    // 에러 시 기본값 반환
+    return INQUIRY_CATEGORY_OPTIONS
+  }
+}
+
+// 기본 카테고리 옵션 (API 에러 시 폴백)
+export const INQUIRY_CATEGORY_OPTIONS: SelectorOption[] = [
+  { value: 'general', label: '일반 문의' },
+  { value: 'technical', label: '기술 지원' },
+  { value: 'account', label: '계정 문의' },
+  { value: 'report', label: '신고' },
+  { value: 'other', label: '기타' },
+]
 

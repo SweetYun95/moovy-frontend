@@ -1,6 +1,16 @@
 @import '../../../styles/variables';
 
 .profile-edit-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 8px;
+  
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
   &__avatar {
     display: flex;
     justify-content: center;
@@ -42,6 +52,18 @@
     display: block;
   }
 
+  &__readonly-value {
+    background-color: rgba($white, 0.1);
+    border: 1px solid rgba($white, 0.3);
+    border-radius: $border-radius;
+    padding: $spacing-2;
+    color: $white;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+  }
+
   &__info {
     display: flex;
     justify-content: space-between;
@@ -73,8 +95,5 @@
     }
   }
 
-  &__actions {
-    flex-direction: column;
-  }
 }
 

@@ -45,8 +45,15 @@
     max-width: 95vw;
     
     @media (max-height: 730px) {
-      max-height: 90vh;
+      max-height: calc(100vh - 100px);
       overflow-y: auto;
+      padding: $spacing-3;
+
+      
+      .modal-content {
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
     }
   }
   
@@ -55,8 +62,15 @@
     max-width: 95vw;
     
     @media (max-height: 730px) {
-      max-height: 90vh;
+      max-height: calc(100vh - 100px);
       overflow-y: auto;
+      padding: $spacing-3;
+
+      
+      .modal-content {
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
     }
   }
 }
@@ -143,8 +157,10 @@
   }
   
   // 공통 액션 버튼 영역 스타일
-  [class$="__actions"]:not(.settings-modal__actions) {
-    @include flex-center;
+  [class$="__actions"]:not(.report-modal__actions):not(.confirm-modal__actions):not(.withdrawal-confirm-modal__actions) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     gap: $spacing-1;
   }
 }
@@ -204,6 +220,15 @@
     max-height: 100vh;
     border-radius: 0;
     overflow-y: auto;
-    padding: $spacing-3;
+    padding: $spacing-2;
+    
+    .modal-content {
+      padding-bottom: $spacing-1;
+      margin-bottom: 0;
+    }
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - 120px);
   }
 }
