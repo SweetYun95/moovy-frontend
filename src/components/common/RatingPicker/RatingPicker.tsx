@@ -44,7 +44,11 @@ export const RatingPicker: React.FC<RatingPickerProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        if (onOpenChange) {
+          onOpenChange(false);
+        } else {
+          setInternalIsOpen(false);
+        }
       }
     };
 
@@ -52,7 +56,7 @@ export const RatingPicker: React.FC<RatingPickerProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [onOpenChange]);
 
   const handleRatingSelect = (rating: number) => {
     setSelectedRating(rating);

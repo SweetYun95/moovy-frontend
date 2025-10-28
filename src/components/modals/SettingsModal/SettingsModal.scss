@@ -1,0 +1,77 @@
+@import '../../../styles/globals';
+@import '../../../styles/mixins';
+
+// 설정 모달 래퍼 (모달 컨테이너 스타일 오버라이드)
+.settings-modal-wrapper {
+  background-color: $white;
+  
+  .modal-title {
+    color: $gray1;
+  }
+  
+  .modal-close {
+    color: $gray1;
+  }
+}
+
+.settings-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
+  &__section {
+    margin-bottom: $spacing-3; // 24px
+
+  }
+
+  &__section-title {
+    @include text-base($body-normal-size, $font-weight-bold);
+    color: $gray3;
+    margin-bottom: $spacing-1; // 8px
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__item {
+    @include flex-between;
+    padding-bottom: $spacing-2; // 16px
+    @include form-width;
+  }
+
+  &__item-label {
+    @include text-base($body-normal-size, 500);
+    color: $black1;
+
+    &--danger {
+      color: $danger-color;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &__select {
+    background: $white;
+    border: 1px solid $primary-color;
+    border-radius: $border-radius;
+    padding: $spacing-1 $spacing-2; // 8px 12px
+    color: $gray1;
+    font-size: $body-small-size;
+    cursor: pointer;
+    outline: none;
+    transition: $transition-base;
+
+    &:focus {
+      border-color: $primary-color;
+    }
+  }
+}
+

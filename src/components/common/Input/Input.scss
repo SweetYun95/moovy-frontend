@@ -1,46 +1,131 @@
-// Moovy 컴포넌트 라이브러리 - 입력 컴포넌트
-// ==========================================
+// Moovy 컴포넌트 라이브러리 - 입력 컴포넌트 스타일
+// ================================================
 
-@import '../../../styles/globals';
+@import '../../../styles/_variables';
+@import '../../../styles/_mixins';
 
-// 커스텀 입력 스타일
+// 기본 입력 필드
 .moovy-input {
+  @include input-base;
   height: $spacing-6; // 56px
-  border: 1px solid white;
-  background-color: rgba($color: #ffffff, $alpha: 0.1);
-  color: $white;
-  border-radius: $border-radius;
-  padding: $padding-sm $padding-md; // 16px 24px
+  width: 100%;
+  padding: $spacing-2 $spacing-3; // 16px 24px
   font-size: $body-normal-size;
   line-height: $body-normal-line-height;
+  border: 1px solid $white;
+  background-color: rgba($white, 0.1);
+  border-radius: $border-radius;
+  color: $white;
   font-family: $font-family-base;
   transition: $transition-base;
-
-  &:focus {
-    border-color: $primary-color;
-    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
-    background-color: rgba($color: #ffffff, $alpha: 0.1);
-    outline: 0;
+  
+  // 입력 상태
+  &--success { 
+    border-color: $success-color; 
   }
-
-  &.moovy-input-success { border-color: $success-color; }
-  &.moovy-input-warning { border-color: $warning-color; }
-  &.moovy-input-error { border-color: $danger-color; }
+  
+  &--warning { 
+    border-color: $warning-color; 
+  }
+  
+  &--error { 
+    border-color: $danger-color; 
+  }
+  
+  // 읽기 전용
+  &--readonly {
+    background-color: $black1;
+    border-color: $gray1;
+    cursor: default;
+    
+    &:focus {
+      border-color: $gray1;
+      box-shadow: none;
+    }
+  }
+  
+  // 라이트 테마
+  &.light-theme {
+    height: 36px;
+    border: 1px solid $gray4;
+    background-color: $white;
+    color: $gray1;
+    border-radius: $border-radius-lg;
+    padding: $spacing-2 $spacing-3;
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+    cursor: pointer;
+    transition: all 0.15s 
+ease-in-out;
+    
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+    
+    &--success {
+      border-color: $success-color;
+    }
+    
+    &--warning {
+      border-color: $warning-color;
+    }
+    
+    &--error {
+      border-color: $danger-color;
+    }
+  }
+  
+  // 자동완성 스타일 제거
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba($white, 0.1) inset;
+    -webkit-text-fill-color: $white;
+    background-color: rgba($white, 0.1);
+    background-image: none;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  
+  // 라이트 테마 자동완성
+  &.light-theme:-webkit-autofill,
+  &.light-theme:-webkit-autofill:hover,
+  &.light-theme:-webkit-autofill:focus,
+  &.light-theme:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px $white inset;
+    -webkit-text-fill-color: $black1;
+    background-color: $white;
+  }
 }
 
-// 아이콘을 위한 입력 래퍼
+// 입력 래퍼 (아이콘용)
 .moovy-input-wrapper {
   position: relative;
   display: inline-block;
-  width: 100%;
-
+  @include form-width;
+  
   .moovy-input {
-    padding-right: $spacing-6; // 56px - Make space for icon
+    padding-right: $spacing-6; // 아이콘 공간 확보
   }
-
+  
+  &.light-theme {
+    .moovy-input {
+      border: 1px solid $gray3;
+      background-color: $white;
+      color: $black1;
+      
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+    }
+  }
+  
   .password-toggle-icon {
     position: absolute;
-    right: $spacing-2; // 16px
+    right: $spacing-2;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -48,101 +133,94 @@
     color: $primary-color;
     font-size: $icon-md;
     cursor: pointer;
-    padding: $padding-xs; // 8px
+    padding: $spacing-1;
     transition: $transition-base;
     z-index: 2;
-
+    
     &:hover {
       color: $white;
     }
-
+    
     &:focus {
       outline: none;
       color: $primary-color;
     }
   }
-
+  
+  &.light-theme .password-toggle-icon {
+    color: $gray1;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+  
   .right-button-wrapper {
     position: absolute;
-    right: $margin-sm; // 16px
+    right: $spacing-2;
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
   }
 }
 
-// 폼 라벨
-label {
-  font-weight: $font-weight-bold;
-  font-size: $body-small-size;
-  line-height: $body-small-line-height;
-  font-family: $font-family-base;
-  margin-bottom: $margin-xs; // 8px
-}
-
-// 폼 유효성 검사 메시지
-.form-text {
-  font-size: $body-small-size;
-  line-height: $body-small-line-height;
-  font-family: $font-family-base;
-  margin-top: $margin-xs; // 8px
-
-  &.text-success {
-    color: $success-color;
+// 텍스트 영역
+.moovy-textarea {
+  @include input-base;
+  width: 100%;
+  min-height: $spacing-9; // 96px
+  padding: $spacing-2 $spacing-3; // 16px 24px
+  font-size: $body-normal-size;
+  line-height: $body-normal-line-height;
+  resize: vertical;
+  margin-bottom: 0;
+  
+  // 텍스트 영역 상태
+  &--success { 
+    border-color: $success-color; 
   }
-
-  &.text-warning {
-    color: $warning-color;
+  
+  &--warning { 
+    border-color: $warning-color; 
   }
-
-  &.text-danger {
-    color: $danger-color;
+  
+  &--error { 
+    border-color: $danger-color; 
   }
-}
-
-// 라이트 테마
-.moovy-input.light-theme {
-  height: 2.25rem; // 36px
-  border: 1px solid $gray4;
-  background-color: $white;
-  color: $gray1;
-  border-radius: $border-radius-lg;
-  padding: $padding-xs $padding-sm; // 8px 16px
-  font-size: $body-small-size;
-  line-height: $body-small-line-height;
-  font-family: $font-family-base;
-  transition: $transition-base;
-
-  &:focus {
-    border-color: $primary-color;
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
-    background-color: $white;
-    outline: 0;
-  }
-
-  &::placeholder {
-    color: $gray3;
-  }
-
-  &.moovy-input-success { border-color: $success-color; }
-  &.moovy-input-warning { border-color: $warning-color; }
-  &.moovy-input-error { border-color: $danger-color; }
-}
-
-.moovy-input-wrapper.light-theme {
-  .moovy-input {
-    padding-right: $spacing-6; // 56px - Make space for icon
-  }
-
-  .password-toggle-icon {
-    color: $primary-color;
-
-    &:hover {
-      color: $gray2;
-    }
-
+  
+  // 읽기 전용
+  &--readonly {
+    background-color: $black1;
+    border-color: $gray1;
+    cursor: default;
+    resize: none;
+    
     &:focus {
-      color: $primary-color;
+      border-color: $gray1;
+      box-shadow: none;
     }
   }
 }
+
+// 텍스트 영역 래퍼
+.moovy-textarea-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  
+  .textarea-counter {
+    display: block;
+    text-align: right;
+    font-size: $body-small-size;
+    color: $gray3;
+    margin-top: $spacing-1;
+  }
+}
+
+// 전체 너비 클래스
+.textarea-full-width {
+  max-width: none;
+  width: 100%;
+}
+
+

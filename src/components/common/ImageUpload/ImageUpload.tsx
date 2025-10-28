@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
 import './ImageUpload.scss';
-import { Icon } from '@iconify/react';
-
-/**
- * ImageUpload Props:
- * - images?: string[] (업로드된 이미지 URL 배열)
- * - onChange?: (images: string[]) => void (이미지 변경 핸들러)
- * - maxImages?: number (최대 이미지 개수)
- * - className?: string (추가 CSS 클래스)
- * - id?: string (요소 ID)
- */
 
 export interface ImageUploadProps {
   images?: string[];
@@ -57,7 +47,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className={`moovy-image-upload ${className}`} id={id}>
       <div className="image-upload-header">
         <label htmlFor={`image-input-${id}`} className="upload-label">
-          <Icon icon="mdi:image" />
+          <i className="fas fa-image"></i>
           이미지 추가
         </label>
         <input
@@ -80,14 +70,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               className="remove-image-btn"
               onClick={() => handleRemoveImage(index)}
             >
-              <Icon icon="mdi:close" />
+              <i className="fas fa-times"></i>
             </button>
           </div>
         ))}
         
         {uploadedImages.length < maxImages && (
           <div className="image-placeholder">
-            <Icon icon="mdi:plus" />
+            <i className="fas fa-plus"></i>
             <span>이미지 추가</span>
           </div>
         )}

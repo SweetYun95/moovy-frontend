@@ -58,7 +58,6 @@ export const Textarea: React.FC<TextareaProps> = ({
   };
 
   const textareaClasses = [
-    'form-control',
     'moovy-textarea',
     state && `moovy-textarea-${state}`,
     className,

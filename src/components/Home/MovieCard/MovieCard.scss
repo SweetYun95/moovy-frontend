@@ -11,7 +11,7 @@
   width: 100%;
   aspect-ratio: 5/8; // 5:8 비율로 고정 (가로 60, 세로 96)
   position: relative;
-  margin-bottom: $margin-sm; // 16px
+  margin-bottom: $spacing-2; // 16px
   
   &:hover {
     transform: translateY(-4px);
@@ -145,7 +145,7 @@
     font-size: $body-small-size; // 14px
     font-weight: $font-weight-normal;
     color: $gray4;
-    margin: 0 0 $spacing-3 0; // 0 0 24px 0
+    margin-bottom: $spacing-3; //24px
     line-height: $body-small-line-height;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -164,7 +164,7 @@
       opacity: 1;
       transform: translateY(0);
       height: auto;
-      margin: 0 0 $spacing-3 0;
+      margin-bottom: $spacing-3;
       -webkit-line-clamp: 2;
     }
     

@@ -1,0 +1,109 @@
+// Moovy 컴포넌트 라이브러리 - 기본 스타일
+// ======================================
+
+@import 'variables';
+@import 'mixins';
+
+// 리셋 및 기본 스타일
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $black1;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $white;
+  margin: 0;
+  padding: 0;
+}
+
+// 공통 폼 요소 스타일
+.form-control,
+.btn,
+.list-group-item,
+.card,
+.dropdown-menu {
+  background-color: $black3;
+  color: $white;
+  border-color: $gray1;
+}
+
+.form-control::placeholder {
+  color: $gray2;
+}
+
+// 공통 버튼 아웃라인 스타일
+.btn-outline-secondary,
+.btn-outline-dark,
+.btn-outline-danger,
+.btn-outline-success,
+.btn-outline-info {
+  background-color: transparent;
+  color: $white;
+  border-color: $gray2;
+  
+  &:hover {
+    border-color: $white;
+  }
+}
+
+// 공통 텍스트 유틸리티
+.text-primary { color: $primary-color; }
+.text-success { color: $success-color; }
+.text-danger { color: $danger-color; }
+.text-warning { color: $warning-color; }
+.text-muted { color: $gray2; }
+
+// 공통 폼 라벨
+label {
+  @include text-base($body-small-size, $font-weight-bold);
+  margin-bottom: $spacing-1;
+}
+
+// 공통 폼 유효성 검사 메시지
+.form-text {
+  @include text-base($body-small-size);
+  margin-top: $spacing-1;
+}
+
+// 공통 컴포넌트 데모 컨테이너
+.component-demo {
+  @include card-base;
+  margin-bottom: $spacing-4;
+  
+  .form-group {
+    margin-bottom: $spacing-2;
+  }
+}
+
+// 커스텀 스크롤바 스타일
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $black1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray1;
+  border-radius: 4px;
+  
+  &:hover {
+    background: $gray2;
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: $black1;
+}
+
+// Firefox용 스크롤바 스타일
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $gray1 $black1;
+}

@@ -1,26 +1,24 @@
 import React, { useState, useRef } from 'react';
-import { Button } from '../../common/Button/Button';
+import { Button } from '../../common/Button/ButtonStyle';
 import { Icon } from '@iconify/react';
-// import moovyLogo from '../../../assets/moovy-logo.svg';
+import moovyLogo from '../../../assets/moovy-logo.svg';
 import './Header.scss';
 
-/**
- * Header Props:
- * - onSearchChange?: (value: string) => void (검색어 변경 핸들러)
- * - onSearch?: (value: string) => void (검색 실행 핸들러)
- * - onLoginClick?: () => void (로그인 버튼 클릭 핸들러)
- * - onSignupClick?: () => void (회원가입 버튼 클릭 핸들러)
- * - logoUrl?: string (로고 이미지 URL)
- * - searchPlaceholder?: string (검색창 플레이스홀더)
- * - className?: string (추가 CSS 클래스)
- */
+/*
+Header Props:
+- onSearchChange?: (value: string) => void (검색어 변경 핸들러)
+- onSearch?: (value: string) => void (검색 실행 핸들러)
+- onLoginClick?: () => void (로그인 버튼 클릭 핸들러)
+- onSignupClick?: () => void (회원가입 버튼 클릭 핸들러)
+- searchPlaceholder?: string (검색창 플레이스홀더)
+- className?: string (추가 CSS 클래스)
+*/
 
 export interface HeaderProps {
   onSearchChange?: (value: string) => void;
   onSearch?: (value: string) => void;
   onLoginClick?: () => void;
   onSignupClick?: () => void;
-  logoUrl?: string;
   searchPlaceholder?: string;
   className?: string;
 }
@@ -30,7 +28,6 @@ export const Header: React.FC<HeaderProps> = ({
   onSearch,
   onLoginClick,
   onSignupClick,
-  logoUrl,
   searchPlaceholder = '영화명을 입력해주세요',
   className = '',
 }) => {
@@ -77,7 +74,17 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="row align-items-center py-3">
           <div className="col-auto">
             <div className="moovy-header__logo">
-              <img src={logoUrl || moovyLogo} alt="MOOVY" className="moovy-header__logo-image" />
+              <img 
+                src={moovyLogo} 
+                alt="MOOVY" 
+                className="moovy-header__logo-image"
+                onError={(e) => {
+                  // 로고 로드 실패 시 텍스트로 대체
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.add('show');
+                }}
+              />
+              <span className="moovy-header__logo-text" style={{ display: 'none' }}>MOOVY</span>
             </div>
           </div>
           

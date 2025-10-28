@@ -1,0 +1,76 @@
+@import '../../../styles/variables';
+
+.topic-management-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
+  .row {
+    margin-bottom: $spacing-3;
+  }
+
+  &__field {
+    margin-bottom: $spacing-3;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    // 이미지 업로드 크기 조정
+    .moovy-image-upload {
+      .image-upload-header {
+        margin-bottom: $spacing-2;
+
+        .upload-label {
+          padding: 0;
+          background-color: transparent;
+          border: none;
+          
+          &:hover {
+            background-color: transparent;
+            border-color: transparent;
+          }
+        }
+      }
+
+      .image-preview-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: $spacing-1;
+
+        .image-preview-item,
+        .image-placeholder {
+          aspect-ratio: 3/4;
+        }
+
+        .image-placeholder {
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-2;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-2;
+    margin-top: $spacing-3;
+    
+    @media (max-height: 730px) {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+}
+

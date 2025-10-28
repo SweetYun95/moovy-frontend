@@ -1,0 +1,38 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.report-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: $spacing-1;
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-3;
+
+    h3 {
+      @include flex-center;
+      gap: $spacing-1;
+    }
+  }
+
+  &__icon {
+    color: $danger-color;
+    font-size: $icon-md;
+  }
+
+  &__label {
+    @include text-base($body-normal-size, $font-weight-bold);
+    display: block;
+    margin-bottom: $spacing-1;
+  }
+
+  &__field {
+    margin-bottom: $spacing-3;
+  }
+
+  &__actions {
+    @include flex-center;
+  }
+}
+

@@ -2,22 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Selector.scss';
 import { Icon } from '@iconify/react';
 
-/**
- * Selector Props:
- * - options: SelectorOption[] (선택 옵션 배열)
- * - value?: string (선택된 값)
- * - onChange?: (value: string) => void (값 변경 핸들러)
- * - placeholder?: string (플레이스홀더 텍스트)
- * - disabled?: boolean (비활성화 상태)
- * - className?: string (추가 CSS 클래스)
- * - id?: string (요소 ID)
- * - name?: string (요소 이름)
- * - state?: 'success' | 'warning' | 'error' (선택 상태)
- * - isOpen?: boolean (드롭다운 열림 상태)
- * - onToggle?: () => void (드롭다운 토글 핸들러)
- * - onClose?: () => void (드롭다운 닫기 핸들러)
- */
-
 export interface SelectorOption {
   value: string;
   label: string;

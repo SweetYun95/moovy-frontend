@@ -2,11 +2,6 @@ import React from 'react';
 import './QuickMenu.scss';
 import { Icon } from '@iconify/react';
 
-/**
- * QuickMenu Props:
- * - className?: string (추가 CSS 클래스)
- */
-
 export interface QuickMenuProps {
   className?: string;
 }
