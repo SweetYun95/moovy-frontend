@@ -1,16 +1,17 @@
+// moovy-frontend/src/app/rootReducer.ts
 import { combineReducers } from '@reduxjs/toolkit'
 
 // slices
 import auth from '../features/auth/authSlice'
 import ui from '../features/ui/uiSlice'
+import comments from '../features/reply/commentSlice'
 import replies from '../features/reply/replySlice'
-
-// 필요 시 여기에 계속 추가
 // import movies from '@/features/movies/moviesSlice'
 
 const rootReducer = combineReducers({
    auth,
    ui,
+   comments,
    replies,
    // movies,
 })
