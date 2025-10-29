@@ -1,33 +1,32 @@
-
 // Brand Colors
-$primary-color: #7B61FF;
-$secondary-color: #FF3C67;
-$success-color: #00C896;
-$danger-color: #FF4C4C;
-$warning-color: #FFD60A;
-$info-color: #00AEEF;
+$primary-color: #7b61ff;
+$secondary-color: #ff3c67;
+$success-color: #00c896;
+$danger-color: #ff4c4c;
+$warning-color: #ffd60a;
+$info-color: #00aeef;
 
 // Neutral Palette (Dark Theme)
 $black1: #121212; // background
-$black2: #1E1E1E;
-$black3: #2C2C2C;
-$gray1: #3A3A3A;
+$black2: #1e1e1e;
+$black3: #2c2c2c;
+$gray1: #3a3a3a;
 $gray2: #707070;
-$gray3: #A1A1A1;
-$gray4: #D9D9D9;
-$gray5: #F5F5F5;
-$white: #FFFFFF;
+$gray3: #a1a1a1;
+$gray4: #d9d9d9;
+$gray5: #f5f5f5;
+$white: #ffffff;
 
 // Legacy aliases (for existing references)
 $light-color: $gray5;
 $dark-color: $gray1;
 
 // Social Colors
-$kakao-yellow: #FFD60A;
-$google-white: #FFFFFF;
+$kakao-yellow: #ffd60a;
+$google-white: #ffffff;
 
 // Typography
-$font-family-base: 'Pretendard', sans-serif;
+$font-family-base: "Pretendard", sans-serif;
 $font-weight-normal: 400;
 $font-weight-bold: 700;
 
@@ -62,27 +61,27 @@ $font-size-base: $body-normal-size;
 // ==========================================
 
 // Base spacing unit
-$spacer: 1rem;  //16px
+$spacer: 1rem; //16px
 
 // Spacing Levels (8px, 16px, 24px, 32px, 40px, 56px, 72px, 80px, 96px, 120px)
-$spacing-1: 0.5rem;   // 8px
-$spacing-2: 1rem;     // 16px  
-$spacing-3: 1.5rem;   // 24px
-$spacing-4: 2rem;     // 32px
-$spacing-5: 2.5rem;   // 40px
-$spacing-6: 3.5rem;   // 56px
-$spacing-7: 4.5rem;   // 72px
-$spacing-8: 5rem;     // 80px
-$spacing-9: 6rem;     // 96px
-$spacing-10: 7.5rem;  // 120px
+$spacing-1: 0.5rem; // 8px
+$spacing-2: 1rem; // 16px
+$spacing-3: 1.5rem; // 24px
+$spacing-4: 2rem; // 32px
+$spacing-5: 2.5rem; // 40px
+$spacing-6: 3.5rem; // 56px
+$spacing-7: 4.5rem; // 72px
+$spacing-8: 5rem; // 80px
+$spacing-9: 6rem; // 96px
+$spacing-10: 7.5rem; // 120px
 
 // Border
 // Base radius used by most components
-$border-radius: 0.5rem;  //8px
+$border-radius: 0.5rem; //8px
 
 // Size variants
 $border-radius-sm: 0.25rem; // 4px
-$border-radius-lg: 1rem;  //16px
+$border-radius-lg: 1rem; //16px
 
 // Shadows
 $box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);

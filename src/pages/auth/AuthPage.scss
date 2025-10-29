@@ -1,0 +1,60 @@
+@import "../../styles/globals.scss";
+
+.container {
+  display: flex;
+  justify-content: center; // 가로 가운데
+  align-items: center; // 세로 가운데
+  min-height: 100vh; // 화면 전체 높이 차지
+}
+
+#loginform,
+#registerform {
+  width: 100%;
+  max-width: 646px;
+  background-color: rgba(18, 18, 18, 0.8);
+  border-radius: 16px;
+  padding: $spacing-7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+
+  .form-group {
+    margin: 0 auto;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    &.form-item {
+      width: 100%;
+    }
+  }
+
+  .row {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.auth-link {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-link a {
+  text-decoration: underline;
+  color: inherit;
+  &:not(:last-child)::after {
+    content: "|";
+    margin: 15px;
+  }
+}
+
+.gap:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}

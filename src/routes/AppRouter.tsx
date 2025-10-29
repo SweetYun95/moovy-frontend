@@ -1,13 +1,13 @@
 // moovy-frontend/src/routes/AppRouter.tsx
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 
 // Guards
-import GuestOnly from './guards/GuestOnly.tsx'
-import UserOnly from './guards/UserOnly.tsx'
-import AdminOnly from './guards/AdminOnly.tsx'
+import GuestOnly from "./guards/GuestOnly.tsx";
+import UserOnly from "./guards/UserOnly.tsx";
+import AdminOnly from "./guards/AdminOnly.tsx";
 
 // 임시 플레이스홀더 (화면 출력 없음)
-const Placeholder = () => null
+const Placeholder = () => null;
 // 페이지 import 예정
 
 export default function AppRouter() {
@@ -31,5 +31,5 @@ export default function AppRouter() {
         <Route path="__admin__" element={<Placeholder />} />
       </Route>
     </Routes>
-  )
+  );
 }

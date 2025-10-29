@@ -11,6 +11,7 @@ import TestApp from "./TestApp";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/globals.scss";
+import LoginPage from "./pages/auth/AuthPage";
 
 initGSAP();
 
@@ -19,7 +20,8 @@ createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <BrowserRouter>
         <TestApp />
+        <LoginPage />
       </BrowserRouter>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 );
