@@ -1,17 +1,19 @@
-import { combineReducers } from "@reduxjs/toolkit";
+import { combineReducers } from '@reduxjs/toolkit'
 
 // slices
-import auth from "@/features/auth/authSlice";
-import ui from "@/features/ui/uiSlice";
+import auth from '../features/auth/authSlice'
+import ui from '../features/ui/uiSlice'
+import replies from '../features/reply/replySlice'
 
 // 필요 시 여기에 계속 추가
 // import movies from '@/features/movies/moviesSlice'
 
 const rootReducer = combineReducers({
-  auth,
-  ui,
-  // movies,
-});
+   auth,
+   ui,
+   replies,
+   // movies,
+})
 
-export type RootReducer = ReturnType<typeof rootReducer>;
-export default rootReducer;
+export type RootReducer = ReturnType<typeof rootReducer>
+export default rootReducer
