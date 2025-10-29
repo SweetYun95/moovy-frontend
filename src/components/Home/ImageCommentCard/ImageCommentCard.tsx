@@ -1,3 +1,4 @@
+// moovy-frontend/src/components/Home/ImageCommentCard/ImageCommentCard.tsx
 import React, { useState, useEffect } from 'react';
 import './ImageCommentCard.scss';
 import { Icon } from '@iconify/react';
