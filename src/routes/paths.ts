@@ -3,6 +3,7 @@
 // 라우트 상수(필요시 여기서만 수정)
 export const PATHS = {
    root: '/',
+   home: '/',
    login: '/login',
    register: '/register',
    userHome: '/user',
@@ -10,6 +11,12 @@ export const PATHS = {
 
    movies: '/movies',
    movieDetail: (id: string | number) => `/movies/${id}`,
+
+   contents: '/contents',
+   contentDetail: (id: string | number) => `/contents/${id}`,
+
+   comments: '/comments',
+   test: '/test',
 
    reviews: '/reviews',
    reviewWrite: '/reviews/new',

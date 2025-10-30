@@ -1,5 +1,10 @@
 // moovy-frontend/src/routes/AppRouter.tsx
 import { Routes, Route } from 'react-router-dom'
+import MainPage from '@/pages/Home/MainPage'
+import ContentDetailPage from '@/pages/movies/ContentDetailPage'
+import CommentsListPage from '@/pages/reviews/CommentsListPage'
+import TestPage from '@/pages/TestPage'
+import { PATHS } from './paths'
 
 // Guards
 import GuestOnly from './guards/GuestOnly.tsx'
@@ -15,8 +20,17 @@ export default function AppRouter() {
     <Routes>
       {/* 공개/게스트 영역 */}
       <Route element={<GuestOnly />}>
-        {/* TODO: 나중에 실제 페이지 붙이기 */}
-        <Route path="__guest__" element={<Placeholder />} />
+        {/* / → MainPage */}
+        <Route path={PATHS.home} element={<MainPage />} />
+
+        {/* /contents/:id → ContentDetailPage */}
+        <Route path={PATHS.contentDetail(':id')} element={<ContentDetailPage />} />
+
+        {/* /comments → CommentsListPage */}
+        <Route path={PATHS.comments} element={<CommentsListPage />} />
+        
+        {/* /test → TestPage (component demo) */}
+        <Route path={PATHS.test} element={<TestPage />} />
       </Route>
 
       {/* 로그인 유저 전용 */}

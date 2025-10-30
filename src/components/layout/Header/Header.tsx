@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
   return (
     <header className={`moovy-header ${className}`}>
-      <div className="container-fluid px-2">
+      <div className="container px-2">
         <div className="row align-items-center py-3">
           <div className="col-auto">
             <div className="moovy-header__logo">
