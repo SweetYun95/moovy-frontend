@@ -10,6 +10,11 @@ export type Topic = {
   synopsis: string
   releaseDate: string
   genre: string
+  category?: string  // 영화, 드라마, 애니메이션 등
+  country?: string   // 한국, 미국, 영국 등
+  year?: string      // releaseDate에서 추출
+  imageUrl?: string  // images[0]
+  overallRating?: number  // 코멘트 평균
   createdAt: string
   updatedAt: string
 }
@@ -31,6 +36,8 @@ export type CreateTopicRequest = {
     day: string
   }
   genre: string
+  category?: string  // 영화, 드라마, 애니메이션 등
+  country?: string   // 한국, 미국, 영국 등
 }
 
 export type UpdateTopicRequest = {
@@ -45,6 +52,8 @@ export type UpdateTopicRequest = {
     day: string
   }
   genre?: string
+  category?: string  // 영화, 드라마, 애니메이션 등
+  country?: string   // 한국, 미국, 영국 등
 }
 
 /** 토픽 목록 조회 */

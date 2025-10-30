@@ -7,13 +7,14 @@ import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import { 
   updateProfile, 
   checkNickname, 
-  getProfile,
   getAdminUserProfile,
   updateAdminUserProfile,
   forceWithdrawUser,
   getUserSanctions,
   type UserProfile
 } from '../../../services/api/userApi';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { setUser } from '../../../features/auth/authSlice';
 import './ProfileEditModal.scss';
 
 export interface ProfileEditModalComponentProps {
@@ -188,7 +189,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">이름</label>
+              <label className="form-label">이름</label>
               <Input placeholder="유저 이름" value={name} onChange={setName} />
             </div>
           </div>
@@ -197,7 +198,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">닉네임</label>
+              <label className="form-label">닉네임</label>
               <Input
                 placeholder="유저 닉네임"
                 value={nickname}
@@ -220,7 +221,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">이메일</label>
+              <label className="form-label">이메일</label>
               <Input
                 type="email"
                 placeholder="유저 이메일"
@@ -236,7 +237,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="profile-edit-modal__field">
-                  <label className="profile-edit-modal__label">비밀번호</label>
+                  <label className="form-label">비밀번호</label>
                   <Input
                     type="password"
                     placeholder="비밀번호를 입력하세요."
@@ -250,7 +251,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="profile-edit-modal__field">
-                  <label className="profile-edit-modal__label">비밀번호 확인</label>
+                  <label className="form-label">비밀번호 확인</label>
                   <Input
                     type="password"
                     placeholder="비밀번호를 다시 입력하세요."
@@ -308,41 +309,17 @@ export default ProfileEditModal;
 
 // Component wrapper with API integration - 일반 사용자용
 export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: ProfileEditModalComponentProps) {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.auth);
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState<{
-    name: string;
-    nickname: string;
-    email: string;
-    profileImage?: string;
-  } | null>(null);
 
-  // 사용자 프로필 데이터 로드
-  useEffect(() => {
-    if (isOpen) {
-      loadProfile();
-    }
-  }, [isOpen]);
-
-  const loadProfile = async () => {
-    try {
-      const data = await getProfile();
-      setUserData({
-        name: data.name,
-        nickname: data.nickname,
-        email: data.email,
-        profileImage: data.avatarUrl,
-      });
-    } catch (error) {
-      console.error('프로필 로드 실패:', error);
-      // TestApp용 mock 데이터
-      setUserData({
-        name: '홍길동',
-        nickname: '길동이',
-        email: 'gildong@example.com',
-        profileImage: undefined,
-      });
-    }
-  };
+  // Redux store의 user 데이터 사용
+  const userData = user ? {
+    name: user.name || '',
+    nickname: user.nickname || '',
+    email: user.email || '',
+    profileImage: user.avatarUrl,
+  } : null;
 
   const handleSubmit = async (data: {
     name: string;
@@ -362,7 +339,13 @@ export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: Profil
       if (data.password) {
         updateData.password = data.password;
       }
-      await updateProfile(updateData);
+      const updatedUser = await updateProfile(updateData);
+      
+      // Redux store 업데이트
+      if (updatedUser && user) {
+        dispatch(setUser({ ...user, ...updatedUser }));
+      }
+      
       onClose();
       if (onSuccess) {
         onSuccess();
@@ -385,17 +368,13 @@ export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: Profil
     }
   };
 
-  if (!userData) {
-    return null; // 로딩 중
-  }
-
   return (
     <ProfileEditModal
       isOpen={isOpen}
       onClose={onClose}
       mode="user"
       onSubmit={handleSubmit}
-      userData={userData}
+      userData={userData || { name: '', nickname: '', email: '', profileImage: undefined }}
       onCheckNickname={handleCheckNickname}
     />
   );

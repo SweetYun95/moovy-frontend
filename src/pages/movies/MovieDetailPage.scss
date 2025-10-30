@@ -8,6 +8,10 @@
   align-items: start;
 }
 
+.detail--data {
+  display: flex;
+  justify-content: space-between;
+}
 .ratescore {
   display: flex;
   gap: $spacing-5;
@@ -22,4 +26,37 @@
   .score--avg h4 {
     color: $primary-color;
   }
+}
+
+.action {
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-2;
+}
+
+.detail--mycomment {
+  display: flex;
+  flex-direction: column;
+  span {
+    margin-left: $spacing-2;
+    color: $gray2;
+  }
+  .comment {
+    padding: 0 $spacing-3;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.movie-comment {
+  display: flex;
+  flex-direction: column;
+  .comment--card {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-4;
+  }
+}
+.comment--card .col-md-3 {
+  padding: 0;
 }

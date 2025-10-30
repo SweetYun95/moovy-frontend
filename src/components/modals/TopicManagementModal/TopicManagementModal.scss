@@ -1,8 +1,9 @@
 @import '../../../styles/variables';
 
 .topic-management-modal {
-  max-height: 70vh;
-  overflow-y: auto;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   
   @media (max-height: 730px) {
     max-height: calc(100vh - 100px);
@@ -12,10 +13,13 @@
   
   .row {
     margin-bottom: $spacing-3;
+    margin-left: 0;  // 그리드 좌우 여백으로 인한 넘침 방지
+    margin-right: 0;
   }
 
   &__field {
     margin-bottom: $spacing-3;
+    min-width: 0; // 내부 요소가 부모 너비를 넘지 않도록
 
     &:last-of-type {
       margin-bottom: 0;
@@ -24,8 +28,7 @@
     // 이미지 업로드 크기 조정
     .moovy-image-upload {
       .image-upload-header {
-        margin-bottom: $spacing-2;
-
+        all: unset;
         .upload-label {
           padding: 0;
           background-color: transparent;
@@ -41,6 +44,7 @@
       .image-preview-grid {
         grid-template-columns: repeat(5, 1fr);
         gap: $spacing-1;
+        max-width: 100%;
 
         .image-preview-item,
         .image-placeholder {
@@ -65,10 +69,9 @@
     display: flex;
     flex-direction: row;
     gap: $spacing-2;
-    margin-top: $spacing-3;
     
     @media (max-height: 730px) {
-      margin-bottom: 0;
+      margin-bottom: $spacing-3;
       padding-bottom: 0;
     }
   }

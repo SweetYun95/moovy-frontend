@@ -7,6 +7,7 @@ export type Provider = 'local' | 'google' | 'kakao'
 export type User = {
    id: number
    name: string
+   nickname?: string
    email?: string
    role: Role
    provider?: Provider

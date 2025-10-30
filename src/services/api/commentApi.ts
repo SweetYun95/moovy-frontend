@@ -1,32 +1,18 @@
 // moovy-frontend/src/services/api/commentApi.ts
 import moovy from './http'
 
-export type ImageCommentCard = {
-   id: number
-   username: string
-   movieTitle: string
-   comment: string
-   rating: number
-   likes: number
-   replies: number
-}
-
 export type CommentCard = {
-   id: number
-   username: string
-   comment: string
-   rating: number
-   likes: number
-   replies: number
+  id: number
+  username: string
+  contentId?: number
+  comment: string
+  rating: number
+  likes: number
+  replies: number
 }
 
-/** 이미지 포함 코멘트 카드 목록 조회 */
-export async function getImageCommentCards() {
-   const res = await moovy.get('/comment/image/list')
-   return res.data as ImageCommentCard[]
-}
+/** 코멘트 카드 목록 조회 */
 
-/** 간단한 코멘트 카드 목록 조회 */
 export async function getCommentCards() {
    const res = await moovy.get('/comment/list')
    return res.data as CommentCard[]

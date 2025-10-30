@@ -6,15 +6,17 @@ import auth from '../features/auth/authSlice'
 import ui from '../features/ui/uiSlice'
 import comments from '../features/reply/commentSlice'
 import replies from '../features/reply/replySlice'
-// import movies from '@/features/movies/moviesSlice'
+import content from "@/features/content/contentSlice";
+
 
 const rootReducer = combineReducers({
    auth,
    ui,
    comments,
    replies,
-   // movies,
-})
+   content,
+});
+
 
 export type RootReducer = ReturnType<typeof rootReducer>
 export default rootReducer

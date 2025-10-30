@@ -83,7 +83,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="inquiry-modal__field">
-              <label className="inquiry-modal__label">분류</label>
+              <label className="form-label">분류</label>
               {mode === 'admin' ? (
                 <div className="inquiry-modal__readonly-value">{getCategoryLabel(inquiryData?.category || '')}</div>
               ) : (
@@ -100,7 +100,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="inquiry-modal__field">
-              <label className="inquiry-modal__label">문의 내용</label>
+              <label className="form-label">문의 내용</label>
               {mode === 'admin' ? (
                 <div className="inquiry-modal__readonly-value">{inquiryData?.content}</div>
               ) : (
@@ -121,7 +121,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
           <div className="row">
             <div className="col-12">
               <div className="inquiry-modal__field">
-                <label className="inquiry-modal__label">답변 내용</label>
+                <label className="form-label">답변 내용</label>
                 <Textarea
                   placeholder="답변내용을 적어주세요."
                   value={reply}

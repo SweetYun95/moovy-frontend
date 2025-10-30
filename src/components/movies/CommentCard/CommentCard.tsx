@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import './CommentCard.scss';
-import { Icon } from '@iconify/react';
-import { getCommentCards, type CommentCard as CommentCardType } from '../../../services/api/commentApi';
+import React from "react";
+import { Icon } from "@iconify/react";
+
+import "./CommentCard.scss";
 
 export interface CommentCardProps {
   username: string;
@@ -22,12 +22,30 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   likes,
   replies,
   profileImageUrl,
-  className = '',
+  className = "",
   onLikeClick,
   onReplyClick,
 }) => {
+  const [isLiked, setIsLiked] = React.useState(false);
+  const [likeCount, setLikeCount] = React.useState(likes);
+
+  const handleLikeClick = () => {
+    setIsLiked(!isLiked);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+    if (onLikeClick) {
+      onLikeClick();
+    }
+  };
+
   const renderStarIcon = () => {
-    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '#FFD60A' }} />;
+    return (
+      <Icon
+        icon="mdi:star"
+        width="16"
+        height="16"
+        style={{ color: "#FFD60A" }}
+      />
+    );
   };
 
   return (
@@ -35,8 +53,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       <div className="comment-card__header">
         <div className="comment-card__profile">
           {profileImageUrl ? (
-            <img 
-              src={profileImageUrl} 
+            <img
+              src={profileImageUrl}
               alt={username}
               className="comment-card__profile-image"
             />
@@ -52,36 +70,41 @@ export const CommentCard: React.FC<CommentCardProps> = ({
           <span className="comment-card__rating-text">{rating}</span>
         </div>
       </div>
-      
+
       <div className="comment-card__content">
         <p className="comment-card__text">{comment}</p>
       </div>
-      
+
       <div className="comment-card__actions">
-        <button 
+        <span
           className="comment-card__action-button comment-card__action-button--like"
-          onClick={onLikeClick}
+          aria-hidden="true"
         >
-          <span>좋아요 {likes}개</span>
-        </button>
-        
-        <button 
+          <span>좋아요 {likeCount}개</span>
+        </span>
+
+        <button
           className="comment-card__action-button comment-card__action-button--reply"
           onClick={onReplyClick}
         >
           <span>댓글 {replies}</span>
         </button>
       </div>
-      
+
       <div className="comment-card__icon-actions">
-        <button 
-          className="comment-card__icon-button comment-card__icon-button--like"
-          onClick={onLikeClick}
+        <button
+          className={`comment-card__icon-button comment-card__icon-button--like ${isLiked ? "comment-card__icon-button--liked" : ""}`}
+          onClick={handleLikeClick}
         >
-          <Icon icon="mdi:heart-outline" width="24" height="24" />
+          <Icon
+            icon={isLiked ? "mdi:heart" : "mdi:heart-outline"}
+            width="24"
+            height="24"
+            style={{ color: isLiked ? "#FF3040" : "inherit" }}
+          />
         </button>
-        
-        <button 
+
+        <button
           className="comment-card__icon-button comment-card__icon-button--reply"
           onClick={onReplyClick}
         >
@@ -93,71 +116,3 @@ export const CommentCard: React.FC<CommentCardProps> = ({
 };
 
 export default CommentCard;
-
-// Demo wrapper
-export function SimpleCommentCardComponent() {
-  const [commentCards, setCommentCards] = useState<CommentCardType[]>([]);
-
-  useEffect(() => {
-    // TODO: 백엔드 API 연동 시 주석 해제
-    // getCommentCards().then(setCommentCards);
-    
-    // 임시 하드코딩 데이터
-    const tempData: CommentCardType[] = [
-      {
-        id: 1,
-        username: '유저닉네임1',
-        comment: '정말 재미있는 영화였어요! 케이팝 아이돌들이 액션 히어로로 나오는 설정이 신선하고, 스토리도 탄탄해서 끝까지 몰입해서 봤습니다.',
-        rating: 4.5,
-        likes: 102,
-        replies: 2,
-      },
-      {
-        id: 2,
-        username: '영화매니아',
-        comment: '예상보다 훨씬 재미있었습니다! 스토리 전개가 빠르고 긴장감이 계속 유지되어서 지루할 틈이 없었어요.',
-        rating: 4.0,
-        likes: 89,
-        replies: 5,
-      },
-      {
-        id: 3,
-        username: '드라마러버',
-        comment: '정치 드라마치고는 정말 현실적이고 몰입도가 높았습니다. 배우들의 연기도 훌륭하고, 스토리도 정치적 상황을 잘 반영한 것 같아요.',
-        rating: 4.8,
-        likes: 156,
-        replies: 8,
-      },
-      {
-        id: 4,
-        username: '시네마팬',
-        comment: '연출과 촬영이 정말 훌륭했습니다. 특히 조명과 색감이 영화의 분위기를 잘 살려주었어요. 강력 추천!',
-        rating: 5.0,
-        likes: 234,
-        replies: 12,
-      },
-    ];
-    setCommentCards(tempData);
-  }, []);
-
-  return (
-    <div className="component-demo">
-      <h4>Simple Comment Card Components</h4>
-      <div className="row">
-        {commentCards.map((commentCard) => (
-          <div key={commentCard.id} className="col-12 col-md-6 col-lg-3 mb-4">
-            <CommentCard
-              username={commentCard.username}
-              comment={commentCard.comment}
-              rating={commentCard.rating}
-              likes={commentCard.likes}
-              replies={commentCard.replies}
-              onLikeClick={() => alert('좋아요 클릭!')}
-              onReplyClick={() => alert('댓글 클릭!')}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

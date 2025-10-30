@@ -66,8 +66,9 @@ body {
   color: $gray2;
 }
 
-// 공통 폼 라벨
-label {
+// 공통 폼 라벨 (클래스 기반으로 통일)
+.form-label {
+  color: $white;
   @include text-base($body-small-size, $font-weight-bold);
   margin-bottom: $spacing-1;
 }
