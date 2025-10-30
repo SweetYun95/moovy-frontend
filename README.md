@@ -9,7 +9,7 @@
 - **Framework:** React, Vite
 - **State:** Redux Toolkit, React-Redux
 - **Routing:** React Router
-- **UI:** MUI(Material UI), Bootstrap, SCSS
+- **UI:** iconify, Bootstrap, SCSS
 - **Animations/UX:** GSAP, Swiper
 - **HTTP:** Axios
 - **Build & Quality:** Vite, ESLint, Prettier, TypeScript

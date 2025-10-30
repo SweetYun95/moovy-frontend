@@ -1,17 +1,78 @@
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.movie-card-slider {
+  position: relative;
+  padding: 20px 0;
+  width: 100%;
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  // 모바일 섹션 내부 슬라이더 컨테이너 (내부 네비게이션의 기준 컨테이너)
+  &__inner-wrapper {
+    position: relative;
+  }
+
+  &__swiper {
+    position: relative;
+    width: 100%;
+  }
+
+  &__nav-button {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba($color: $white, $alpha: 0.5);
+    width: $spacing-3;
+    height: $spacing-3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $white;
+    
+    &:hover {
+      transform: translateY(-50%) scale(1.15);
+    }
+    
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    &--prev {
+      left:   $spacing-2;
+    }
+    
+    &--next {
+      right: $spacing-2;
+    }
+  }
+}
+
+
 
 .movie-card {
   background-color: $black2;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: $border-radius-lg; // 16px
+  border-radius: $border-radius-lg;
   overflow: hidden;
   transition: $transition-base;
   width: 100%;
-  aspect-ratio: 5/8; // 5:8 비율로 고정 (가로 60, 세로 96)
+  max-width: none;
+  aspect-ratio: 5/8;
   position: relative;
-  margin-bottom: $spacing-2; // 16px
+  flex-shrink: 0;
+  
   
   &:hover {
     transform: translateY(-4px);
@@ -83,7 +144,7 @@
   }
   
   &__content {
-    padding: $spacing-3; // 24px
+    padding: $spacing-3;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -94,58 +155,50 @@
     justify-content: space-between;
     height: 100%;
     
-    // 반응형 패딩
     @media (max-width: 767px) {
-      padding: $spacing-2; // 16px on mobile
+      padding: $spacing-2;
     }
   }
   
   &__title-section {
     margin-bottom: 0;
-    margin-top: auto; // 하단으로 밀어내기
+    margin-top: auto;
   }
   
   &__title {
-    font-size: $heading-6-size; // 20px
+    font-size: $heading-6-size;
     font-weight: $font-weight-bold;
     color: $white;
-    margin: 0 0 $spacing-1 0; // 0 0 8px 0
+    margin: 0 0 $spacing-1 0;
     line-height: $heading-6-line-height;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.3s ease;
     
-    // 반응형 폰트 크기
     @media (max-width: 767px) {
-      font-size: $body-medium-size; // 18px
+      font-size: $body-medium-size;
       line-height: 1.3;
     }
   }
   
   &__rating {
-    margin-bottom: $spacing-1; // 8px
+    margin-bottom: $spacing-1;
   }
   
   &__rating-text {
-    font-size: $body-small-size; // 14px
+    font-size: $body-small-size;
     font-weight: $font-weight-normal;
     color: $gray4;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.3s ease;
   }
   
   &__synopsis {
-    font-size: $body-small-size; // 14px
+    font-size: $body-small-size;
     font-weight: $font-weight-normal;
     color: $gray4;
-    margin-bottom: $spacing-3; //24px
+    margin-bottom: $spacing-3;
     line-height: $body-small-line-height;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -157,9 +210,7 @@
     transition: all 0.3s ease;
     height: 0;
     margin: 0;
-    overflow: hidden;
     
-    // 터치 디바이스에서는 항상 표시
     @media (hover: none) {
       opacity: 1;
       transform: translateY(0);
@@ -168,11 +219,10 @@
       -webkit-line-clamp: 2;
     }
     
-    // 반응형 폰트 크기
     @media (max-width: 767px) {
-      font-size: 0.8125rem; // 13px
+      font-size: 0.8125rem;
       line-height: 1.4;
-      -webkit-line-clamp: 2; // 모바일에서는 2줄만
+      -webkit-line-clamp: 2;
     }
   }
   
@@ -180,20 +230,60 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: $spacing-2; // 16px
+    margin-top: $spacing-2;
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.3s ease;
     height: 0;
     margin: 0;
-    overflow: hidden;
     
-    // 터치 디바이스에서는 항상 표시
     @media (hover: none) {
       opacity: 1;
       transform: translateY(0);
       height: auto;
       margin-top: $spacing-2;
+    }
+  }
+}
+
+.movie-card-section {
+  padding: $spacing-3 0;
+
+  &__title {
+    font-size: $heading-6-size;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-3;
+    color: $white;
+  }
+
+  &__grid {
+    display: flex;
+    gap: $spacing-3;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+    width: 100%;
+    
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: center;
+      
+      // 모바일에서는 1개만 표시하고 전체 폭 사용
+      & > .movie-card {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      & > .movie-card:not(:first-child) {
+        display: none;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      // PC에서 카드 3개가 꽉 차게
+      & > .movie-card {
+        flex: 1;
+        max-width: none;
+      }
     }
   }
 }

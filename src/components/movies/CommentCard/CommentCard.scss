@@ -1,4 +1,5 @@
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .comment-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(153, 153, 153, 0.5) 100%);
@@ -7,7 +8,7 @@
   padding: $spacing-2 $spacing-3; // 16px 24px
   transition: $transition-base;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: $spacing-3;
   display: flex;
   flex-direction: column;
   
@@ -19,7 +20,7 @@
   // 반응형 패딩
   @media (max-width: 767px) {
     padding: $spacing-1 $spacing-2; // 8px 16px
-    margin-bottom: 1rem;
+    margin-bottom: $spacing-2;
   }
   
   &__header {
@@ -36,21 +37,21 @@
   }
   
   &__profile-image {
-    width: 40px;
-    height: 40px;
+    width: $spacing-5;
+    height: $spacing-5;
     border-radius: 50%; // 원형으로 변경
     object-fit: cover;
     
     // 반응형 프로필 크기
     @media (max-width: 767px) {
-      width: 36px;
-      height: 36px;
+      width: $spacing-4;
+      height: $spacing-4;
     }
   }
   
   &__profile-placeholder {
-    width: 40px;
-    height: 40px;
+    width: $spacing-5;
+    height: $spacing-5;
     border-radius: 50%; // 원형으로 변경
     background-color: $gray3;
     display: flex;
@@ -60,8 +61,8 @@
     
     // 반응형 프로필 크기
     @media (max-width: 767px) {
-      width: 36px;
-      height: 36px;
+      width: $spacing-4;
+      height: $spacing-4;
     }
   }
   
@@ -111,8 +112,8 @@
     
     // 반응형 폰트 크기 및 줄 수
     @media (max-width: 767px) {
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
       -webkit-line-clamp: 4; // 모바일에서는 4줄까지
     }
   }
@@ -133,8 +134,8 @@
     transition: $transition-base;
     
     svg {
-      width: 16px;
-      height: 16px;
+      width: $spacing-2;
+      height: $spacing-2;
     }
     
     span {
@@ -144,18 +145,11 @@
     
     &--like {
       color: $white;
-      
-      &:hover {
-        text-decoration: underline;
-      }
+      cursor: default;
     }
     
     &--reply {
       color: $white;
-      
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
   
@@ -175,9 +169,7 @@
     transition: $transition-base;
     color: $white;
     
-    &:hover {
-      transform: translateY(-2px);
-    }
+    // hover transform removed
   }
 }
 

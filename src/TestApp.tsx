@@ -1,13 +1,55 @@
+// 외부 라이브러리
+import { useState, useEffect } from 'react';
+
+// 스타일
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/globals.scss';
 import './TestApp.scss';
-import { useState, useEffect } from 'react';
+
+// Redux
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { fetchContentsThunk } from './features/content/contentSlice';
+import { fetchCommentsThunk } from './features/comments/commentSlice';
+
+// Types
+import type { Topic as ContentCardType } from './services/api/topicApi';
+import type { CommentCard as CommentCardType } from './services/api/commentApi';
+
+// API
+import { forceWithdrawUser } from './services/api/userApi';
+
+// Layout Components
 import { Header } from './components/layout/Header/Header';
-import { ContentCardComponent } from './components/movies/ContentCard/ContentCard';
-import { MovieCardComponent } from './components/Home/MovieCard/MovieCard';
-import { ImageCommentCardComponent } from './components/Home/ImageCommentCard/ImageCommentCard';
-import { SimpleCommentCardComponent } from './components/movies/CommentCard/CommentCard';
-import {
+
+// Common Components
+import { Button } from './components/common/Button/ButtonStyle';
+import { LoginButton, StatusButton, ActionButton, WideButton } from './components/common/Button/Button';
+import { DatePicker } from './components/common/DatePicker/DatePicker';
+import { DateSelector } from './components/common/DateSelector/DateSelector';
+import { ImageUpload } from './components/common/ImageUpload/ImageUpload';
+import Spinner from './components/common/Spinner';
+import { EmailInput, PasswordInput, NameInput, NicknameInput, SuccessInput, WarningInput, ErrorInput } from './components/common/Input';
+import { GenreSelector, RatingSelector, YearSelector, CountrySelector } from './components/common/Selector';
+import { ReviewTextarea, CommentTextarea, ErrorTextarea, InquiryTextarea, ProfileTextarea } from './components/common/Textarea';
+import { IdSaveCheckbox, PrivacyCheckbox, TermsCheckbox, MarketingCheckbox, SuccessCheckbox, ErrorCheckbox } from './components/common/Checkbox';
+import { StandardPagination, ExtendedPagination, SmallPagination, LargePagination } from './components/common/Pagination';
+import { MypageTabs, AdminTabs } from './components/common/Tabs/index';
+
+// Home Components
+import { MovieCardSlider } from './components/Home/MovieCard/MovieCardSlider';
+import { ImageCommentCardSlider } from './components/Home/ImageCommentCard/ImageCommentCardSlider';
+import { QuickMenu } from './components/Home/QuickMenu/QuickMenu';
+
+// Movies Components
+import { ContentCard } from './components/movies/ContentCard/ContentCard';
+import { CommentCard } from './components/movies/CommentCard/CommentCard';
+
+// Modals
+import ConfirmModal from './components/modals/ConfirmModal/ConfirmModal';
+import InquiryModal from './components/modals/InquiryModal/InquiryModal';
+import ReportModal from './components/modals/ReportModal/ReportModal';
+import { CommentDetailModal } from './components/modals/CommentDetailModal/CommentDetailModal';
+import { 
   DeleteModalComponent,
   InquiryModalComponent,
   ReportModalComponent,
@@ -15,27 +57,53 @@ import {
   ProfileEditModalComponent,
   SettingsModalComponent,
   TopicManagementModalComponent,
+  SanctionHistoryModal,
+  WithdrawalConfirmModal
 } from './components/modals';
 import { AdminProfileEditModalComponent } from './components/modals/ProfileEditModal/ProfileEditModal';
-import InquiryModal from './components/modals/InquiryModal/InquiryModal';
-import ReportModal from './components/modals/ReportModal/ReportModal';
-import { SanctionHistoryModal, WithdrawalConfirmModal } from './components/modals';
-import ConfirmModal from './components/modals/ConfirmModal/ConfirmModal';
-import { forceWithdrawUser } from './services/api/userApi';
-import { Button } from './components/common/Button/ButtonStyle';
-import { LoginButton, StatusButton, ActionButton, WideButton } from './components/common/Button/Button';
-import { DatePicker } from './components/common/DatePicker/DatePicker';
-import { DateSelector } from './components/common/DateSelector/DateSelector';
-import { ImageUpload } from './components/common/ImageUpload/ImageUpload';
-import { QuickMenu } from './components/Home/QuickMenu/QuickMenu';
-import Spinner from './components/common/Spinner';
-import { MypageTabs, AdminTabs } from './components/common/Tabs/index';
-import { EmailInput, PasswordInput, NameInput, NicknameInput, SuccessInput, WarningInput, ErrorInput } from './components/common/Input';
-import { GenreSelector, RatingSelector, YearSelector, CountrySelector } from './components/common/Selector';
-import { ReviewTextarea, CommentTextarea, ErrorTextarea, InquiryTextarea, ProfileTextarea } from './components/common/Textarea';
-import { IdSaveCheckbox, PrivacyCheckbox, TermsCheckbox, MarketingCheckbox, SuccessCheckbox, ErrorCheckbox } from './components/common/Checkbox';
-import { StandardPagination, ExtendedPagination, SmallPagination, LargePagination } from './components/common/Pagination';
+
+// Admin Components
 import { UserManagementFilter, WorkManagementFilter, CommentManagementFilter, ReportManagementFilter } from './components/admin/AdminFilter';
+
+function CommentDetailExample() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      <div className="component-demo">
+        <h4>Comment Detail Modal</h4>
+        <button onClick={() => setIsModalOpen(true)}>코멘트 상세 모달 열기</button>
+      </div>
+
+      <CommentDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        commentData={{
+          username: "유저닉네임",
+          date: "2025.10.13",
+          content: "코멘트를 작성했습니다~",
+          likes: 102,
+          replies: 2,
+        }}
+        comments={[
+          {
+            id: 1,
+            username: "유저닉네임",
+            content: "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
+            likes: 102,
+            isMyComment: true,
+          },
+          {
+            id: 2,
+            username: "유저닉네임",
+            content: "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
+            likes: 102,
+          },
+        ]}
+      />
+    </>
+  );
+}
 
 function DatePickerExamples() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -302,6 +370,261 @@ function SelectorExamples() {
   );
 }
 
+function ContentCardExamples() {
+  const dispatch = useAppDispatch();
+  const { contents: contentCards, loading } = useAppSelector((state) => state.content);
+
+  useEffect(() => {
+    dispatch(fetchContentsThunk());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="component-demo">
+        <h4>Content Card Components</h4>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (contentCards.length === 0) {
+    return (
+      <div className="component-demo">
+        <h4>Content Card Components</h4>
+        <p>No content available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="component-demo">
+      <h4>Content Card Components</h4>
+      <div className="row g-4">
+        {contentCards.map((content: ContentCardType) => (
+          <div key={content.id} className="col-xl-3 col-md-4 col-sm-6 mb-4">
+            <ContentCard
+              title={content.title}
+              year={content.year || ''}
+              category={content.category}
+              country={content.country}
+              rating={content.overallRating ?? 0}
+              imageUrl={content.imageUrl}
+              onClick={() => alert(`${content.title} 클릭!`)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CommentCardExamples() {
+  const dispatch = useAppDispatch();
+  const { comments: commentCards, loading } = useAppSelector((state) => state.comment);
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchCommentsThunk());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="component-demo">
+        <h4>Simple Comment Card Components</h4>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (commentCards.length === 0) {
+    return (
+      <div className="component-demo">
+        <h4>Simple Comment Card Components</h4>
+        <p>No comments available</p>
+      </div>
+    );
+  }
+
+  const handleReplyClick = (comment: CommentCardType) => {
+    setSelectedCommentId(comment.id);
+    setIsModalOpen(true);
+  };
+
+  const selectedComment = commentCards.find(c => c.id === selectedCommentId);
+
+  return (
+    <>
+      <div className="component-demo">
+        <h4>Simple Comment Card Components</h4>
+        <div className="row">
+          {commentCards.map((commentCard: CommentCardType) => (
+            <div key={commentCard.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <CommentCard
+                username={commentCard.username}
+                comment={commentCard.comment}
+                rating={commentCard.rating}
+                likes={commentCard.likes}
+                replies={commentCard.replies}
+                onLikeClick={() => {}}
+                onReplyClick={() => handleReplyClick(commentCard)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {selectedComment && (
+        <CommentDetailModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedCommentId(null);
+          }}
+          commentData={{
+            username: selectedComment.username,
+            date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+            content: selectedComment.comment,
+            likes: selectedComment.likes,
+            replies: selectedComment.replies,
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+function MovieCardSliderExamples() {
+  const dispatch = useAppDispatch();
+  const { contents, loading } = useAppSelector((state) => state.content);
+
+  useEffect(() => {
+    dispatch(fetchContentsThunk());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="component-demo">
+        <h4>Movie Card Components</h4>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (contents.length === 0) {
+    return (
+      <div className="component-demo">
+        <h4>Movie Card Components</h4>
+        <p>No movies available</p>
+      </div>
+    );
+  }
+
+  // 데이터를 3개씩 그룹으로 나누는 함수
+  const chunkArray = <T,>(array: T[], size: number): T[][] => {
+    const chunks: T[][] = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+  };
+
+  // 전체인기작, 현재상영작, 관리자추천
+  const movieChunks = chunkArray(contents, 3);
+  const sections = [
+    { title: '요즘뜨는 신작 TOP : 토론 ON', movies: movieChunks[0] || [] },
+    { title: '현재 상영작 TOP : 이야기하러 가볼까?', movies: movieChunks[1] || [] },
+    { title: 'MOOVY 추천작 TOP : 언제봐도 명작이다..!', movies: movieChunks[2] || [] },
+  ];
+
+  return (
+    <div className="component-demo">
+      <h4>Movie Card Components</h4>
+      <MovieCardSlider 
+        sections={sections}
+        onCardClick={(title) => alert(`${title} 코멘트 작성`)} 
+      />
+    </div>
+  );
+}
+
+function ImageCommentCardSliderExamples() {
+  const dispatch = useAppDispatch();
+  const { comments, loading: commentsLoading } = useAppSelector((state) => state.comment);
+  const { contents, loading: contentsLoading } = useAppSelector((state) => state.content);
+  const [showDetail, setShowDetail] = useState(false);
+  const [detailData, setDetailData] = useState<{ username: string; date: string; content: string; likes: number; replies: number } | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchCommentsThunk());
+    dispatch(fetchContentsThunk());
+  }, [dispatch]);
+
+  const loading = commentsLoading || contentsLoading;
+
+  if (loading) {
+    return (
+      <div className="component-demo">
+        <h4>Image Comment Card Components</h4>
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (comments.length === 0) {
+    return (
+      <div className="component-demo">
+        <h4>Image Comment Card Components</h4>
+        <p>No comments available</p>
+      </div>
+    );
+  }
+
+  // 데이터를 3개씩 그룹으로 나누는 함수
+  const chunkArray = <T,>(array: T[], size: number): T[][] => {
+    const chunks: T[][] = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+  };
+
+  // 데이터를 4개씩 나누고 타이틀 추가
+  const commentChunks = chunkArray(comments, 4);
+  const sections = [
+    { title: '핫 토크 리뷰', comments: commentChunks[0] || [] },
+    { title: '베스트 리뷰', comments: commentChunks[1] || [] },
+    { title: '실시간 리뷰', comments: commentChunks[2] || [] },
+  ];
+
+  return (
+    <div className="component-demo">
+      <h4>Image Comment Card Components</h4>
+      <ImageCommentCardSlider
+        sections={sections}
+        contents={contents}
+        onCardClick={(data) => {
+          setDetailData({
+            username: data.username || '유저닉네임',
+            date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+            content: data.comment || `${data.title}에 대한 코멘트 상세입니다`,
+            likes: data.likes ?? 0,
+            replies: data.replies ?? 0,
+          });
+          setShowDetail(true);
+        }}
+      />
+      {detailData && (
+        <CommentDetailModal
+          isOpen={showDetail}
+          onClose={() => setShowDetail(false)}
+          commentData={detailData}
+        />
+      )}
+    </div>
+  );
+}
+
 function TestApp() {
   // 모달 상태 관리
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -377,16 +700,19 @@ function TestApp() {
               <TabsExamples />
 
               {/* Content Card */}
-              <ContentCardComponent />
+              <ContentCardExamples />
               
-              {/* Movie Card */}
-              <MovieCardComponent />
+              {/* Movie Card Slider */}
+              <MovieCardSliderExamples />
 
-              {/* Image Comment Card */}
-              <ImageCommentCardComponent />
+              {/* Image Comment Card Slider */}
+              <ImageCommentCardSliderExamples />
 
               {/* Comment Card */}
-              <SimpleCommentCardComponent />
+              <CommentCardExamples />
+
+              {/* Comment Reply Modal */}
+              <CommentDetailExample />
 
               {/* Admin Filters */}
               <div className="component-demo">

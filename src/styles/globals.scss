@@ -3,6 +3,11 @@
 @import 'mixins';
 @import 'base';
 
+// Swiper CSS
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
 
 // 전역 기본값
 :root {

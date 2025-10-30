@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './ImageUpload.scss';
 
 export interface ImageUploadProps {
@@ -17,6 +17,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   id,
 }) => {
   const [uploadedImages, setUploadedImages] = useState<string[]>(images);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -46,7 +47,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   return (
     <div className={`moovy-image-upload ${className}`} id={id}>
       <div className="image-upload-header">
-        <label htmlFor={`image-input-${id}`} className="upload-label">
+        <label className="form-label">
           <i className="fas fa-image"></i>
           이미지 추가
         </label>
@@ -56,7 +57,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           multiple
           onChange={handleImageUpload}
           className="image-input"
-          id={`image-input-${id}`}
+          ref={inputRef}
           disabled={uploadedImages.length >= maxImages}
         />
       </div>
@@ -76,7 +77,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         ))}
         
         {uploadedImages.length < maxImages && (
-          <div className="image-placeholder">
+          <div
+            className="image-placeholder"
+            onClick={() => inputRef.current?.click()}
+          >
             <i className="fas fa-plus"></i>
             <span>이미지 추가</span>
           </div>

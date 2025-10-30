@@ -5,6 +5,7 @@ import { ReportSelector, SanctionLevelSelector, ReportStatusSelector } from '../
 import { Textarea } from '../../common/Textarea/TextareaStyle';
 import { UserProfileCard } from '../../common/UserProfileCard/UserProfileCard';
 import { createReport, type ReportCategory } from '../../../services/api/commentApi';
+import { getAdminUserProfile } from '../../../services/api/userApi';
 import './ReportModal.scss';
 import { Icon } from '@iconify/react';
 
@@ -126,7 +127,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="report-modal__field">
-              <label className="report-modal__label">분류</label>
+              <label className="form-label">분류</label>
               <ReportSelector
                 value={category}
                 onChange={setCategory}
@@ -141,7 +142,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="report-modal__field">
-                  <label className="report-modal__label">신고내용을 적어주세요.</label>
+                  <label className="form-label">신고내용을 적어주세요.</label>
                   <Textarea
                     placeholder="신고내용을 적어주세요."
                     value={content}
@@ -157,7 +158,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="report-modal__field">
-                  <label className="report-modal__label">제재강도</label>
+                  <label className="form-label">제재강도</label>
                   <SanctionLevelSelector
                     value={sanctionLevel}
                     onChange={setSanctionLevel}
@@ -170,7 +171,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="report-modal__field">
-                  <label className="report-modal__label">신고한 유저 알림 메시지</label>
+                  <label className="form-label">신고한 유저 알림 메시지</label>
                   <ReportStatusSelector
                     value={notification}
                     onChange={setNotification}
@@ -205,6 +206,7 @@ export function ReportModalComponent({
   targetType,
   targetId,
   targetUser,
+  targetUserId,
   onReportCountClick
 }: { 
   isOpen: boolean
@@ -215,9 +217,27 @@ export function ReportModalComponent({
     name: string
     reportCount: number
   }
+  targetUserId?: number
   onReportCountClick?: (data: Array<{ id: number; reason: string }>) => void
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchedUser, setFetchedUser] = useState<{ name: string; reportCount: number } | undefined>(undefined);
+
+  // 유저 대상 신고인 경우 사용자 정보 로드
+  React.useEffect(() => {
+    const load = async () => {
+      if (isOpen && targetType === 'user' && targetUserId && !targetUser) {
+        try {
+          const user = await getAdminUserProfile(targetUserId);
+          setFetchedUser({ name: user.name || user.nickname || '사용자', reportCount: user.reportCount || 0 });
+        } catch (e) {
+          console.error('신고 대상 사용자 로드 실패:', e);
+          setFetchedUser(undefined);
+        }
+      }
+    };
+    load();
+  }, [isOpen, targetType, targetUserId, targetUser]);
 
   const handleSubmit = async (data: { category: string; content?: string; sanctionLevel?: string; notification?: string }) => {
     if (!targetType || !targetId) {
@@ -247,7 +267,7 @@ export function ReportModalComponent({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      targetUser={targetUser}
+      targetUser={targetUser || fetchedUser}
       onReportCountClick={onReportCountClick}
     />
   );

@@ -8,6 +8,7 @@ export { default as ReportModal } from './ReportModal/ReportModal';
 export { default as CommentEditModal } from './CommentEditModal/CommentEditModal';
 export { default as ProfileEditModal } from './ProfileEditModal/ProfileEditModal';
 export { default as TopicManagementModal } from './TopicManagementModal/TopicManagementModal';
+export { default as CommentDetailModal } from './CommentDetailModal/CommentDetailModal';
 
 // 타입들도 export
 export type { ModalProps } from './Modal/Modal';
@@ -19,6 +20,7 @@ export type { ReportModalProps } from './ReportModal/ReportModal';
 export type { CommentEditModalProps } from './CommentEditModal/CommentEditModal';
 export type { ProfileEditModalProps } from './ProfileEditModal/ProfileEditModal';
 export type { TopicData, TopicManagementModalProps } from './TopicManagementModal/TopicManagementModal';
+export type { CommentDetailModalProps } from './CommentDetailModal/CommentDetailModal';
 
 // Modal Component wrappers
 export { DeleteModalComponent } from './DeleteModal/DeleteModal';

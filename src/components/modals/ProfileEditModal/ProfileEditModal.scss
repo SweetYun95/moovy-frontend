@@ -1,13 +1,14 @@
 @import '../../../styles/variables';
 
 .profile-edit-modal {
-  max-height: 70vh;
-  overflow-y: auto;
-  padding-right: 8px;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+  padding-bottom: $spacing-3;
   
   @media (max-height: 730px) {
-    max-height: calc(100vh - 100px);
-    padding-bottom: 0;
+    max-height: none;
+    padding-bottom: $spacing-3;
     margin-bottom: 0;
   }
 

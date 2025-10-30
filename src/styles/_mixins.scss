@@ -52,7 +52,7 @@
 @mixin modal-container-base {
   background-color: $black3;
   border-radius: $border-radius-lg;
-  max-height: 90vh;
+  max-height: 97vh;
   overflow: visible;
   position: relative;
   animation: modalFadeIn 0.3s ease-out;
@@ -60,7 +60,7 @@
   flex-direction: column;
   width: fit-content;
   height: fit-content;
-  padding: $spacing-4 $spacing-5;
+  padding: $spacing-3;
 }
 
 // 공통 카드 스타일
