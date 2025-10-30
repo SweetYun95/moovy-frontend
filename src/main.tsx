@@ -13,6 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/globals.scss";
 import AuthPage from "./pages/auth/AuthPage";
 import UserMainPage from "./pages/Home/UserMainPage";
+import MovieDetailPage from "./pages/movies/MovieDetailPage";
 
 initGSAP();
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
         <TestApp />
         {/* <AuthPage /> */}
         {/* <UserMainPage /> */}
+        <MovieDetailPage />
       </BrowserRouter>
     </Provider>
   </StrictMode>
