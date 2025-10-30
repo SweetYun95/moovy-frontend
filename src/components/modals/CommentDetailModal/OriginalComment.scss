@@ -1,0 +1,125 @@
+@import '../../../styles/globals';
+
+.original-comment {
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-4;
+  border-bottom: 1px solid $gray1;
+
+  @media (max-width: 767px) {
+    margin-bottom: $spacing-3;
+    padding-bottom: $spacing-3;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-2;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    @media (max-width: 767px) {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: $black2;
+    border: 1px solid $gray1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gray2;
+    flex-shrink: 0;
+
+    @media (max-width: 767px) {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__username {
+    font-size: $body-normal-size;
+    font-weight: $font-weight-bold;
+    color: $white;
+  }
+
+  &__date {
+    font-size: $body-small-size;
+    color: $gray3;
+  }
+
+  &__content {
+    font-size: $body-normal-size;
+    color: $white;
+    line-height: $body-normal-line-height;
+    margin-bottom: $spacing-3;
+  }
+
+  &__engagement {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-2;
+    font-size: $body-small-size;
+    color: $white;
+
+    &-buttons {
+      display: flex;
+      align-items: center;
+      gap: $spacing-1;
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      margin-right: $spacing-2;
+    }
+  }
+
+  &__icon-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__report-button {
+    all: unset;
+    font-size: $body-small-size;
+    color: $danger-color;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 767px) {
+      font-size: 0.8125rem;
+    }
+  }
+}
+

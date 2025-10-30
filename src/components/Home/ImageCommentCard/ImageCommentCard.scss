@@ -79,7 +79,7 @@
     display: flex;
     gap: $spacing-2; // 16px
     margin-bottom: $spacing-3; // 24px
-    max-height: 120px; 
+    height: 100%;
     overflow: hidden;
     flex: 1;
     
@@ -124,6 +124,7 @@
   &__content {
     display: flex;
     flex-direction: column;
+    gap: $spacing-1;
   }
   
   &__movie-title {
@@ -212,6 +213,105 @@
       
     &:hover {
       transform: translateY(-2px);
+    }
+  }
+}
+
+.image-comment-card-slider {
+  position: relative;
+  padding: 20px 0;
+
+  &__wrapper {
+    position: relative;
+  }
+
+  // 모바일 섹션 내부 슬라이더 컨테이너 (내부 네비게이션의 기준 컨테이너)
+  &__inner-wrapper {
+    position: relative;
+  }
+
+  &__swiper {
+    position: relative;
+  }
+
+  &__nav-button {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba($color: $white, $alpha: 0.5);
+    width: $spacing-3;
+    height: $spacing-3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $white;
+    
+    &:hover {
+      transform: translateY(-50%) scale(1.15);
+    }
+    
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    &--prev {
+      left: $spacing-3;
+    }
+    
+    &--next {
+      right: $spacing-3;
+    }
+  }
+
+  &__swiper {
+    .swiper-slide {
+      height: auto;
+    }
+  }
+}
+
+.image-comment-card-section {
+  padding: 20px 0;
+
+  &__title {
+    font-size: $heading-6-size;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-3;
+    color: $white;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    
+    // 모바일 (<768px): 1개만 표시
+    @media (max-width: 767px) {
+      & > .comment-card:nth-child(n+2) {
+        display: none;
+      }
+    }
+    
+    // 태블릿 (≥768px, <992px): 2열 그리드, 최대 4개 표시 (2열 2행)
+    @media (min-width: 768px) and (max-width: 991px) {
+      grid-template-columns: repeat(2, 1fr);
+      & > .comment-card:nth-child(n+5) {
+        display: none;
+      }
+    }
+    
+    // PC (≥992px): 3열 그리드, 최대 3개 표시
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+      & > .comment-card:nth-child(n+4) {
+        display: none;
+      }
     }
   }
 }
