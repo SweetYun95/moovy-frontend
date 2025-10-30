@@ -1,4 +1,5 @@
-import { combineReducers } from "@reduxjs/toolkit";
+// moovy-frontend/src/app/rootReducer.ts
+import { combineReducers } from '@reduxjs/toolkit'
 
 // slices
 import auth from "@/features/auth/authSlice";
@@ -13,5 +14,6 @@ const rootReducer = combineReducers({
   comment,
 });
 
-export type RootReducer = ReturnType<typeof rootReducer>;
-export default rootReducer;
+
+export type RootReducer = ReturnType<typeof rootReducer>
+export default rootReducer

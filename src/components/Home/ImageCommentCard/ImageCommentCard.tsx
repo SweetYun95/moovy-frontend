@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './ImageCommentCard.scss';
 import { Icon } from '@iconify/react';
 
@@ -41,7 +42,7 @@ export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
   };
 
   const renderStarIcon = () => {
-    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '$warning-color' }} />;
+    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '#FFD60A' }} />;
   };
 
   return (
