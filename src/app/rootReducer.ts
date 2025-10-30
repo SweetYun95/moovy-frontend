@@ -2,16 +2,19 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
 // slices
-import auth from "@/features/auth/authSlice";
-import ui from "@/features/ui/uiSlice";
+import auth from '../features/auth/authSlice'
+import ui from '../features/ui/uiSlice'
+import comments from '../features/reply/commentSlice'
+import replies from '../features/reply/replySlice'
 import content from "@/features/content/contentSlice";
-import comment from "@/features/comments/commentSlice";
+
 
 const rootReducer = combineReducers({
-  auth,
-  ui,
-  content,
-  comment,
+   auth,
+   ui,
+   comments,
+   replies,
+   content,
 });
 
 
