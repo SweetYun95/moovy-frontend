@@ -105,6 +105,7 @@ import {
   CommentManagementFilter,
   ReportManagementFilter,
 } from "./components/admin/AdminFilter";
+import { useNavigate } from "react-router-dom";
 
 function CommentDetailExample() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -469,9 +470,9 @@ function ContentCardExamples() {
 
 function CommentCardExamples() {
   const dispatch = useAppDispatch();
-  const { comments: commentCards, loading } = useAppSelector(
-    (state) => state.comment
-  );
+  // const { comments: commentCards, loading } = useAppSelector(
+  //   (state) => state.comment
+  // );
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
     null
   );
@@ -481,37 +482,37 @@ function CommentCardExamples() {
     dispatch(fetchCommentsThunk());
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
 
-  if (commentCards.length === 0) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>No comments available</p>
-      </div>
-    );
-  }
+  // if (commentCards.length === 0) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>No comments available</p>
+  //     </div>
+  //   );
+  // }
 
   const handleReplyClick = (comment: CommentCardType) => {
     setSelectedCommentId(comment.id);
     setIsModalOpen(true);
   };
 
-  const selectedComment = commentCards.find((c) => c.id === selectedCommentId);
+  // const selectedComment = commentCards.find((c) => c.id === selectedCommentId);
 
   return (
     <>
       <div className="component-demo">
         <h4>Simple Comment Card Components</h4>
         <div className="row">
-          {commentCards.map((commentCard: CommentCardType) => (
+          {/* {commentCards.map((commentCard: CommentCardType) => (
             <div
               key={commentCard.id}
               className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
@@ -526,10 +527,10 @@ function CommentCardExamples() {
                 onReplyClick={() => handleReplyClick(commentCard)}
               />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
-
+      {/* 
       {selectedComment && (
         <CommentDetailModal
           isOpen={isModalOpen}
@@ -545,7 +546,7 @@ function CommentCardExamples() {
             replies: selectedComment.replies,
           }}
         />
-      )}
+      )} */}
     </>
   );
 }
@@ -612,9 +613,10 @@ function MovieCardSliderExamples() {
 
 function ImageCommentCardSliderExamples() {
   const dispatch = useAppDispatch();
-  const { comments, loading: commentsLoading } = useAppSelector(
-    (state) => state.comment
-  );
+  // const { comments, loading: commentsLoading } = useAppSelector(
+  //   (state) => state.comment
+  // );
+  const comments = [{}];
   const { contents, loading: contentsLoading } = useAppSelector(
     (state) => state.content
   );
@@ -632,18 +634,18 @@ function ImageCommentCardSliderExamples() {
     dispatch(fetchContentsThunk());
   }, [dispatch]);
 
-  const loading = commentsLoading || contentsLoading;
+  // const loading = commentsLoading || contentsLoading;
 
-  if (loading) {
-    return (
-      <div className="component-demo">
-        <h4>Image Comment Card Components</h4>
-        <Spinner />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Image Comment Card Components</h4>
+  //       <Spinner />
+  //     </div>
+  //   );
+  // }
 
-  if (comments.length === 0) {
+  if (comments?.length === 0) {
     return (
       <div className="component-demo">
         <h4>Image Comment Card Components</h4>
@@ -720,14 +722,15 @@ function TestApp() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showTopicModal, setShowTopicModal] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
       <Header
         onSearchChange={(value) => console.log("검색:", value)}
         onSearch={(value) => alert(`검색: ${value}`)}
-        onLoginClick={() => alert("로그인 클릭!")}
-        onSignupClick={() => alert("회원가입 클릭!")}
+        onLoginClick={() => navigate("/login")}
+        onSignupClick={() => navigate("/register")}
       />
 
       <div className="container-fluid">

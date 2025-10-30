@@ -1,4 +1,5 @@
 // moovy-frontend/src/main.tsx
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
@@ -14,6 +15,7 @@ import "./styles/globals.scss";
 import AuthPage from "./pages/auth/AuthPage";
 import UserMainPage from "./pages/Home/UserMainPage";
 import MovieDetailPage from "./pages/movies/MovieDetailPage";
+import MyPage from "./pages/profile/MyPage";
 
 initGSAP();
 
@@ -24,7 +26,8 @@ createRoot(document.getElementById("root")!).render(
         {/* <TestApp /> */}
         {/* <AuthPage /> */}
         {/* <UserMainPage /> */}
-        <MovieDetailPage />
+        {/* <MovieDetailPage /> */}
+        <MyPage />
       </BrowserRouter>
     </Provider>
   </StrictMode>
