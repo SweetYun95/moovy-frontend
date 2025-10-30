@@ -69,13 +69,13 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
 
   // 스크롤 시 작성 영역 접기/펼치기
   useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
+    const container = scrollerRef.current?.closest('.modal-content') as HTMLElement | null;
+    if (!container) return;
     const onScroll = () => {
-      setCollapsed(el.scrollTop > 40);
+      setCollapsed(container.scrollTop > 40);
     };
-    el.addEventListener('scroll', onScroll);
-    return () => el.removeEventListener('scroll', onScroll);
+    container.addEventListener('scroll', onScroll);
+    return () => container.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
@@ -86,7 +86,7 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
       showCloseButton={true}
       className="comment-reply-modal-wrapper"
     >
-      <div className="comment-reply-modal modal-content" ref={scrollerRef}>
+      <div className="comment-reply-modal" ref={scrollerRef}>
         <OriginalComment
           username={commentData.username}
           date={commentData.date}

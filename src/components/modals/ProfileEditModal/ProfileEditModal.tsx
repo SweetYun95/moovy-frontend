@@ -189,7 +189,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">이름</label>
+              <label className="form-label">이름</label>
               <Input placeholder="유저 이름" value={name} onChange={setName} />
             </div>
           </div>
@@ -198,7 +198,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">닉네임</label>
+              <label className="form-label">닉네임</label>
               <Input
                 placeholder="유저 닉네임"
                 value={nickname}
@@ -221,7 +221,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="profile-edit-modal__field">
-              <label className="profile-edit-modal__label">이메일</label>
+              <label className="form-label">이메일</label>
               <Input
                 type="email"
                 placeholder="유저 이메일"
@@ -237,7 +237,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="profile-edit-modal__field">
-                  <label className="profile-edit-modal__label">비밀번호</label>
+                  <label className="form-label">비밀번호</label>
                   <Input
                     type="password"
                     placeholder="비밀번호를 입력하세요."
@@ -251,7 +251,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             <div className="row">
               <div className="col-12">
                 <div className="profile-edit-modal__field">
-                  <label className="profile-edit-modal__label">비밀번호 확인</label>
+                  <label className="form-label">비밀번호 확인</label>
                   <Input
                     type="password"
                     placeholder="비밀번호를 다시 입력하세요."
@@ -368,17 +368,13 @@ export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: Profil
     }
   };
 
-  if (!userData) {
-    return null; // 로딩 중
-  }
-
   return (
     <ProfileEditModal
       isOpen={isOpen}
       onClose={onClose}
       mode="user"
       onSubmit={handleSubmit}
-      userData={userData}
+      userData={userData || { name: '', nickname: '', email: '', profileImage: undefined }}
       onCheckNickname={handleCheckNickname}
     />
   );

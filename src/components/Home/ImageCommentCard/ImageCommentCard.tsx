@@ -41,7 +41,7 @@ export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
   };
 
   const renderStarIcon = () => {
-    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '#FFD60A' }} />;
+    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '$warning-color' }} />;
   };
 
   return (
@@ -89,12 +89,12 @@ export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
       </div>
       
       <div className="comment-card__actions">
-        <button 
+        <span 
           className="comment-card__action-button comment-card__action-button--like"
-          onClick={handleLikeClick}
+          aria-hidden="true"
         >
-          <span>좋아요 {likeCount}개</span>
-        </button>
+          <span>좋아요 {likeCount}</span>
+        </span>
         
         <button 
           className="comment-card__action-button comment-card__action-button--reply"

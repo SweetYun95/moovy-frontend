@@ -68,12 +68,12 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       </div>
       
       <div className="comment-card__actions">
-        <button 
+        <span 
           className="comment-card__action-button comment-card__action-button--like"
-          onClick={handleLikeClick}
+          aria-hidden="true"
         >
           <span>좋아요 {likeCount}개</span>
-        </button>
+        </span>
         
         <button 
           className="comment-card__action-button comment-card__action-button--reply"

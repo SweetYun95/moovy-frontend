@@ -11,7 +11,7 @@ interface ImageCommentCardSliderProps {
   className?: string;
   sections: SliderSection[];
   contents: any[]; // 컨텐츠 배열 (id, title, imageUrl 등 포함)
-  onCardClick?: (title: string) => void;
+  onCardClick?: (data: { title: string; likes: number; replies: number; comment: string; username: string }) => void;
 }
 
 export interface SliderSection {
@@ -94,8 +94,13 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                       likes={comment.likes}
                       replies={comment.replies}
                       movieImageUrl={content?.imageUrl}
-                      onLikeClick={() => onCardClick?.(content?.title || '')}
-                      onReplyClick={() => onCardClick?.(content?.title || '')}
+                      onReplyClick={() => onCardClick?.({
+                        title: content?.title || '',
+                        likes: comment.likes,
+                        replies: comment.replies,
+                        comment: comment.comment,
+                        username: comment.username,
+                      })}
                     />
                   </div>
                 </SwiperSlide>
@@ -178,8 +183,13 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                             likes={comment.likes}
                             replies={comment.replies}
                             movieImageUrl={content?.imageUrl}
-                            onLikeClick={() => onCardClick?.(content?.title || '')}
-                            onReplyClick={() => onCardClick?.(content?.title || '')}
+                            onReplyClick={() => onCardClick?.({
+                              title: content?.title || '',
+                              likes: comment.likes,
+                              replies: comment.replies,
+                              comment: comment.comment,
+                              username: comment.username,
+                            })}
                           />
                         );
                       })}

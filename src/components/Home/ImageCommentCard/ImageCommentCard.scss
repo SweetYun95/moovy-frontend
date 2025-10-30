@@ -1,4 +1,5 @@
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .comment-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(153, 153, 153, 0.5) 100%);
@@ -180,9 +181,9 @@
     
     &--like {
       color: $white;
-      
+      cursor: default;
       &:hover {
-        text-decoration: underline;
+        text-decoration: none;
       }
     }
     

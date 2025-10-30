@@ -552,6 +552,8 @@ function ImageCommentCardSliderExamples() {
   const dispatch = useAppDispatch();
   const { comments, loading: commentsLoading } = useAppSelector((state) => state.comment);
   const { contents, loading: contentsLoading } = useAppSelector((state) => state.content);
+  const [showDetail, setShowDetail] = useState(false);
+  const [detailData, setDetailData] = useState<{ username: string; date: string; content: string; likes: number; replies: number } | null>(null);
 
   useEffect(() => {
     dispatch(fetchCommentsThunk());
@@ -564,7 +566,7 @@ function ImageCommentCardSliderExamples() {
     return (
       <div className="component-demo">
         <h4>Image Comment Card Components</h4>
-        <p>Loading...</p>
+        <Spinner />
       </div>
     );
   }
@@ -601,8 +603,24 @@ function ImageCommentCardSliderExamples() {
       <ImageCommentCardSlider
         sections={sections}
         contents={contents}
-        onCardClick={(title) => alert(`${title} 클릭!`)}
+        onCardClick={(data) => {
+          setDetailData({
+            username: data.username || '유저닉네임',
+            date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+            content: data.comment || `${data.title}에 대한 코멘트 상세입니다`,
+            likes: data.likes ?? 0,
+            replies: data.replies ?? 0,
+          });
+          setShowDetail(true);
+        }}
       />
+      {detailData && (
+        <CommentDetailModal
+          isOpen={showDetail}
+          onClose={() => setShowDetail(false)}
+          commentData={detailData}
+        />
+      )}
     </div>
   );
 }

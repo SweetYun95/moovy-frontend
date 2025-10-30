@@ -1,11 +1,9 @@
-@import '../../../styles/globals';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .comment-reply-modal-wrapper {
-  .modal-content {
+  .comment-reply-modal {
     padding: 0;
-    max-height: 80vh;
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 }
 
