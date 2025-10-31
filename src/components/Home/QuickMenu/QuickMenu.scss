@@ -4,6 +4,7 @@
 .quick-menu {
   padding: $spacing-3 0; // 24px 0
   width: 100%;
+  margin: 0 auto;
   
   &__item {
     display: flex;
@@ -46,24 +47,29 @@
   
   // 반응형 - 태블릿 및 모바일 (2x2 그리드)
   @media (max-width: 991px) {
-    &__item {
-      margin-bottom: $spacing-3; // 24px - 행간 간격
-    }
+    padding: $spacing-2 0; // 16px 0
+    &__item { margin-bottom: $spacing-2; }
   }
   
   // 반응형 - 모바일
   @media (max-width: 575px) {
-    padding: $spacing-2 0; // 16px 0
+    padding: $spacing-1 0; // 8px 0
     
     &__item {
       padding: $spacing-1 $spacing-2; // 8px 16px
+      margin-bottom: $spacing-1; // 8px
       min-height: 50px; // 커스텀 디자인 사이즈
       gap: $spacing-1;
-      margin-bottom: $spacing-1; // 8px - 행간 간격
     }
     
     &__text {
       font-size: $body-normal-size; // 16px
     }
+  }
+
+  // 초소형 기기
+  @media (max-width: 400px) {
+    &__item { padding: $spacing-1 $spacing-1; }
+    &__text { font-size: $body-small-size; }
   }
 }

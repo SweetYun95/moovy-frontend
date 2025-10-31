@@ -1,0 +1,89 @@
+@import '../../../styles/variables';
+
+.moovy-footer {
+  background-color: $black2;
+  color: $gray4;
+  padding: $spacing-4 0; // 32px 0
+  font-size: $body-small-size;
+
+  a { color: $gray3; text-decoration: none; }
+  a:hover { color: $white; text-decoration: underline; }
+
+  &__count { color: $primary-color;}
+
+
+  .opacity-75:hover { opacity: 1; }
+
+  .text-muted { color: $gray3; }
+
+  &__social {
+    gap: $spacing-2; // 16px
+    a {
+      color: $white;
+      opacity: 0.75;
+      transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    }
+    a:hover {
+      color: $white;
+      opacity: 1;
+    }
+  }
+
+  .sep {
+    margin: 0 $spacing-1; // 8px
+  }
+
+  .footer-top-links {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: $spacing-3; // 24px
+    padding: 0 $spacing-2;
+    list-style: none;
+    li { display: flex; align-items: center; }
+    a { padding: 0; }
+  }
+
+  .footer-top-content {
+    gap: $spacing-1; 
+    font-size: $body-normal-size;
+    font-weight: $font-weight-bold;
+  }
+
+  .footer-company {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: $spacing-2;
+    color: $gray3;
+    list-style: none;
+    padding: 0;
+    li { display: flex; align-items: center; }
+  }
+}
+
+// Light theme (global theme)
+.theme-light {
+  .moovy-footer {
+    background-color: $gray5;
+    color: $gray1;
+
+    a { color: $gray1; }
+    a:hover { color: $primary-color; }
+
+    .footer-company { color: $gray1; }
+    .text-muted { color: $gray2; }
+
+    .moovy-footer__social {
+      a {
+        opacity: 0.75;
+      }
+      a:hover {
+        color: $primary-color;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+

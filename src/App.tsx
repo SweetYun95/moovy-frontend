@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './app/hooks.ts'
 import { hydrateAuthThunk } from './features/auth/authSlice.ts'
-import AppRouter from './routes/AppRouter.ts'
+import AppRouter from './routes/AppRouter'
 
 export default function App() {
    const dispatch = useAppDispatch()

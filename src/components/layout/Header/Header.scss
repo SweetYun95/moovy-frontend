@@ -223,7 +223,7 @@
       .btn-sm {
         font-size: 0.8125rem; // 13px
         width: auto;
-        min-width: 60px; // 커스텀 디자인 사이즈
+        min-width: 60px; 
         height: 2.25rem; // 36px
         line-height: 2.25rem; // 36px
         padding: 0 $spacing-1; // 0 8px
@@ -283,10 +283,36 @@
       
       .btn-sm {
         font-size: 0.75rem; // 12px
-        min-width: 50px; // 커스텀 디자인 사이즈
+        min-width: 50px; 
         height: $spacing-4; // 32px
         line-height: $spacing-4; // 32px
         padding: 0 0.375rem; // 0 6px
+      }
+    }
+  }
+}
+
+
+// Light theme(global theme)
+.theme-light {
+  .moovy-header {
+    background-color: rgba(255, 255, 255, 0.7);
+
+    .moovy-search-wrapper {
+      &:not(.open) {
+        .search-icon{ color: $primary-color; }
+      }
+
+      &.open {
+        .moovy-search {
+          border: 1px solid $gray3;
+          background-color: rgba($color: rgba($gray1, 0.5), $alpha: 0.04);
+          color: $gray1;
+          &::placeholder { color: rgba($gray1, 0.5); }
+        }
+
+        .search-icon { color: $gray1; }
+        .search-icon:hover { color: $primary-color; }
       }
     }
   }
