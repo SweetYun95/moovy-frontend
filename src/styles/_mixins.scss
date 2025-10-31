@@ -1,7 +1,7 @@
 // Moovy 컴포넌트 라이브러리 - 믹스인
 // ======================================
 
-@import '_variables';
+@import "_variables";
 
 // 공통 입력 필드 스타일
 @mixin input-base {
@@ -11,17 +11,17 @@
   color: $white;
   font-family: $font-family-base;
   transition: $transition-base;
-  
+
   &:focus {
     border-color: $primary-color;
     box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
     outline: 0;
   }
-  
+
   &::placeholder {
     color: $gray3;
   }
-  
+
   &:disabled {
     background-color: rgba($white, 0.05);
     color: $gray4;
@@ -41,7 +41,7 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -110,10 +110,8 @@
 
 @mixin responsive-show($breakpoint: 768px) {
   display: none;
-  
+
   @media (max-width: $breakpoint) {
     display: block;
   }
 }
-
-

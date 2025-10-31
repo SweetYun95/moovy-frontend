@@ -1,55 +1,91 @@
 // 외부 라이브러리
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // 스타일
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/globals.scss';
-import './TestApp.scss';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles/globals.scss";
+import "./TestApp.scss";
 
 // Redux
-import { useAppDispatch, useAppSelector } from './app/hooks';
-import { fetchContentsThunk } from './features/content/contentSlice';
-import { fetchCommentsThunk } from './features/comments/commentSlice';
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { fetchContentsThunk } from "./features/content/contentSlice";
+import { fetchCommentsThunk } from "./features/comments/commentSlice";
 
 // Types
-import type { Topic as ContentCardType } from './services/api/topicApi';
-import type { CommentCard as CommentCardType } from './services/api/commentApi';
+import type { Topic as ContentCardType } from "./services/api/topicApi";
+import type { CommentCard as CommentCardType } from "./services/api/commentApi";
 
 // API
-import { forceWithdrawUser } from './services/api/userApi';
+import { forceWithdrawUser } from "./services/api/userApi";
 
 // Layout Components
-import { Header } from './components/layout/Header/Header';
+import { Header } from "./components/layout/Header/Header";
 
 // Common Components
-import { Button } from './components/common/Button/ButtonStyle';
-import { LoginButton, StatusButton, ActionButton, WideButton } from './components/common/Button/Button';
-import { DatePicker } from './components/common/DatePicker/DatePicker';
-import { DateSelector } from './components/common/DateSelector/DateSelector';
-import { ImageUpload } from './components/common/ImageUpload/ImageUpload';
-import Spinner from './components/common/Spinner';
-import { EmailInput, PasswordInput, NameInput, NicknameInput, SuccessInput, WarningInput, ErrorInput } from './components/common/Input';
-import { GenreSelector, RatingSelector, YearSelector, CountrySelector } from './components/common/Selector';
-import { ReviewTextarea, CommentTextarea, ErrorTextarea, InquiryTextarea, ProfileTextarea } from './components/common/Textarea';
-import { IdSaveCheckbox, PrivacyCheckbox, TermsCheckbox, MarketingCheckbox, SuccessCheckbox, ErrorCheckbox } from './components/common/Checkbox';
-import { StandardPagination, ExtendedPagination, SmallPagination, LargePagination } from './components/common/Pagination';
-import { MypageTabs, AdminTabs } from './components/common/Tabs/index';
+import { Button } from "./components/common/Button/ButtonStyle";
+import {
+  LoginButton,
+  StatusButton,
+  ActionButton,
+  WideButton,
+} from "./components/common/Button/Button";
+import { DatePicker } from "./components/common/DatePicker/DatePicker";
+import { DateSelector } from "./components/common/DateSelector/DateSelector";
+import { ImageUpload } from "./components/common/ImageUpload/ImageUpload";
+import Spinner from "./components/common/Spinner";
+import {
+  EmailInput,
+  PasswordInput,
+  NameInput,
+  NicknameInput,
+  SuccessInput,
+  WarningInput,
+  ErrorInput,
+} from "./components/common/Input";
+import {
+  GenreSelector,
+  RatingSelector,
+  YearSelector,
+  CountrySelector,
+} from "./components/common/Selector";
+import {
+  ReviewTextarea,
+  CommentTextarea,
+  ErrorTextarea,
+  InquiryTextarea,
+  ProfileTextarea,
+} from "./components/common/Textarea";
+import {
+  IdSaveCheckbox,
+  PrivacyCheckbox,
+  TermsCheckbox,
+  MarketingCheckbox,
+  SuccessCheckbox,
+  ErrorCheckbox,
+} from "./components/common/Checkbox";
+import {
+  StandardPagination,
+  ExtendedPagination,
+  SmallPagination,
+  LargePagination,
+} from "./components/common/Pagination";
+import { MypageTabs, AdminTabs } from "./components/common/Tabs/index";
 
 // Home Components
-import { MovieCardSlider } from './components/Home/MovieCard/MovieCardSlider';
-import { ImageCommentCardSlider } from './components/Home/ImageCommentCard/ImageCommentCardSlider';
-import { QuickMenu } from './components/Home/QuickMenu/QuickMenu';
+import { MovieCardSlider } from "./components/Home/MovieCard/MovieCardSlider";
+import { ImageCommentCardSlider } from "./components/Home/ImageCommentCard/ImageCommentCardSlider";
+import { QuickMenu } from "./components/Home/QuickMenu/QuickMenu";
 
 // Movies Components
-import { ContentCard } from './components/movies/ContentCard/ContentCard';
-import { CommentCard } from './components/movies/CommentCard/CommentCard';
+import { ContentCard } from "./components/movies/ContentCard/ContentCard";
+import { CommentCard } from "./components/movies/CommentCard/CommentCard";
 
 // Modals
-import ConfirmModal from './components/modals/ConfirmModal/ConfirmModal';
-import InquiryModal from './components/modals/InquiryModal/InquiryModal';
-import ReportModal from './components/modals/ReportModal/ReportModal';
-import { CommentDetailModal } from './components/modals/CommentDetailModal/CommentDetailModal';
-import { 
+import ConfirmModal from "./components/modals/ConfirmModal/ConfirmModal";
+import InquiryModal from "./components/modals/InquiryModal/InquiryModal";
+import ReportModal from "./components/modals/ReportModal/ReportModal";
+import { CommentDetailModal } from "./components/modals/CommentDetailModal/CommentDetailModal";
+import {
   DeleteModalComponent,
   InquiryModalComponent,
   ReportModalComponent,
@@ -58,12 +94,18 @@ import {
   SettingsModalComponent,
   TopicManagementModalComponent,
   SanctionHistoryModal,
-  WithdrawalConfirmModal
-} from './components/modals';
-import { AdminProfileEditModalComponent } from './components/modals/ProfileEditModal/ProfileEditModal';
+  WithdrawalConfirmModal,
+} from "./components/modals";
+import { AdminProfileEditModalComponent } from "./components/modals/ProfileEditModal/ProfileEditModal";
 
 // Admin Components
-import { UserManagementFilter, WorkManagementFilter, CommentManagementFilter, ReportManagementFilter } from './components/admin/AdminFilter';
+import {
+  UserManagementFilter,
+  WorkManagementFilter,
+  CommentManagementFilter,
+  ReportManagementFilter,
+} from "./components/admin/AdminFilter";
+import { useNavigate } from "react-router-dom";
 
 function CommentDetailExample() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,7 +114,9 @@ function CommentDetailExample() {
     <>
       <div className="component-demo">
         <h4>Comment Detail Modal</h4>
-        <button onClick={() => setIsModalOpen(true)}>코멘트 상세 모달 열기</button>
+        <button onClick={() => setIsModalOpen(true)}>
+          코멘트 상세 모달 열기
+        </button>
       </div>
 
       <CommentDetailModal
@@ -89,14 +133,16 @@ function CommentDetailExample() {
           {
             id: 1,
             username: "유저닉네임",
-            content: "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
+            content:
+              "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
             likes: 102,
             isMyComment: true,
           },
           {
             id: 2,
             username: "유저닉네임",
-            content: "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
+            content:
+              "댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다 댓글입니다",
             likes: 102,
           },
         ]}
@@ -106,7 +152,7 @@ function CommentDetailExample() {
 }
 
 function DatePickerExamples() {
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState("");
 
   return (
     <div className="component-demo">
@@ -240,24 +286,24 @@ function TextareaExamples() {
       <h4>Textarea Components</h4>
       <div className="row">
         <div className="col-md-12">
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="review-textarea">리뷰 작성</label>
             <ReviewTextarea />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="comment-textarea">댓글 작성</label>
             <CommentTextarea />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="textarea-error">Error State</label>
             <ErrorTextarea />
             <small className="text-danger">필수 입력 항목입니다.</small>
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="inquiry-textarea">문의 작성</label>
             <InquiryTextarea />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="profile-textarea">프로필 소개</label>
             <ProfileTextarea />
           </div>
@@ -273,35 +319,35 @@ function InputExamples() {
       <h4>Input Components</h4>
       <div className="row">
         <div className="col-md-6">
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="email">Email</label>
             <EmailInput />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="name">이름</label>
             <NameInput />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="nickname">닉네임</label>
             <NicknameInput />
           </div>
         </div>
         <div className="col-md-6">
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="password">Password</label>
             <PasswordInput />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="success-input">Success State</label>
             <SuccessInput />
             <small className="text-success">Success!</small>
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="warning-input">Warning State</label>
             <WarningInput />
             <small className="text-warning">Warning!</small>
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="error-input">Error State</label>
             <ErrorInput />
             <small className="text-danger">Error!</small>
@@ -331,7 +377,9 @@ function PaginationExamples() {
             <SmallPagination />
           </div>
           <div className="mb-4">
-            <label className="d-block mb-2">대규모 페이지네이션 (100페이지)</label>
+            <label className="d-block mb-2">
+              대규모 페이지네이션 (100페이지)
+            </label>
             <LargePagination />
           </div>
         </div>
@@ -346,21 +394,21 @@ function SelectorExamples() {
       <h4>Selector Components</h4>
       <div className="row">
         <div className="col-md-6">
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="genre-selector">장르 선택</label>
             <GenreSelector />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="year-selector">연도 선택</label>
             <YearSelector />
           </div>
         </div>
         <div className="col-md-6">
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="rating-selector">평점 선택</label>
             <RatingSelector />
           </div>
-          <div className='mb-3'>
+          <div className="mb-3">
             <label htmlFor="country-selector">국가 선택</label>
             <CountrySelector />
           </div>
@@ -372,7 +420,9 @@ function SelectorExamples() {
 
 function ContentCardExamples() {
   const dispatch = useAppDispatch();
-  const { contents: contentCards, loading } = useAppSelector((state) => state.content);
+  const { contents: contentCards, loading } = useAppSelector(
+    (state) => state.content
+  );
 
   useEffect(() => {
     dispatch(fetchContentsThunk());
@@ -404,7 +454,7 @@ function ContentCardExamples() {
           <div key={content.id} className="col-xl-3 col-md-4 col-sm-6 mb-4">
             <ContentCard
               title={content.title}
-              year={content.year || ''}
+              year={content.year || ""}
               category={content.category}
               country={content.country}
               rating={content.overallRating ?? 0}
@@ -420,46 +470,53 @@ function ContentCardExamples() {
 
 function CommentCardExamples() {
   const dispatch = useAppDispatch();
-  const { comments: commentCards, loading } = useAppSelector((state) => state.comment);
-  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  // const { comments: commentCards, loading } = useAppSelector(
+  //   (state) => state.comment
+  // );
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCommentsThunk());
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
 
-  if (commentCards.length === 0) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>No comments available</p>
-      </div>
-    );
-  }
+  // if (commentCards.length === 0) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>No comments available</p>
+  //     </div>
+  //   );
+  // }
 
   const handleReplyClick = (comment: CommentCardType) => {
     setSelectedCommentId(comment.id);
     setIsModalOpen(true);
   };
 
-  const selectedComment = commentCards.find(c => c.id === selectedCommentId);
+  // const selectedComment = commentCards.find((c) => c.id === selectedCommentId);
 
   return (
     <>
       <div className="component-demo">
         <h4>Simple Comment Card Components</h4>
-        <div className="row">
+        {/* <div className="row">
           {commentCards.map((commentCard: CommentCardType) => (
-            <div key={commentCard.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div
+              key={commentCard.id}
+              className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+            >
               <CommentCard
                 username={commentCard.username}
                 comment={commentCard.comment}
@@ -471,10 +528,10 @@ function CommentCardExamples() {
               />
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
-      {selectedComment && (
+      {/* {selectedComment && (
         <CommentDetailModal
           isOpen={isModalOpen}
           onClose={() => {
@@ -483,13 +540,13 @@ function CommentCardExamples() {
           }}
           commentData={{
             username: selectedComment.username,
-            date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+            date: new Date().toISOString().split("T")[0].replace(/-/g, "."),
             content: selectedComment.comment,
             likes: selectedComment.likes,
             replies: selectedComment.replies,
           }}
         />
-      )}
+      )} */}
     </>
   );
 }
@@ -532,17 +589,23 @@ function MovieCardSliderExamples() {
   // 전체인기작, 현재상영작, 관리자추천
   const movieChunks = chunkArray(contents, 3);
   const sections = [
-    { title: '요즘뜨는 신작 TOP : 토론 ON', movies: movieChunks[0] || [] },
-    { title: '현재 상영작 TOP : 이야기하러 가볼까?', movies: movieChunks[1] || [] },
-    { title: 'MOOVY 추천작 TOP : 언제봐도 명작이다..!', movies: movieChunks[2] || [] },
+    { title: "요즘뜨는 신작 TOP : 토론 ON", movies: movieChunks[0] || [] },
+    {
+      title: "현재 상영작 TOP : 이야기하러 가볼까?",
+      movies: movieChunks[1] || [],
+    },
+    {
+      title: "MOOVY 추천작 TOP : 언제봐도 명작이다..!",
+      movies: movieChunks[2] || [],
+    },
   ];
 
   return (
     <div className="component-demo">
       <h4>Movie Card Components</h4>
-      <MovieCardSlider 
+      <MovieCardSlider
         sections={sections}
-        onCardClick={(title) => alert(`${title} 코멘트 작성`)} 
+        onCardClick={(title) => alert(`${title} 코멘트 작성`)}
       />
     </div>
   );
@@ -550,28 +613,39 @@ function MovieCardSliderExamples() {
 
 function ImageCommentCardSliderExamples() {
   const dispatch = useAppDispatch();
-  const { comments, loading: commentsLoading } = useAppSelector((state) => state.comment);
-  const { contents, loading: contentsLoading } = useAppSelector((state) => state.content);
+  // const { comments, loading: commentsLoading } = useAppSelector(
+  //   (state) => state.comment
+  // );
+  const comments = [{}];
+  const { contents, loading: contentsLoading } = useAppSelector(
+    (state) => state.content
+  );
   const [showDetail, setShowDetail] = useState(false);
-  const [detailData, setDetailData] = useState<{ username: string; date: string; content: string; likes: number; replies: number } | null>(null);
+  const [detailData, setDetailData] = useState<{
+    username: string;
+    date: string;
+    content: string;
+    likes: number;
+    replies: number;
+  } | null>(null);
 
   useEffect(() => {
     dispatch(fetchCommentsThunk());
     dispatch(fetchContentsThunk());
   }, [dispatch]);
 
-  const loading = commentsLoading || contentsLoading;
+  // const loading = commentsLoading || contentsLoading;
 
-  if (loading) {
-    return (
-      <div className="component-demo">
-        <h4>Image Comment Card Components</h4>
-        <Spinner />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Image Comment Card Components</h4>
+  //       <Spinner />
+  //     </div>
+  //   );
+  // }
 
-  if (comments.length === 0) {
+  if (comments?.length === 0) {
     return (
       <div className="component-demo">
         <h4>Image Comment Card Components</h4>
@@ -592,9 +666,9 @@ function ImageCommentCardSliderExamples() {
   // 데이터를 4개씩 나누고 타이틀 추가
   const commentChunks = chunkArray(comments, 4);
   const sections = [
-    { title: '핫 토크 리뷰', comments: commentChunks[0] || [] },
-    { title: '베스트 리뷰', comments: commentChunks[1] || [] },
-    { title: '실시간 리뷰', comments: commentChunks[2] || [] },
+    { title: "핫 토크 리뷰", comments: commentChunks[0] || [] },
+    { title: "베스트 리뷰", comments: commentChunks[1] || [] },
+    { title: "실시간 리뷰", comments: commentChunks[2] || [] },
   ];
 
   return (
@@ -605,8 +679,8 @@ function ImageCommentCardSliderExamples() {
         contents={contents}
         onCardClick={(data) => {
           setDetailData({
-            username: data.username || '유저닉네임',
-            date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+            username: data.username || "유저닉네임",
+            date: new Date().toISOString().split("T")[0].replace(/-/g, "."),
             content: data.comment || `${data.title}에 대한 코멘트 상세입니다`,
             likes: data.likes ?? 0,
             replies: data.replies ?? 0,
@@ -632,33 +706,39 @@ function TestApp() {
   const [showInquiryAdminModal, setShowInquiryAdminModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showReportAdminModal, setShowReportAdminModal] = useState(false);
-  const [showSanctionHistoryModal, setShowSanctionHistoryModal] = useState(false);
-  const [sanctionHistories, setSanctionHistories] = useState<Array<{ id: number; reason: string }>>([]);
+  const [showSanctionHistoryModal, setShowSanctionHistoryModal] =
+    useState(false);
+  const [sanctionHistories, setSanctionHistories] = useState<
+    Array<{ id: number; reason: string }>
+  >([]);
   const [showWithdrawalUserModal, setShowWithdrawalUserModal] = useState(false);
-  const [showWithdrawalAdminModal, setShowWithdrawalAdminModal] = useState(false);
+  const [showWithdrawalAdminModal, setShowWithdrawalAdminModal] =
+    useState(false);
   const [withdrawalUserId, setWithdrawalUserId] = useState<number | null>(null);
   const [showCommentEditModal, setShowCommentEditModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
-  const [showAdminProfileEditModal, setShowAdminProfileEditModal] = useState(false);
+  const [showAdminProfileEditModal, setShowAdminProfileEditModal] =
+    useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showTopicModal, setShowTopicModal] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
       <Header
-        onSearchChange={(value) => console.log('검색:', value)}
+        onSearchChange={(value) => console.log("검색:", value)}
         onSearch={(value) => alert(`검색: ${value}`)}
-        onLoginClick={() => alert('로그인 클릭!')}
-        onSignupClick={() => alert('회원가입 클릭!')}
+        onLoginClick={() => navigate("/login")}
+        onSignupClick={() => navigate("/register")}
       />
-      
+
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             <div className="p-4">
               <h1 className="text-primary mb-4">Moovy Component Library</h1>
-              
+
               {/* Quick Menu */}
               <h4>QuickMenu Component</h4>
               <QuickMenu />
@@ -701,7 +781,7 @@ function TestApp() {
 
               {/* Content Card */}
               <ContentCardExamples />
-              
+
               {/* Movie Card Slider */}
               <MovieCardSliderExamples />
 
@@ -719,23 +799,23 @@ function TestApp() {
                 <h4>Admin Filter Components</h4>
                 <div className="row g-4">
                   <div className="col-12">
-                    <UserManagementFilter 
-                      onSearch={(filters) => console.log('유저 필터:', filters)}
+                    <UserManagementFilter
+                      onSearch={(filters) => console.log("유저 필터:", filters)}
                     />
                   </div>
                   <div className="col-12">
-                    <WorkManagementFilter 
-                      onSearch={(filters) => console.log('작품 필터:', filters)}
+                    <WorkManagementFilter
+                      onSearch={(filters) => console.log("작품 필터:", filters)}
                     />
                   </div>
                   <div className="col-12">
-                    <CommentManagementFilter 
-                      onSearch={(filters) => console.log('댓글 필터:', filters)}
+                    <CommentManagementFilter
+                      onSearch={(filters) => console.log("댓글 필터:", filters)}
                     />
                   </div>
                   <div className="col-12">
-                    <ReportManagementFilter 
-                      onSearch={(filters) => console.log('신고 필터:', filters)}
+                    <ReportManagementFilter
+                      onSearch={(filters) => console.log("신고 필터:", filters)}
                     />
                   </div>
                 </div>
@@ -748,10 +828,20 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>코멘트삭제, 환경설정모달</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowDeleteModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowDeleteModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         코멘트삭제
                       </Button>
-                      <Button variant="primary" size='md' onClick={() => setShowSettingsModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowSettingsModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         환경설정
                       </Button>
                     </div>
@@ -760,10 +850,20 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>탈퇴모달(유저, 관리자)</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowWithdrawalUserModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowWithdrawalUserModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         유저
                       </Button>
-                      <Button variant="primary" size='md' onClick={() => setShowWithdrawalAdminModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowWithdrawalAdminModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         관리자
                       </Button>
                     </div>
@@ -774,10 +874,20 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>1:1 문의모달(유저, 관리자)</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowInquiryModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowInquiryModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         유저
                       </Button>
-                      <Button variant="primary" size='md' onClick={() => setShowInquiryAdminModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowInquiryAdminModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         관리자
                       </Button>
                     </div>
@@ -786,10 +896,20 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>신고모달(유저, 관리자)</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowReportModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowReportModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         유저
                       </Button>
-                      <Button variant="primary" size='md' onClick={() => setShowReportAdminModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowReportAdminModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         관리자
                       </Button>
                     </div>
@@ -800,7 +920,12 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>코멘트작성모달</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowCommentEditModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowCommentEditModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         코멘트작성
                       </Button>
                     </div>
@@ -809,10 +934,20 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>프로필편집, 유저관리(관리자)모달</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowProfileEditModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowProfileEditModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         프로필편집
                       </Button>
-                      <Button variant="primary" size='md' onClick={() => setShowAdminProfileEditModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowAdminProfileEditModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         유저관리
                       </Button>
                     </div>
@@ -823,7 +958,12 @@ function TestApp() {
                   <div className="col-md-6">
                     <h4>토픽관리모달</h4>
                     <div className="mt-2">
-                      <Button variant="primary" size='md' onClick={() => setShowTopicModal(true)} className="mr-2 mb-2">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => setShowTopicModal(true)}
+                        className="mr-2 mb-2"
+                      >
                         토픽생성
                       </Button>
                     </div>
@@ -832,51 +972,57 @@ function TestApp() {
               </div>
 
               {/* Modal Components */}
-              <DeleteModalComponent isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
-              <InquiryModalComponent isOpen={showInquiryModal} onClose={() => setShowInquiryModal(false)} />
+              <DeleteModalComponent
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+              />
+              <InquiryModalComponent
+                isOpen={showInquiryModal}
+                onClose={() => setShowInquiryModal(false)}
+              />
               <InquiryModal
                 isOpen={showInquiryAdminModal}
                 onClose={() => setShowInquiryAdminModal(false)}
                 mode="admin"
                 inquiryData={{
-                  category: 'general',
-                  content: '어쩌구 저쩌구 문의 사항입니다.',
-                  initialReply: '답변내용을 적어주세요.'
+                  category: "general",
+                  content: "어쩌구 저쩌구 문의 사항입니다.",
+                  initialReply: "답변내용을 적어주세요.",
                 }}
                 onSubmit={(data) => {
-                  console.log('답변 저장:', data);
+                  console.log("답변 저장:", data);
                   setShowInquiryAdminModal(false);
                 }}
                 onReport={() => {
-                  console.log('신고 처리');
+                  console.log("신고 처리");
                 }}
               />
-              <ReportModalComponent 
-                isOpen={showReportModal} 
+              <ReportModalComponent
+                isOpen={showReportModal}
                 onClose={() => setShowReportModal(false)}
                 targetType="user"
                 targetId={1}
-                targetUser={{ name: '홍길동', reportCount: 5 }}
+                targetUser={{ name: "홍길동", reportCount: 5 }}
                 onReportCountClick={(data) => {
                   setSanctionHistories(data);
                   setShowSanctionHistoryModal(true);
                 }}
               />
-              <ReportModal 
+              <ReportModal
                 isOpen={showReportAdminModal}
                 onClose={() => setShowReportAdminModal(false)}
                 mode="admin"
                 reportData={{
-                  category: 'spam',
-                  content: '스팸 신고 내용입니다.',
+                  category: "spam",
+                  content: "스팸 신고 내용입니다.",
                   targetUser: {
-                    name: 'Natali Craig',
+                    name: "Natali Craig",
                     reportCount: 5,
-                    avatar: 'https://picsum.photos/48/48?random=1'
-                  }
+                    avatar: "https://picsum.photos/48/48?random=1",
+                  },
                 }}
                 onSubmit={(data) => {
-                  console.log('신고 처리:', data);
+                  console.log("신고 처리:", data);
                   setShowReportAdminModal(false);
                 }}
                 onReportCountClick={(data) => {
@@ -888,11 +1034,14 @@ function TestApp() {
                 isOpen={showSanctionHistoryModal}
                 onClose={() => setShowSanctionHistoryModal(false)}
                 histories={sanctionHistories}
-                onDetailClick={(id) => console.log('상세 신고내역:', id)}
+                onDetailClick={(id) => console.log("상세 신고내역:", id)}
               />
-              <CommentEditModalComponent isOpen={showCommentEditModal} onClose={() => setShowCommentEditModal(false)} />
-              <ProfileEditModalComponent 
-                isOpen={showProfileEditModal} 
+              <CommentEditModalComponent
+                isOpen={showCommentEditModal}
+                onClose={() => setShowCommentEditModal(false)}
+              />
+              <ProfileEditModalComponent
+                isOpen={showProfileEditModal}
                 onClose={() => setShowProfileEditModal(false)}
                 onSuccess={() => setShowConfirmModal(true)}
               />
@@ -901,8 +1050,8 @@ function TestApp() {
                 onClose={() => setShowConfirmModal(false)}
                 message="수정되었습니다."
               />
-              <AdminProfileEditModalComponent 
-                isOpen={showAdminProfileEditModal} 
+              <AdminProfileEditModalComponent
+                isOpen={showAdminProfileEditModal}
                 onClose={() => setShowAdminProfileEditModal(false)}
                 userId={1}
                 onWithdrawClick={() => {
@@ -915,15 +1064,21 @@ function TestApp() {
                   setShowSanctionHistoryModal(true);
                 }}
               />
-              <SettingsModalComponent isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
-              <TopicManagementModalComponent isOpen={showTopicModal} onClose={() => setShowTopicModal(false)} />
+              <SettingsModalComponent
+                isOpen={showSettingsModal}
+                onClose={() => setShowSettingsModal(false)}
+              />
+              <TopicManagementModalComponent
+                isOpen={showTopicModal}
+                onClose={() => setShowTopicModal(false)}
+              />
               <WithdrawalConfirmModal
                 isOpen={showWithdrawalUserModal}
                 onClose={() => setShowWithdrawalUserModal(false)}
                 mode="user"
                 userName="홍길동"
                 onConfirm={() => {
-                  console.log('유저 탈퇴');
+                  console.log("유저 탈퇴");
                   setShowWithdrawalUserModal(false);
                 }}
               />
@@ -936,12 +1091,15 @@ function TestApp() {
                 onConfirm={async () => {
                   if (withdrawalUserId !== null) {
                     try {
-                      await forceWithdrawUser(withdrawalUserId, '관리자에 의한 강제 탈퇴');
-                      console.log('관리자 강제 탈퇴 완료');
+                      await forceWithdrawUser(
+                        withdrawalUserId,
+                        "관리자에 의한 강제 탈퇴"
+                      );
+                      console.log("관리자 강제 탈퇴 완료");
                       setShowWithdrawalAdminModal(false);
                       setWithdrawalUserId(null);
                     } catch (error) {
-                      console.error('강제 탈퇴 실패:', error);
+                      console.error("강제 탈퇴 실패:", error);
                       // TODO: 에러 토스트 메시지 표시
                     }
                   }

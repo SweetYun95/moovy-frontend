@@ -1,5 +1,8 @@
-@import 'variables';
-@import 'mixins';
+// Moovy 컴포넌트 라이브러리 - 기본 스타일
+// ======================================
+
+@import "variables";
+@import "mixins";
 
 // 리셋 및 기본 스타일
 * {
@@ -40,18 +43,28 @@ body {
   background-color: transparent;
   color: $white;
   border-color: $gray2;
-  
+
   &:hover {
     border-color: $white;
   }
 }
 
 // 공통 텍스트 유틸리티
-.text-primary { color: $primary-color; }
-.text-success { color: $success-color; }
-.text-danger { color: $danger-color; }
-.text-warning { color: $warning-color; }
-.text-muted { color: $gray2; }
+.text-primary {
+  color: $primary-color;
+}
+.text-success {
+  color: $success-color;
+}
+.text-danger {
+  color: $danger-color;
+}
+.text-warning {
+  color: $warning-color;
+}
+.text-muted {
+  color: $gray2;
+}
 
 // 공통 폼 라벨 (클래스 기반으로 통일)
 .form-label {
@@ -70,7 +83,7 @@ body {
 .component-demo {
   @include card-base;
   margin-bottom: $spacing-4;
-  
+
   .form-group {
     margin-bottom: $spacing-2;
   }
@@ -90,7 +103,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background: $gray1;
   border-radius: 4px;
-  
+
   &:hover {
     background: $gray2;
   }
@@ -104,4 +117,36 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: $gray1 $black1;
+}
+
+//margin top
+.mt-1 {
+  margin-top: $spacing-1; //8px
+}
+.mt-2 {
+  margin-top: $spacing-2; //16px
+}
+.mt-3 {
+  margin-top: $spacing-3; //24px
+}
+.mt-4 {
+  margin-top: $spacing-4; //32px
+}
+.mt-5 {
+  margin-top: $spacing-5; //40px
+}
+.mt-6 {
+  margin-top: $spacing-6; //56px
+}
+.mt-7 {
+  margin-top: $spacing-7; //72px
+}
+.mt-8 {
+  margin-top: $spacing-8; //80px
+}
+.mt-9 {
+  margin-top: $spacing-9; //96px
+}
+.mt-10 {
+  margin-top: $spacing-10; //120px
 }

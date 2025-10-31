@@ -1,6 +1,7 @@
-import React from 'react';
-import './CommentCard.scss';
-import { Icon } from '@iconify/react';
+import React from "react";
+import { Icon } from "@iconify/react";
+
+import "./CommentCard.scss";
 
 export interface CommentCardProps {
   username: string;
@@ -21,7 +22,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   likes,
   replies,
   profileImageUrl,
-  className = '',
+  className = "",
   onLikeClick,
   onReplyClick,
 }) => {
@@ -30,14 +31,21 @@ export const CommentCard: React.FC<CommentCardProps> = ({
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     if (onLikeClick) {
       onLikeClick();
     }
   };
 
   const renderStarIcon = () => {
-    return <Icon icon="mdi:star" width="16" height="16" style={{ color: '#FFD60A' }} />;
+    return (
+      <Icon
+        icon="mdi:star"
+        width="16"
+        height="16"
+        style={{ color: "#FFD60A" }}
+      />
+    );
   };
 
   return (
@@ -45,8 +53,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       <div className="comment-card__header">
         <div className="comment-card__profile">
           {profileImageUrl ? (
-            <img 
-              src={profileImageUrl} 
+            <img
+              src={profileImageUrl}
               alt={username}
               className="comment-card__profile-image"
             />
@@ -62,36 +70,41 @@ export const CommentCard: React.FC<CommentCardProps> = ({
           <span className="comment-card__rating-text">{rating}</span>
         </div>
       </div>
-      
+
       <div className="comment-card__content">
         <p className="comment-card__text">{comment}</p>
       </div>
-      
+
       <div className="comment-card__actions">
-        <span 
+        <span
           className="comment-card__action-button comment-card__action-button--like"
           aria-hidden="true"
         >
           <span>좋아요 {likeCount}개</span>
         </span>
-        
-        <button 
+
+        <button
           className="comment-card__action-button comment-card__action-button--reply"
           onClick={onReplyClick}
         >
           <span>댓글 {replies}</span>
         </button>
       </div>
-      
+
       <div className="comment-card__icon-actions">
-        <button 
-          className={`comment-card__icon-button comment-card__icon-button--like ${isLiked ? 'comment-card__icon-button--liked' : ''}`}
+        <button
+          className={`comment-card__icon-button comment-card__icon-button--like ${isLiked ? "comment-card__icon-button--liked" : ""}`}
           onClick={handleLikeClick}
         >
-          <Icon icon={isLiked ? "mdi:heart" : "mdi:heart-outline"} width="24" height="24" style={{ color: isLiked ? '#FF3040' : 'inherit' }} />
+          <Icon
+            icon={isLiked ? "mdi:heart" : "mdi:heart-outline"}
+            width="24"
+            height="24"
+            style={{ color: isLiked ? "#FF3040" : "inherit" }}
+          />
         </button>
-        
-        <button 
+
+        <button
           className="comment-card__icon-button comment-card__icon-button--reply"
           onClick={onReplyClick}
         >

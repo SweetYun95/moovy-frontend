@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Input } from './InputStyle';
+import React, { useState } from "react";
+import { Input } from "./InputStyle";
 
 export const EmailInput: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <Input
@@ -16,7 +16,7 @@ export const EmailInput: React.FC = () => {
 };
 
 export const PasswordInput: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <Input
@@ -29,9 +29,22 @@ export const PasswordInput: React.FC = () => {
     />
   );
 };
+export const PasswordCheckInput: React.FC = () => {
+  const [value, setValue] = useState("");
 
+  return (
+    <Input
+      type="password"
+      placeholder="비밀번호를 다시 입력하세요"
+      value={value}
+      onChange={setValue}
+      showPasswordToggle={true}
+      id="password"
+    />
+  );
+};
 export const NameInput: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <Input
@@ -45,7 +58,7 @@ export const NameInput: React.FC = () => {
 };
 
 export const NicknameInput: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <Input
@@ -54,10 +67,10 @@ export const NicknameInput: React.FC = () => {
       value={value}
       onChange={setValue}
       rightButton={{
-        text: '중복 확인',
-        onClick: () => alert('중복 확인 클릭!'),
-        variant: 'primary',
-        size: 'sm',
+        text: "중복 확인",
+        onClick: () => alert("중복 확인 클릭!"),
+        variant: "primary",
+        size: "sm",
       }}
       id="nickname"
     />
@@ -65,7 +78,7 @@ export const NicknameInput: React.FC = () => {
 };
 
 export const SuccessInput: React.FC = () => {
-  const [value, setValue] = useState('Success!');
+  const [value, setValue] = useState("Success!");
 
   return (
     <Input
@@ -79,7 +92,7 @@ export const SuccessInput: React.FC = () => {
 };
 
 export const WarningInput: React.FC = () => {
-  const [value, setValue] = useState('Warning!');
+  const [value, setValue] = useState("Warning!");
 
   return (
     <Input
@@ -93,7 +106,7 @@ export const WarningInput: React.FC = () => {
 };
 
 export const ErrorInput: React.FC = () => {
-  const [value, setValue] = useState('Error!');
+  const [value, setValue] = useState("Error!");
 
   return (
     <Input
