@@ -1,11 +1,11 @@
-// moovy-frontend/src/pages/movies/MovieDetailPage.tsx
+// moovy-frontend/src/pages/movies/ContentDetailPage.tsx
 
 import React from "react";
 import { Icon } from "@iconify/react";
 
 import CommentCard from "@/components/movies/CommentCard/CommentCard";
 
-import "./MovieDetailPage.scss";
+import "./ContentDetailPage.scss";
 
 interface Movie {
   content_id: number;
@@ -24,7 +24,7 @@ interface Comment {
   content: string;
 }
 
-const MovieDetailPage: React.FC = () => {
+const ContentDetailPage: React.FC = () => {
   // 확인용 하드코딩 데이터
   const movie: Movie = {
     content_id: 1,
@@ -153,4 +153,4 @@ const MovieDetailPage: React.FC = () => {
   );
 };
 
-export default MovieDetailPage;
+export default ContentDetailPage;

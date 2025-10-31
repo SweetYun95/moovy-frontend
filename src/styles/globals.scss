@@ -9,10 +9,10 @@
 @import 'swiper/css/pagination';
 
 
-// 전역 기본값
+// 전역 기본값 (다크 테마를 기본으로)
 :root {
-  --color-bg: #{$white};
-  --color-fg: #{$black1};
+  --color-bg: #{$black1};
+  --color-fg: #{$gray3};
   --color-primary: #{$primary-color};
 }
 
@@ -27,12 +27,14 @@ html, body, #root {
   padding: 0 $spacing-2;
 }
 
-// 다크 테마(선택): body에 .theme-dark 붙이면 적용
-.theme-dark {
-  --color-bg: #{$black1};
-  --color-fg: #{$gray3};
+// 라이트 테마(선택): body에 .theme-light 붙이면 적용
+.theme-light {
+  --color-bg: #{$white};
+  --color-fg: #{$black1};
   background: var(--color-bg);
   color: var(--color-fg);
 }
+
+// 자동 테마 지원은 비활성화 (명시적 테마만 사용)
 
 
