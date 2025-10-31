@@ -23,11 +23,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        {/* <TestApp /> */}
+        <TestApp />
         {/* <AuthPage /> */}
         {/* <UserMainPage /> */}
         {/* <MovieDetailPage /> */}
-        <MyPage />
+        {/* <MyPage /> */}
       </BrowserRouter>
     </Provider>
   </StrictMode>

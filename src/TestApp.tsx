@@ -470,9 +470,9 @@ function ContentCardExamples() {
 
 function CommentCardExamples() {
   const dispatch = useAppDispatch();
-  const { comments: commentCards, loading } = useAppSelector(
-    (state) => state.comment
-  );
+  // const { comments: commentCards, loading } = useAppSelector(
+  //   (state) => state.comment
+  // );
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
     null
   );
@@ -482,36 +482,36 @@ function CommentCardExamples() {
     dispatch(fetchCommentsThunk());
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
 
-  if (commentCards.length === 0) {
-    return (
-      <div className="component-demo">
-        <h4>Simple Comment Card Components</h4>
-        <p>No comments available</p>
-      </div>
-    );
-  }
+  // if (commentCards.length === 0) {
+  //   return (
+  //     <div className="component-demo">
+  //       <h4>Simple Comment Card Components</h4>
+  //       <p>No comments available</p>
+  //     </div>
+  //   );
+  // }
 
   const handleReplyClick = (comment: CommentCardType) => {
     setSelectedCommentId(comment.id);
     setIsModalOpen(true);
   };
 
-  const selectedComment = commentCards.find((c) => c.id === selectedCommentId);
+  // const selectedComment = commentCards.find((c) => c.id === selectedCommentId);
 
   return (
     <>
       <div className="component-demo">
         <h4>Simple Comment Card Components</h4>
-        <div className="row">
+        {/* <div className="row">
           {commentCards.map((commentCard: CommentCardType) => (
             <div
               key={commentCard.id}
@@ -528,10 +528,10 @@ function CommentCardExamples() {
               />
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
-      {selectedComment && (
+      {/* {selectedComment && (
         <CommentDetailModal
           isOpen={isModalOpen}
           onClose={() => {
@@ -546,7 +546,7 @@ function CommentCardExamples() {
             replies: selectedComment.replies,
           }}
         />
-      )}
+      )} */}
     </>
   );
 }
