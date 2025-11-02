@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Modal from '../Modal/Modal';
-import './CommentDetailModal.scss';
-import { useAppDispatch } from '@/app/hooks';
-import { createReplyThunk } from '@/features/comments/commentSlice';
-import { OriginalComment } from './OriginalComment';
-import { ReplyForm } from './ReplyForm';
-import { ReplyList, type ReplyItem } from './ReplyList';
+import React, { useEffect, useRef, useState } from "react";
+import Modal from "../Modal/Modal";
+import "./CommentDetailModal.scss";
+import { useAppDispatch } from "@/app/hooks";
+import { createReplyThunk } from "@/features/comments/commentCardsSlice";
+import { OriginalComment } from "./OriginalComment";
+import { ReplyForm } from "./ReplyForm";
+import { ReplyList, type ReplyItem } from "./ReplyList";
 
 export interface CommentDetailModalProps {
   isOpen: boolean;
@@ -43,39 +43,41 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
   const handleSubmit = async (content: string, isPrivate: boolean) => {
     try {
       const result = await dispatch(
-        createReplyThunk({ 
-          parentCommentId: (commentData as any).id || 0, 
-          content, 
-          isPrivate 
-        })
+        createReplyThunk({
+          parentCommentId: (commentData as any).id || 0,
+          content,
+          isPrivate,
+        }),
       );
-      
+
       // 성공 여부와 관계없이 목록에 추가 (dev 모드)
       const newReply: ReplyItem = {
         id: Date.now(),
-        username: '유저닉네임',
+        username: "유저닉네임",
         content,
         likes: 0,
         isMyComment: true,
       };
       setRepliesList([...repliesList, newReply]);
-      
+
       // 작성 완료 후 폼 숨김
       setShowReplyForm(false);
     } catch (error) {
-      console.error('댓글 작성 실패:', error);
+      console.error("댓글 작성 실패:", error);
     }
   };
 
   // 스크롤 시 작성 영역 접기/펼치기
   useEffect(() => {
-    const container = scrollerRef.current?.closest('.modal-content') as HTMLElement | null;
+    const container = scrollerRef.current?.closest(
+      ".modal-content",
+    ) as HTMLElement | null;
     if (!container) return;
     const onScroll = () => {
       setCollapsed(container.scrollTop > 40);
     };
-    container.addEventListener('scroll', onScroll);
-    return () => container.removeEventListener('scroll', onScroll);
+    container.addEventListener("scroll", onScroll);
+    return () => container.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -97,15 +99,15 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
           onCommentClick={() => setShowReplyForm(!showReplyForm)}
         />
 
-        <div className={collapsed ? 'reply-form--collapsed' : ''}>
+        <div className={collapsed ? "reply-form--collapsed" : ""}>
           {showReplyForm ? (
-            <ReplyForm 
-              onSubmit={handleSubmit} 
+            <ReplyForm
+              onSubmit={handleSubmit}
               onCancel={() => setShowReplyForm(false)}
             />
           ) : (
             <div className="reply-form-collapsed">
-              <button 
+              <button
                 className="reply-form-collapsed__button"
                 onClick={() => setShowReplyForm(true)}
               >
@@ -122,4 +124,3 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
 };
 
 export default CommentDetailModal;
-
