@@ -9,7 +9,7 @@ import "./TestApp.scss";
 // Redux
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { fetchContentsThunk } from "./features/content/contentSlice";
-import { fetchCommentsThunk } from "./features/comments/commentSlice";
+import { fetchCommentsThunk } from "./features/comments/commentCardsSlice";
 
 // Types
 import type { Topic as ContentCardType } from "./services/api/topicApi";
@@ -421,7 +421,7 @@ function SelectorExamples() {
 function ContentCardExamples() {
   const dispatch = useAppDispatch();
   const { contents: contentCards, loading } = useAppSelector(
-    (state) => state.content
+    (state) => state.content,
   );
 
   useEffect(() => {
@@ -474,7 +474,7 @@ function CommentCardExamples() {
   //   (state) => state.comment
   // );
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
-    null
+    null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -618,7 +618,7 @@ function ImageCommentCardSliderExamples() {
   // );
   const comments = [{}];
   const { contents, loading: contentsLoading } = useAppSelector(
-    (state) => state.content
+    (state) => state.content,
   );
   const [showDetail, setShowDetail] = useState(false);
   const [detailData, setDetailData] = useState<{
@@ -1093,7 +1093,7 @@ function TestApp() {
                     try {
                       await forceWithdrawUser(
                         withdrawalUserId,
-                        "관리자에 의한 강제 탈퇴"
+                        "관리자에 의한 강제 탈퇴",
                       );
                       console.log("관리자 강제 탈퇴 완료");
                       setShowWithdrawalAdminModal(false);
