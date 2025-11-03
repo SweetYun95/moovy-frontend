@@ -1,13 +1,16 @@
-// React
+// 외부 라이브러리
 import React, { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-// App hooks/state
+// 내부 유틸/전역/서비스
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { fetchCommentsThunk } from '@/features/comments/commentSlice'
 import { fetchContentsThunk } from '@/features/content/contentSlice'
 import { useDisclosure } from '@/hooks/useDisclosure'
+import { buildCommentSections, buildHeroSlides, buildMovieSections } from '@/utils/homeSections'
+import { buildCommentDetailData } from '@/utils/modals'
 
-// UI components
+// 컴포넌트
 import Spinner from '@/components/common/Spinner'
 import HeroBanner from '@/components/Home/HeroBanner/HeroBanner'
 import { ImageCommentCardSlider } from '@/components/Home/ImageCommentCard/ImageCommentCardSlider'
@@ -17,14 +20,13 @@ import Footer from '@/components/layout/Footer/Footer'
 import { Header } from '@/components/layout/Header/Header'
 import { CommentDetailModal } from '@/components/modals/CommentDetailModal/CommentDetailModal'
 
-// Utils
-import { buildCommentSections, buildHeroSlides, buildMovieSections } from '@/utils/homeSections'
-import { buildCommentDetailData } from '@/utils/modals'
-
 export default function MainPage() {
   const dispatch = useAppDispatch()
   const { contents, loading: contentsLoading } = useAppSelector((s) => s.content)
-  const { comments, loading: commentsLoading } = useAppSelector((s) => s.comment)
+  const { comments, loading: commentsLoading } = useAppSelector((s) => ({
+    comments: s.comments.homeComments,
+    loading: s.comments.homeLoading,
+  }))
   const { isOpen: showCommentDetail, open: openCommentDetail, close: closeCommentDetail } = useDisclosure(false)
   const [commentDetailData, setCommentDetailData] = useState<{ username: string; date: string; content: string; likes: number; replies: number } | null>(null)
 

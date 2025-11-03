@@ -1,7 +1,14 @@
+// 외부 라이브러리
 import React, { useState, useRef } from 'react';
-import { Button } from '../../common/Button/ButtonStyle';
 import { Icon } from '@iconify/react';
+
+// 컴포넌트
+import { Button } from '../../common/Button/ButtonStyle';
+
+// 자산
 import moovyLogo from '../../../assets/moovy-logo.svg';
+
+// 스타일
 import './Header.scss';
 
 /*

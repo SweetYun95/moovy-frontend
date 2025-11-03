@@ -11,7 +11,7 @@ interface ImageCommentCardSliderProps {
   className?: string;
   sections: SliderSection[];
   contents: any[]; // 컨텐츠 배열 (id, title, imageUrl 등 포함)
-  onCardClick?: (data: { title: string; likes: number; replies: number; comment: string; username: string }) => void;
+  onCardClick?: (data: { id?: number; title: string; likes: number; replies: number; comment: string; username: string }) => void;
 }
 
 export interface SliderSection {
@@ -95,6 +95,7 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                       replies={comment.replies}
                       movieImageUrl={content?.imageUrl}
                       onReplyClick={() => onCardClick?.({
+                        id: comment.id,
                         title: content?.title || '',
                         likes: comment.likes,
                         replies: comment.replies,
@@ -184,6 +185,7 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                             replies={comment.replies}
                             movieImageUrl={content?.imageUrl}
                             onReplyClick={() => onCardClick?.({
+                              id: comment.id,
                               title: content?.title || '',
                               likes: comment.likes,
                               replies: comment.replies,

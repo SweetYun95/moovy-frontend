@@ -1,3 +1,4 @@
+//컨텐츠(토픽) 전용 슬라이스
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { getTopics, type Topic as ContentCardType } from '@/services/api/topicApi';
@@ -50,7 +51,7 @@ export const fetchContentsThunk = createAsyncThunk(
         {
           id: 1,
           title: '다 이루어질 지니',
-          images: ['https://picsum.photos/300/400?random=1'],
+          images: ['https://picsum.photos/900/1600?random=1'],
           runtime: '120분',
           ageRating: '15',
           releaseDate: '2025-01-15',
@@ -60,7 +61,7 @@ export const fetchContentsThunk = createAsyncThunk(
           genre: '액션',
           synopsis: '케이팝 슈퍼스타 루미, 미라, 조이. 매진을 기록하는 대형 스타디움 공연이 없을 때면 이들은 또 다른 활동에 나선다. 바로 비밀 능력을 이용해 팬들을 초자연적 위협으로부터 보호하는 것.',
           overallRating: 4.5,
-          imageUrl: 'https://picsum.photos/300/400?random=1',
+          imageUrl: 'https://picsum.photos/900/1600?random=1',
           createdAt: '2024-12-01',
           updatedAt: '2024-12-01',
         },

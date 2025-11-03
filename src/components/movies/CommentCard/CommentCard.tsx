@@ -1,6 +1,8 @@
+// 외부 라이브러리
 import React from "react";
 import { Icon } from "@iconify/react";
 
+// 스타일
 import "./CommentCard.scss";
 
 export interface CommentCardProps {

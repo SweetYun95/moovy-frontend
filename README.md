@@ -59,9 +59,11 @@ moovy-frontend/
   - assets/: 이미지/아이콘/폰트 등 정적 자산
   - components/: 재사용 UI 컴포넌트 (공통은 common/)
   - features/: Redux slices(도메인 상태/비동기 로직)
+  - hooks/: 커스텀 훅(useInfiniteScroll, useContentDetail 등)
   - pages/: 라우팅 단위 화면(홈/영화/리뷰/프로필/관리자)
   - routes/: 라우터 구성 및 접근 가드(Guest/User/Admin)
-  - services/: 외부 통신 계층, api/(axios 인스턴스·모듈)
+  - services/: 외부 통신 계층
+    - api/: API 모듈들 (http.ts는 axios 인스턴스, 나머지는 API 함수)
   - styles/: 전역 SCSS
   - types/: 전역 타입 선언(d.ts), env 타입
   - utils/: 공용 유틸(GSAP 설정 등)

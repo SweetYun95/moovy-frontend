@@ -4,7 +4,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 // slices
 import auth from '../features/auth/authSlice'
 import ui from '../features/ui/uiSlice'
-import comments from '../features/reply/commentSlice'
+import comments from '../features/comments/commentSlice'
 import replies from '../features/reply/replySlice'
 import content from "@/features/content/contentSlice";
 

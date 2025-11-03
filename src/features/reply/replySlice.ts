@@ -1,4 +1,4 @@
-// moovy-frontend/src/features/reply/replySlice.ts
+//댓글 전용 슬라이스
 import { createAsyncThunk, createSlice,  } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import * as api from '../../services/api/replyApi'
@@ -211,13 +211,13 @@ export default repliesSlice.reducer
 // ─────────────────────────────────────────────────────────────
 // Selectors
 // ─────────────────────────────────────────────────────────────
-// 프로젝트의 루트 상태 타입이 있다면 아래 RootState를 교체하세요.
-export type RootRepliesState = { replies: RepliesState }
+// RootState는 app/store.ts에서 import 가능
+import type { RootState } from '@/app/store'
 
-export const selectRepliesState = (state: RootRepliesState) => state.replies
+export const selectRepliesState = (state: RootState) => state.replies
 
-export const selectRepliesByComment = (state: RootRepliesState, commentId: number): Reply[] => state.replies.byCommentId[commentId]?.items || []
+export const selectRepliesByComment = (state: RootState, commentId: number): Reply[] => state.replies.byCommentId[commentId]?.items || []
 
-export const selectRepliesMeta = (state: RootRepliesState, commentId: number): RepliesMeta | null => state.replies.byCommentId[commentId]?.meta || null
+export const selectRepliesMeta = (state: RootState, commentId: number): RepliesMeta | null => state.replies.byCommentId[commentId]?.meta || null
 
-export const selectRepliesLoading = (state: RootRepliesState, commentId: number): boolean => state.replies.byCommentId[commentId]?.loading || false
+export const selectRepliesLoading = (state: RootState, commentId: number): boolean => state.replies.byCommentId[commentId]?.loading || false
