@@ -106,13 +106,15 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
 
   // 스크롤 시 작성 영역 접기/펼치기
   useEffect(() => {
-    const container = scrollerRef.current?.closest('.modal-content') as HTMLElement | null;
+    const container = scrollerRef.current?.closest(
+      ".modal-content",
+    ) as HTMLElement | null;
     if (!container) return;
     const onScroll = () => {
       setCollapsed(container.scrollTop > 40);
     };
-    container.addEventListener('scroll', onScroll);
-    return () => container.removeEventListener('scroll', onScroll);
+    container.addEventListener("scroll", onScroll);
+    return () => container.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -134,15 +136,15 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
           onCommentClick={() => setShowReplyForm(!showReplyForm)}
         />
 
-        <div className={collapsed ? 'reply-form--collapsed' : ''}>
+        <div className={collapsed ? "reply-form--collapsed" : ""}>
           {showReplyForm ? (
-            <ReplyForm 
-              onSubmit={handleSubmit} 
+            <ReplyForm
+              onSubmit={handleSubmit}
               onCancel={() => setShowReplyForm(false)}
             />
           ) : (
             <div className="reply-form-collapsed">
-              <button 
+              <button
                 className="reply-form-collapsed__button"
                 onClick={() => setShowReplyForm(true)}
               >
@@ -159,4 +161,3 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
 };
 
 export default CommentDetailModal;
-
