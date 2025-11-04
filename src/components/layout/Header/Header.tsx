@@ -1,7 +1,18 @@
+// 외부 라이브러리
 import React, { useState, useRef } from 'react';
-import { Button } from '../../common/Button/ButtonStyle';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+
+// 내부 유틸/전역/서비스
+import { PATHS } from '@/routes/paths';
+
+// 컴포넌트
+import { Button } from '../../common/Button/ButtonStyle';
+
+// 자산
 import moovyLogo from '../../../assets/moovy-logo.svg';
+
+// 스타일
 import './Header.scss';
 
 /*
@@ -21,6 +32,9 @@ export interface HeaderProps {
   onSignupClick?: () => void;
   searchPlaceholder?: string;
   className?: string;
+  showSearch?: boolean; // 검색 기능 표시 여부
+  showLoginButton?: boolean; // 로그인 버튼 표시 여부
+  showSignupButton?: boolean; // 회원가입 버튼 표시 여부
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,7 +44,11 @@ export const Header: React.FC<HeaderProps> = ({
   onSignupClick,
   searchPlaceholder = '영화명을 입력해주세요',
   className = '',
+  showSearch = true,
+  showLoginButton = true,
+  showSignupButton = true,
 }) => {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +62,16 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      onSearch?.(searchValue);
+      if (onSearch) {
+        onSearch(searchValue);
+      } else {
+        // 기본 동작: ContentsListPage로 이동
+        if (searchValue.trim()) {
+          navigate(`${PATHS.contents}?q=${encodeURIComponent(searchValue.trim())}`);
+          setSearchValue('');
+          setIsSearchOpen(false);
+        }
+      }
     }
   };
 
@@ -58,7 +85,14 @@ export const Header: React.FC<HeaderProps> = ({
       if (!searchValue.trim()) {
         setIsSearchOpen(false);
       } else {
-        onSearch?.(searchValue);
+        if (onSearch) {
+          onSearch(searchValue);
+        } else {
+          // 기본 동작: ContentsListPage로 이동
+          navigate(`${PATHS.contents}?q=${encodeURIComponent(searchValue.trim())}`);
+          setSearchValue('');
+          setIsSearchOpen(false);
+        }
       }
     }
   };
@@ -68,12 +102,33 @@ export const Header: React.FC<HeaderProps> = ({
       setIsSearchOpen(false);
     }
   };
+
+  const handleLoginClick = () => {
+    if (onLoginClick) {
+      onLoginClick();
+    } else {
+      navigate(PATHS.login);
+    }
+  };
+
+  const handleSignupClick = () => {
+    if (onSignupClick) {
+      onSignupClick();
+    } else {
+      navigate(PATHS.register);
+    }
+  };
+
   return (
     <header className={`moovy-header ${className}`}>
       <div className="container px-2">
         <div className="row align-items-center py-3">
           <div className="col-auto">
-            <div className="moovy-header__logo">
+            <div 
+              className="moovy-header__logo" 
+              onClick={() => navigate(PATHS.home)}
+              style={{ cursor: 'pointer' }}
+            >
               <img 
                 src={moovyLogo} 
                 alt="MOOVY" 
@@ -88,48 +143,56 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
           
-          <div className="col">
-            <div className="moovy-header__search-group d-flex justify-content-end">
-              <div className="form-group mb-0">
-                <div 
-                  className={`moovy-search-wrapper ${isSearchOpen ? 'open' : ''}`}
-                  ref={wrapperRef}
-                >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    className="form-control moovy-search"
-                    placeholder={searchPlaceholder}
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                    onKeyPress={handleSearchKeyPress}
-                    onBlur={handleSearchBlur}
-                  />
-                  <button
-                    className="search-icon"
-                    type="button"
-                    onClick={handleSearchIconClick}
+          {showSearch || showLoginButton || showSignupButton ? (
+            <div className="col">
+              <div className="moovy-header__search-group d-flex justify-content-end">
+                {showSearch && (
+                  <div className="form-group mb-0">
+                    <div 
+                      className={`moovy-search-wrapper ${isSearchOpen ? 'open' : ''}`}
+                      ref={wrapperRef}
+                    >
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        className="form-control moovy-search"
+                        placeholder={searchPlaceholder}
+                        value={searchValue}
+                        onChange={handleSearchChange}
+                        onKeyPress={handleSearchKeyPress}
+                        onBlur={handleSearchBlur}
+                      />
+                      <button
+                        className="search-icon"
+                        type="button"
+                        onClick={handleSearchIconClick}
+                      >
+                        <Icon icon="line-md:search" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {showLoginButton && (
+                  <Button 
+                    variant="primary"
+                    size="sm"
+                    onClick={handleLoginClick}
                   >
-                    <Icon icon="line-md:search" />
-                  </button>
-                </div>
+                    로그인
+                  </Button>
+                )}
+                {showSignupButton && (
+                  <Button 
+                    variant="primary"
+                    size="sm"
+                    onClick={handleSignupClick}
+                  >
+                    회원가입
+                  </Button>
+                )}
               </div>
-              <Button 
-                variant="primary"
-                size="sm"
-                onClick={onLoginClick}
-              >
-                로그인
-              </Button>
-              <Button 
-                variant="primary"
-                size="sm"
-                onClick={onSignupClick}
-              >
-                회원가입
-              </Button>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </header>

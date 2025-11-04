@@ -12,6 +12,7 @@ export interface ModalProps {
   noResponsive?: boolean;
   className?: string;
   zIndex?: number;
+  mode?: 'light' | 'dark';
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -25,6 +26,7 @@ const Modal: React.FC<ModalProps> = ({
   noResponsive = false,
   className = '',
   zIndex,
+  mode = 'dark',
 }) => {
   useEffect(() => {
     if (isOpen) {
@@ -63,7 +65,7 @@ const Modal: React.FC<ModalProps> = ({
       onClick={handleBackdropClick}
       style={zIndex ? { zIndex } : undefined}
     >
-      <div className={`modal-container modal-${size} ${noResponsive ? 'modal-no-responsive' : ''} ${className}`}>
+      <div className={`modal-container modal-${size} modal--${mode} ${noResponsive ? 'modal-no-responsive' : ''} ${className}`}>
         {(title || showCloseButton) && (
           <div className="modal-header">
             {title && <h2 className={`modal-title modal-title--${titleAlign}`}>{title}</h2>}
