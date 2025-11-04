@@ -17,6 +17,11 @@ body {
   color: $white;
   margin: 0;
   padding: 0;
+  
+  // AuthPage에서는 배경색 제거 (globals.scss에서 처리하되, 여기서도 예외 처리)
+  &.auth-page-background {
+    background-color: transparent;
+  }
 }
 
 // 공통 폼 요소 스타일

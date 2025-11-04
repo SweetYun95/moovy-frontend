@@ -5,6 +5,7 @@ export type Topic = {
   id: number
   images: string[]
   title: string
+  englishTitle?: string  // 영어 타이틀
   runtime: string
   ageRating: 'all' | '12' | '15' | '18'
   synopsis: string

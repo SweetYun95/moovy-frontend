@@ -10,6 +10,7 @@ import type { Topic as ContentCardType } from '@/services/api/topicApi';
 interface Topic {
   id: number;
   title: string;
+  englishTitle?: string;
   year: string;
   genre: string;
   runtime: string;
@@ -60,6 +61,7 @@ export function useContentDetail({
     return {
       id: found.id,
       title: found.title,
+      englishTitle: found.englishTitle,
       year: found.year || '',
       genre: found.genre,
       runtime: found.runtime,

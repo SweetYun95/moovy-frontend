@@ -1,16 +1,22 @@
-import React, { useRef, useState, useEffect } from 'react';
-
+// 외부 라이브러리
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { Icon } from '@iconify/react';
 import 'swiper/css';
 
+// 내부 유틸/전역/서비스
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchContentsThunk } from '@/features/content/contentSlice';
+import { buildMovieSections } from '@/utils/homeSections';
+
+// 컴포넌트
 import { MovieCard } from './MovieCard';
 
 interface MovieCardSliderProps {
   className?: string;
-  sections: SliderSection[];
   onCardClick?: (title: string) => void;
+  onSectionsChange?: (sections: SliderSection[]) => void;
 }
 
 export interface SliderSection {
@@ -18,12 +24,33 @@ export interface SliderSection {
   movies: any[]; // 무비 배열 (id, title, synopsis, imageUrl, overallRating 등 포함)
 }
 
-
 export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
   className = '',
-  sections,
   onCardClick,
+  onSectionsChange,
 }) => {
+  const dispatch = useAppDispatch();
+  const { contents, loading } = useAppSelector((s) => s.content);
+
+  // 섹션 데이터 생성
+  const sections = useMemo(() => {
+    if (contents.length === 0) return [];
+    return buildMovieSections(contents);
+  }, [contents]);
+
+  // 섹션 변경 시 콜백 호출 (HeroBanner에 전달)
+  useEffect(() => {
+    if (sections.length > 0 && onSectionsChange) {
+      onSectionsChange(sections);
+    }
+  }, [sections, onSectionsChange]);
+
+  // 초기 데이터 로드
+  useEffect(() => {
+    if (contents.length === 0) {
+      dispatch(fetchContentsThunk());
+    }
+  }, [dispatch, contents.length]);
   const swiperRef = useRef<any>(null);
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
@@ -37,7 +64,7 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
     const nextId = `movie-card-inner-next-${index}`;
 
     return (
-      <div className="movie-card-section">
+      <div className="movie-card-section mb-4">
         <h2 className="movie-card-section__title">{section.title}</h2>
 
         <div className="movie-card-slider__inner-wrapper">
@@ -69,11 +96,12 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
               <SwiperSlide key={movie.id}>
                 <div className="movie-card-section__grid">
                   <MovieCard
+                    id={movie.id}
                     title={movie.title}
                     synopsis={movie.synopsis}
                     imageUrl={movie.imageUrl}
                     rating={movie.overallRating}
-                    onCommentClick={() => onCardClick?.(movie.title)}
+                    onCommentClick={onCardClick ? () => onCardClick?.(movie.title) : undefined}
                   />
                 </div>
               </SwiperSlide>
@@ -140,7 +168,7 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
               modules={[Navigation, Autoplay]}
               spaceBetween={40}
               slidesPerView={1}
-              loop={true}
+              loop={sections.length > 1}
               navigation={{
                 prevEl: `#${prevBtnId}`,
                 nextEl: `#${nextBtnId}`,
@@ -160,18 +188,19 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
               className="movie-card-slider__swiper"
             >
               {sections.map((section, index) => (
-                <SwiperSlide key={index}>
+                <SwiperSlide key={`section-${index}`}>
                   <div className="movie-card-section">
                     <h2 className="movie-card-section__title">{section.title}</h2>
                     <div className="movie-card-section__grid">
                       {section.movies.map((movie: any) => (
                         <MovieCard
                           key={movie.id}
+                          id={movie.id}
                           title={movie.title}
                           synopsis={movie.synopsis}
                           imageUrl={movie.imageUrl}
                           rating={movie.overallRating}
-                          onCommentClick={() => onCardClick?.(movie.title)}
+                          onCommentClick={onCardClick ? () => onCardClick?.(movie.title) : undefined}
                         />
                       ))}
                     </div>

@@ -1,0 +1,15 @@
+@import '../../styles/variables';
+
+.contents-list-page {
+  min-height: 100%;
+
+
+  &__title {
+    font-size: $heading-4-size;
+    font-weight: $font-weight-bold;
+    color: $white;
+    line-height: $heading-4-line-height;
+    margin-bottom: 0;
+  }
+}
+

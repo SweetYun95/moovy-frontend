@@ -18,6 +18,42 @@
 .modal-container {
   @include modal-container-base;
   
+  // 다크 모드 (기본)
+  &.modal--dark {
+    background-color: $black3;
+    
+    .modal-content {
+      color: $white;
+      background-color: $black3;
+    }
+    
+    .modal-title {
+      color: $white;
+    }
+    
+    .modal-close {
+      color: $white;
+    }
+  }
+  
+  // 라이트 모드
+  &.modal--light {
+    background-color: $white;
+    
+    .modal-content {
+      color: $black1;
+      background-color: $white;
+    }
+    
+    .modal-title {
+      color: $black1;
+    }
+    
+    .modal-close {
+      color: $black1;
+    }
+  }
+  
   // 모달 크기 변형
   &.modal-360px {
     width: 360px;
@@ -63,6 +99,10 @@
 .modal-header {
   @include flex-between;
   margin-bottom: $spacing-4;
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  padding-bottom: 0 !important;
   
   &:has(.modal-close):not(:has(.modal-title)) {
     justify-content: flex-end;
@@ -111,6 +151,8 @@
   transition: opacity 0.2s;
   position: relative;
   z-index: 1;
+  margin-left: auto; // 항상 오른쪽에 배치
+  flex-shrink: 0; // 크기 고정
   
   &:hover {
     opacity: 0.7;
@@ -125,11 +167,16 @@
 
 // 모달 콘텐츠
 .modal-content {
-  color: $white;
   flex: 1;
   max-height: 80vh;
   overflow-y: auto;
-  overflow-x: hidden; 
+  overflow-x: hidden;
+  padding: $spacing-2;
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
   
   // 공통 타이틀 스타일
   h3 {
@@ -207,5 +254,6 @@
   
   .modal-content {
     max-height: calc(100vh - 120px);
+    
   }
 }
