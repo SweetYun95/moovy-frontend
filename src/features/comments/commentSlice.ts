@@ -1,3 +1,4 @@
+// moovy-frontend/src/features/comments/commentSlice.ts
 //코멘트 전용 슬라이스
 import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
