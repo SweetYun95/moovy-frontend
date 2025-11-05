@@ -18,7 +18,6 @@ export const MypageTabs: React.FC<MypageTabsProps> = ({
       tabs={[
         { id: "profile", label: "내 프로필" },
         { id: "calendar", label: "캘린더" },
-        { id: "comments", label: "코멘트 내역" },
         { id: "analysis", label: "취향 분석" },
         { id: "inquiry", label: "1:1문의" },
       ]}
