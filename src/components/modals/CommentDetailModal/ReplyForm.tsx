@@ -29,7 +29,7 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
   const [isPrivate, setIsPrivate] = useState(false);
 
   const trimmed = useMemo(() => commentText.trim(), [commentText]);
-  const remaining = maxLength - commentText.length;
+  const used = commentText.length;
   const canSubmit = trimmed.length > 0 && !isSubmitting;
 
   const handleSubmit = () => {
@@ -82,6 +82,7 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
         className="reply-form__textarea"
         placeholder="댓글을 입력하세요. (Ctrl/⌘ + Enter 제출)"
         value={commentText}
+        maxLength={maxLength} // 네이티브 제한(모바일/스크린리더 호환 ↑)
         onChange={(e) => {
           const v = e.target.value;
           if (v.length <= maxLength) setCommentText(v);
@@ -95,13 +96,9 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
       />
 
       <div className="reply-form__footer">
-        <span
-          className={`reply-form__counter ${remaining < 0 ? "is-over" : ""}`}
-          aria-live="polite"
-        >
-          {remaining} / {maxLength}
+        <span className="reply-form__counter" aria-live="polite">
+          {used} / {maxLength}
         </span>
-
         <div className="reply-form__buttons">
           <ActionButton
             action="confirm"
