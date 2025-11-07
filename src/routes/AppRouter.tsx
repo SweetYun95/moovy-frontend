@@ -52,11 +52,12 @@ export default function AppRouter() {
           <Route path={PATHS.mypage} element={<MyPage />} />
         </Route>
 
-        {/* 관리자 전용 */}
-        <Route element={<AdminOnly />}>
-          {/* TODO: /admin 등 실제 페이지 붙이기 */}
-          <Route path="__admin__" element={<Placeholder />} />
-        </Route>
+      </Route>
+
+      {/* 관리자 전용 (전역 레이아웃 제외) */}
+      <Route element={<AdminOnly />}>
+        {/* TODO: /admin 등 실제 페이지 붙이기 */}
+        <Route path={PATHS.adminHome} element={<Placeholder />} />
       </Route>
     </Routes>
   );
