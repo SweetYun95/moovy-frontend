@@ -9,7 +9,7 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   fullWidth?: boolean;
   icon?: React.ReactNode;
 }

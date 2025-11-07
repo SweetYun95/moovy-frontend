@@ -9,6 +9,7 @@ import { InquirySection } from "@/components/profile/InquirySection";
 
 import "./MyPage.scss";
 import ProfileTab from "@/components/profile/MyProfile/ProfileTab";
+import ReplyForm from "@/components/modals/CommentDetailModal/ReplyForm";
 
 const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<

@@ -1,4 +1,4 @@
-@import "/Users/jeongseyeon/Desktop/work/Moovy/moovy-frontend/src/styles/globals.scss";
+@import "../../styles/globals.scss";
 
 //내 프로필
 .profile_section {
@@ -65,6 +65,38 @@
 }
 .icon.setting:hover {
   cursor: pointer;
+}
+
+// 테이블
+.inner-table {
+  margin-top: $spacing-6;
+}
+.inner-table__header {
+  img {
+    margin-left: $spacing-2;
+  }
+}
+.inner-table table {
+  margin-top: $spacing-3;
+  margin-bottom: $spacing-3;
+
+  tr,
+  tr > td,
+  tr > th {
+    padding: $spacing-3;
+  }
+}
+.inner-table table tr.column {
+  :first-child {
+    border-radius: 4px 0 0 0;
+  }
+  :last-child {
+    border-radius: 0 4px 0 0;
+  }
+  th {
+    background: $primary-color;
+    border: none;
+  }
 }
 
 // 캘린더

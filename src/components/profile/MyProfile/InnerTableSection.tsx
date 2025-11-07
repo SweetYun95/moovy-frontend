@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 
 import type { InnerTabType } from "./ProfileTab";
+import { StandardPagination } from "../../common/Pagination/PaginationComponents";
 
 import BookmarkIcon from "../../../assets/bookmarkIcon.svg";
 import CommentIcon from "../../../assets/commentIcon.svg";
@@ -44,7 +45,7 @@ export const InnerTableSection: React.FC<InnerTableSectionProps> = ({
 
   const { title, icon } = tabConfig[innerTab] || { title: "", icon: "" };
 
-  console.log(innerTab);
+  console.log("아이콘: ", tabConfig, title, icon);
   return (
     <section className="inner-table">
       <div className="inner-table__header">
@@ -53,10 +54,10 @@ export const InnerTableSection: React.FC<InnerTableSectionProps> = ({
         </h4>
       </div>
 
-      {/* 테이블 */}
+      {/* 테이블 영역*/}
       <table className="table">
         <thead>
-          <tr>
+          <tr className="column">
             <th>No</th>
             <th>작품</th>
             <th>날짜</th>
@@ -75,14 +76,7 @@ export const InnerTableSection: React.FC<InnerTableSectionProps> = ({
         </tbody>
       </table>
 
-      {/* 페이지네이션 (간단한 placeholder) */}
-      <div className="pagination">
-        <button>{"<"}</button>
-        <button className="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>{">"}</button>
-      </div>
+      <StandardPagination />
     </section>
   );
 };

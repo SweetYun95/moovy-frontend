@@ -61,11 +61,44 @@
 }
 
 .image-comment-card-section {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-3;
+  }
+
   &__title {
     font-size: $heading-6-size;
     font-weight: $font-weight-bold;
-    margin-bottom: $spacing-3;
+    margin-bottom: 0;
     color: $white;
+  }
+
+  &__arrow-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: $white;
+    padding: $spacing-1;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: rgba($color: $white, $alpha: 0.1);
+      transform: translateX(4px);
+    }
+    
+    &:active {
+      transform: translateX(2px);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 
   &__grid {
@@ -88,7 +121,7 @@
       }
     }
     
-    // PC (≥992px): 3열 그리드, 최대 3개 표시
+    // PC (≥992px): 3열 그리드, 최대 3개 표시 (1행 3열)
     @media (min-width: 992px) {
       grid-template-columns: repeat(3, 1fr);
       & > .comment-card:nth-child(n+4) {
@@ -105,8 +138,12 @@
   padding: $spacing-2 $spacing-3; // 16px 24px
   transition: $transition-base;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  min-height: 277px;
+  display: grid;
+  grid-template-rows: auto 1fr auto; // header, content, footer
+  grid-template-columns: 1fr;
+  gap: $spacing-3;
   
   &:hover {
     transform: translateY(-2px);
@@ -115,14 +152,14 @@
   
   // 반응형 패딩
   @media (max-width: 767px) {
-    padding: $spacing-1 $spacing-2; // 8px 16px on mobile
+    padding: $spacing-1 $spacing-2; // 8px 16px 
+    min-height: 240px;
   }
   
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: $spacing-3; // 24px
   }
   
   &__profile {
@@ -175,16 +212,12 @@
   &__main-content {
     display: flex;
     gap: $spacing-2; // 16px
-    margin-bottom: $spacing-3; // 24px
-    height: 100%;
     overflow: hidden;
-    flex: 1;
+    min-height: 0; // grid item이 축소될 수 있도록
     
     // 반응형 레이아웃
     @media (max-width: 767px) {
-      gap: $spacing-1; // 8px on mobile
-      margin-bottom: $spacing-2; // 16px on mobile
-      max-height: 100px;
+      gap: $spacing-1; // 8px
     }
   }
   
@@ -222,6 +255,7 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-1;
+    min-height: 0; // grid item이 축소될 수 있도록
   }
   
   &__movie-title {
@@ -238,31 +272,37 @@
     margin: 0;
     line-height: $body-normal-line-height;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
     
     // 반응형 폰트 크기 및 줄 수
     @media (max-width: 767px) {
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
       -webkit-line-clamp: 4; // 모바일에서는 4줄까지
     }
   }
   
+  &__footer {
+    display: grid;
+    grid-template-rows: auto auto; // actions, icon-actions 세로로 배치
+    gap: $spacing-1; // 16px
+    align-items: start;
+  }
+  
   &__actions {
     display: flex;
+    gap: $spacing-2; // 16px
   }
   
   &__action-button {
     display: flex;
     align-items: center;
-    gap: $spacing-1; // 8px
+    gap: $spacing-2; // 16px
     background: none;
     border: none;
     cursor: pointer;
-    padding: $spacing-1; // 8px
-    border-radius: $border-radius-sm; // 4px
     transition: $transition-base;
     
     svg {
@@ -294,17 +334,17 @@
   
   &__icon-actions {
     display: flex;
+    gap: $spacing-2; // 16px
   }
   
   &__icon-button {
     display: flex;
     align-items: center;
     justify-content: center;
+    all: unset;
     background: none;
     border: none;
     cursor: pointer;
-    padding: $spacing-1; // 8px
-    border-radius: $border-radius-sm; // 4px
     transition: $transition-base;
     color: $white;
       

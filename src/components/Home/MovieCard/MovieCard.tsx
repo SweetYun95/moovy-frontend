@@ -1,8 +1,16 @@
+// 외부 라이브러리
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// 내부 유틸/전역/서비스
+import { createContentDetailHandler } from '@/utils/navigationUtils'
+
+// 컴포넌트
 import { WideButton } from '../../common/Button/Button';
 import './MovieCard.scss';
 
 export interface MovieCardProps {
+  id?: string | number;
   title: string;
   synopsis?: string;
   imageUrl?: string;
@@ -13,14 +21,17 @@ export interface MovieCardProps {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({
+  id,
   title,
   synopsis,
   imageUrl,
-  imageAlt,
   className = '',
   rating,
   onCommentClick,
 }) => {
+  const navigate = useNavigate();
+  const handleCommentClick = createContentDetailHandler(navigate, id, onCommentClick);
+
   return (
     <div 
       className={`movie-card ${className} ${!imageUrl ? 'movie-card--no-image' : ''}`}
@@ -42,7 +53,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
         <div className="movie-card__action">
           <WideButton
             buttonType="comment"
-            onClick={onCommentClick}
+            onClick={handleCommentClick}
           />
         </div>
       </div>

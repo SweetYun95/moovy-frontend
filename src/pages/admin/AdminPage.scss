@@ -1,0 +1,35 @@
+@import "../../styles/globals.scss";
+
+#admin {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  .admin--menu,
+  .admin--history {
+    width: 15%;
+    max-width: 280px;
+  }
+}
+
+// .admin--menu
+.admin--menu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    margin-top: $spacing-4;
+  }
+}
+
+.admin__group {
+  width: 100%;
+  margin: $spacing-5 $spacing-2 0 $spacing-2;
+}
+
+.admin__group > .menu__tab {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

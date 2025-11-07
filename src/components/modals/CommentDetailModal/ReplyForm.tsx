@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Icon } from '@iconify/react';
-import { ActionButton } from '../../common/Button/Button';
-import './ReplyForm.scss';
+import React, { useState } from "react";
+import { Icon } from "@iconify/react";
+import { ActionButton } from "../../common/Button/Button";
+import "./ReplyForm.scss";
 
 export interface ReplyFormProps {
   onSubmit: (content: string, isPrivate: boolean) => void;
@@ -9,13 +9,13 @@ export interface ReplyFormProps {
 }
 
 export const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, onCancel }) => {
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
   const handleSubmit = () => {
     if (commentText.trim()) {
       onSubmit(commentText, isPrivate);
-      setCommentText('');
+      setCommentText("");
       setIsPrivate(false);
     }
   };
@@ -30,15 +30,15 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, onCancel }) => {
           <span className="reply-form__username">유저닉네임</span>
         </div>
         <label className="reply-form__checkbox">
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             checked={isPrivate}
             onChange={(e) => setIsPrivate(e.target.checked)}
           />
           <span>나만보기</span>
         </label>
       </div>
-      
+
       <textarea
         className="reply-form__textarea"
         placeholder="댓글 작성필드"
@@ -46,7 +46,7 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, onCancel }) => {
         onChange={(e) => setCommentText(e.target.value)}
         rows={4}
       />
-      
+
       <div className="reply-form__buttons">
         <ActionButton action="confirm" onClick={handleSubmit}>
           작성
@@ -60,4 +60,3 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, onCancel }) => {
 };
 
 export default ReplyForm;
-
