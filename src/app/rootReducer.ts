@@ -9,6 +9,7 @@ import replies from "../features/reply/replySlice";
 import content from "@/features/content/contentSlice";
 import rating from "@/features/rating/ratingSlice";
 import topics from "@/features/topic/topicSlice";
+import favorite from "@/features/favorite/favoriteSlice";
 
 // admin
 import adminUsers from "../features/admin/usersSlice";
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   content,
   rating,
   topics,
+  favorite,
 
   // admin
   adminUsers,

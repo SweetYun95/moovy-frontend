@@ -9,6 +9,7 @@ export const PATHS = {
   userHome: "/user",
   adminHome: "/admin",
   mypage: "/my",
+  favorites: "/my/favorites", // ✅ 보관함(찜) 경로 추가
 
   movies: "/movies",
   movieDetail: (id: string | number) => `/movies/${id}`,
