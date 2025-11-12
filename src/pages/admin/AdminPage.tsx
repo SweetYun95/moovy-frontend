@@ -1,32 +1,36 @@
+import React, { useState } from "react";
+import Sidebar from "../../components/admin/Sidebar";
+import Header from "../../components/admin/Header";
+import HistoryPanel from "../../components/admin/HistoryPanel";
 import "./AdminPage.scss";
+import Table from "@/components/admin/Table";
 
-const AdminPage: React.FC = () => {
+interface AdminProps {
+  content: "dashboard" | "user" | "topic" | "inquiry" | "report";
+}
+
+const AdminPage: React.FC<AdminProps> = ({ content }) => {
+  const [activeSideBar, setActiveSideBar] = useState<
+    "dashboard" | "user" | "topic" | "inquiry" | "report"
+  >("dashboard");
+
+  const changeActiveSideBar = (e: React.MouseEvent<HTMLLIElement>) => {
+    const value = e.currentTarget.getAttribute("value");
+    setActiveSideBar(value);
+  };
+
   return (
-    <div id="admin">
-      <div className="admin--menu">
-        <img src="/" alt="로고" />
-        <div className="admin__group">
-          <div className="menu__tab">
-            <div>대시보드</div>
-            <div>유저 관리</div>
-            <div>토픽 관리</div>
-            <div>1:1 문의</div>
-            <div>신고내역</div>
-          </div>
-          <div className="admin__tab">
-            <div className="profile">
-              <img src="/" alt="이미지" />
-              <p>관리자 아이디</p>
-              <img src="/" alt="설정" />
-            </div>
-            <a href="/">로그아웃</a>
-          </div>
-        </div>
+    <div className="layout">
+      <Sidebar
+        content={activeSideBar}
+        changeActiveSideBar={changeActiveSideBar}
+      />
+      <div className="main">
+        <Header content={activeSideBar} />
+        <Table content={activeSideBar} />
       </div>
-      <div className="admin--content">
-        <div className="container">컨텐츠</div>
-      </div>
-      <div className="admin--history">히스토리</div>
+      <HistoryPanel />
+      {/* 아래로 토픽 관리 탭 넣기 */}
     </div>
   );
 };

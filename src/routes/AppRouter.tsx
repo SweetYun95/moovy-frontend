@@ -57,7 +57,7 @@ export default function AppRouter() {
       {/* 관리자 전용 (전역 레이아웃 제외) */}
       <Route element={<AdminOnly />}>
         {/* TODO: /admin 등 실제 페이지 붙이기 */}
-        <Route path={PATHS.adminHome} element={<Placeholder />} />
+        <Route path={PATHS.adminHome} element={<AdminPage />} />
       </Route>
     </Routes>
   );

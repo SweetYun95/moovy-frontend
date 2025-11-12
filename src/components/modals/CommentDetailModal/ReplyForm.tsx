@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
 // moovy-frontend/src/components/modals/CommentDetailModal/ReplyForm.tsx
 import React, { useMemo, useState } from "react";
->>>>>>> 7672aefd92d86767c5018ec716ee37d54cdec122
 import { Icon } from "@iconify/react";
 import { ActionButton } from "../../common/Button/Button";
 import "./ReplyForm.scss";
@@ -20,9 +16,6 @@ export interface ReplyFormProps {
   autoFocus?: boolean; // 포커스 자동 이동
 }
 
-<<<<<<< HEAD
-export const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, onCancel }) => {
-=======
 export const ReplyForm: React.FC<ReplyFormProps> = ({
   onSubmit,
   onCancel,
@@ -32,7 +25,6 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
   currentUserAvatarUrl,
   autoFocus = false,
 }) => {
->>>>>>> 7672aefd92d86767c5018ec716ee37d54cdec122
   const [commentText, setCommentText] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
@@ -41,12 +33,6 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
   const canSubmit = trimmed.length > 0 && !isSubmitting;
 
   const handleSubmit = () => {
-<<<<<<< HEAD
-    if (commentText.trim()) {
-      onSubmit(commentText, isPrivate);
-      setCommentText("");
-      setIsPrivate(false);
-=======
     if (!canSubmit) return;
     onSubmit(trimmed, isPrivate);
     setCommentText("");
@@ -60,7 +46,6 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
     if (isCmdEnter) {
       e.preventDefault();
       handleSubmit();
->>>>>>> 7672aefd92d86767c5018ec716ee37d54cdec122
     }
   };
 
@@ -110,15 +95,6 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
         autoFocus={autoFocus}
       />
 
-<<<<<<< HEAD
-      <div className="reply-form__buttons">
-        <ActionButton action="confirm" onClick={handleSubmit}>
-          작성
-        </ActionButton>
-        <ActionButton action="cancel" onClick={onCancel}>
-          취소
-        </ActionButton>
-=======
       <div className="reply-form__footer">
         <span className="reply-form__counter" aria-live="polite">
           {used} / {maxLength}
@@ -139,7 +115,6 @@ export const ReplyForm: React.FC<ReplyFormProps> = ({
             취소
           </ActionButton>
         </div>
->>>>>>> 7672aefd92d86767c5018ec716ee37d54cdec122
       </div>
     </div>
   );
