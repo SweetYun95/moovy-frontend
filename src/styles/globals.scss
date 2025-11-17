@@ -1,13 +1,12 @@
 // Import shared styles
-@import 'variables';
-@import 'mixins';
-@import 'base';
+@import "variables";
+@import "mixins";
+@import "base";
 
 // Swiper CSS
-@import 'swiper/css';
-@import 'swiper/css/navigation';
-@import 'swiper/css/pagination';
-
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 // 전역 기본값 (다크 테마를 기본으로)
 :root {
@@ -16,7 +15,9 @@
   --color-primary: #{$primary-color};
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -45,9 +46,12 @@ html body.auth-page-background #root {
 
 // body에만 배경 이미지 적용
 html body.auth-page-background {
-  background-image: 
-    linear-gradient(rgba($color: $black1, $alpha: 0.6), rgba($color: $black1, $alpha: 0.6)),
-    url('../assets/auth-background.jpg');
+  background-image:
+    linear-gradient(
+      rgba($color: $black1, $alpha: 0.6),
+      rgba($color: $black1, $alpha: 0.6)
+    ),
+    url("../assets/auth-background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -71,5 +75,3 @@ html body.auth-page-background {
 .modal-header {
   padding-bottom: 0 !important;
 }
-
-
