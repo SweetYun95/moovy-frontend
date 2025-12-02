@@ -160,26 +160,29 @@ li {
   }
 }
 
-.admin-content table.table {
-  thead {
-    color: $gray3;
-
-    th {
-      font-weight: 400;
-      font-size: 0.75rem;
-      border-top: none;
-      border-bottom: 1px solid $gray4;
-    }
-    td {
-      border-bottom: 1px solid $gray5;
-      font-size: $body-small-size;
-    }
+.admin-content .table {
+  ul {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 0;
   }
-  img {
+  ul.header {
+    color: $gray4;
+  }
+
+  ul.data:hover {
+    background-color: $gray5;
+  }
+  ul.data img {
     max-width: 24px;
     margin-right: $spacing-1;
   }
-  a {
-    text-decoration: underline;
+  ul li {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
   }
 }
