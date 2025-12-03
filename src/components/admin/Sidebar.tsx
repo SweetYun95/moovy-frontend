@@ -1,3 +1,5 @@
+// moovy-frontend/src/components/admin/Sidebar.tsx
+
 import React from "react";
 
 import Moovy from "../../assets/moovy-logo.svg";

@@ -1,3 +1,5 @@
+// moovy-frontend/src/components/admin/HistoryPanel.tsx
+
 import React from "react";
 
 import Human from "../../assets/Human.svg";
