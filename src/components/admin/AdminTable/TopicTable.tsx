@@ -1,4 +1,4 @@
-// moovy-frontent/src/components/admin/AdminTable/TopicTable.tsx
+// moovy-frontend/src/components/admin/AdminTable/TopicTable.tsx
 
 import React from "react";
 
