@@ -1,4 +1,4 @@
-// moovy-frontent/src/components/admin/AdminTable/InquiryTable.tsx
+// moovy-frontend/src/components/admin/AdminTable/InquiryTable.tsx
 
 import React from "react";
 
