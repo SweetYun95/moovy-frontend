@@ -94,13 +94,13 @@ const Table: React.FC<TableProps> = ({ content }) => {
               {content === "user" && (
                 <UserTable columns={columns} content={content} />
               )}
-              {content == "topic" && (
+              {content === "topic" && (
                 <TopicTable columns={columns} content={content} />
               )}
-              {content == "inquiry" && (
+              {content === "inquiry" && (
                 <InquiryTable columns={columns} content={content} />
               )}
-              {content == "report" && (
+              {content === "report" && (
                 <ReportTable columns={columns} content={content} />
               )}
             </div>
