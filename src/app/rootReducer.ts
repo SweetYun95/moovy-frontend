@@ -10,12 +10,14 @@ import content from "@/features/content/contentSlice";
 import rating from "@/features/rating/ratingSlice";
 import topics from "@/features/topic/topicSlice";
 import favorite from "@/features/favorite/favoriteSlice";
+import testAuth from "@/features/auth/test_authSlice";
 
 // admin
 import adminUsers from "../features/admin/usersSlice";
 
 const rootReducer = combineReducers({
   auth,
+  testAuth,
   ui,
   comments,
   replies,

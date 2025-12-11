@@ -16,6 +16,7 @@ import UserOnly from "./guards/UserOnly.tsx";
 import AdminOnly from "./guards/AdminOnly.tsx";
 import MyPage from "@/pages/profile/MyPage.tsx";
 import AdminPage from "@/pages/admin/AdminPage.tsx";
+import TestAuthPage from "@/pages/auth/TestAuthPage";
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null;
@@ -24,6 +25,9 @@ const Placeholder = () => null;
 export default function AppRouter() {
   return (
     <Routes>
+      {/* 테스트 페이지 */}
+      <Route path="/test/auth" element={<TestAuthPage />} />
+
       {/* 전역 레이아웃 (Header, Footer 포함) */}
       <Route element={<AppLayout />}>
         {/* AuthPage는 특별한 Header 표시 */}
