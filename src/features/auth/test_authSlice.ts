@@ -7,12 +7,14 @@ const initialState: AuthState = {
    user: null,
    loading: false,
    error: null,
+   isLoggedIn: false,
 }
 
 type AuthState = {
    user: AuthUser | null
    loading: boolean
    error: string | null
+   isLoggedIn: boolean
 }
 
 interface AuthUser {
