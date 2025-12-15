@@ -1,132 +1,75 @@
-// moovy-frontend/src/pages/auth/TestAuthPage.tsx
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { test_loginThunk, test_joinThunk, test_logoutThunk, test_hydrateAuthThunk } from '@/features/auth/test_authSlice'
+import { localLoginThunk, localSignUpThunk, logoutThunk } from '@/features/auth/test_authSlice'
 
 export default function TestAuthPage() {
    const dispatch = useAppDispatch()
-   // rootReducer에 testAuth를 추가해야 함. 아직 추가 안했으면 에러 날 수 있음.
-   // @ts-ignore
-   const { user, isAuthenticated, loading, error, provider } = useAppSelector((state) => state.testAuth || {})
+   const { user, loading, error } = useAppSelector((state) => state.testAuth)
 
-   const [mode, setMode] = useState<'LOGIN' | 'JOIN'>('LOGIN')
-
-   // Form State
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [name, setName] = useState('')
 
-   useEffect(() => {
-      // 페이지 진입 시 세션 체크
-      dispatch(test_hydrateAuthThunk())
-   }, [dispatch])
-
-   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-      if (mode === 'LOGIN') {
-         await dispatch(test_loginThunk({ email, password }))
-      } else {
-         const res = await dispatch(test_joinThunk({ email, password, name }))
-         if (test_joinThunk.fulfilled.match(res)) {
-            alert('회원가입 성공! 로그인해주세요.')
-            setMode('LOGIN')
-         }
+   const handleLogin = () => {
+      if (!email || !password) {
+         alert('이메일과 비밀번호를 입력해주세요.')
+         return
       }
+      dispatch(localLoginThunk({ email, password }))
+   }
+
+   const handleSignUp = () => {
+      if (!email || !password || !name) {
+         alert('이메일, 비밀번호, 이름을 모두 입력해주세요.')
+         return
+      }
+      dispatch(localSignUpThunk({ email, password, name }))
    }
 
    const handleLogout = () => {
-      dispatch(test_logoutThunk())
+      dispatch(logoutThunk())
    }
 
    return (
-      <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-         <h1>Test Auth Page</h1>
+      <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto', color: '#333' }}>
+         <h1 style={{ color: '#fff' }}>Test Auth Page</h1>
 
-         <div
-            style={{
-               marginBottom: '2rem',
-               padding: '1rem',
-               border: '1px solid #ccc',
-               borderRadius: '8px',
-            }}
-         >
-            <h3>Current State</h3>
-            <pre style={{ background: '#f4f4f4', padding: '1rem' }}>{JSON.stringify({ isAuthenticated, user, loading, error, provider }, null, 2)}</pre>
-            {isAuthenticated && (
-               <button
-                  onClick={handleLogout}
-                  style={{
-                     padding: '0.5rem 1rem',
-                     background: 'red',
-                     color: 'white',
-                     border: 'none',
-                     cursor: 'pointer',
-                  }}
-               >
+         <div style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ccc', background: '#f5f5f5' }}>
+            <h2>Status</h2>
+            <p>Loading: {loading ? 'True' : 'False'}</p>
+            <p style={{ color: 'red' }}>Error: {error ? JSON.stringify(error) : 'None'}</p>
+            <p>User: {user ? JSON.stringify(user, null, 2) : 'Not Logged In'}</p>
+            {user && (
+               <button onClick={handleLogout} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
                   Logout
                </button>
             )}
          </div>
 
-         {!isAuthenticated && (
-            <div
-               style={{
-                  border: '1px solid #ddd',
-                  padding: '2rem',
-                  borderRadius: '8px',
-               }}
-            >
-               <div style={{ marginBottom: '1rem' }}>
-                  <button
-                     onClick={() => setMode('LOGIN')}
-                     style={{
-                        marginRight: '1rem',
-                        fontWeight: mode === 'LOGIN' ? 'bold' : 'normal',
-                     }}
-                  >
-                     Login
-                  </button>
-                  <button onClick={() => setMode('JOIN')} style={{ fontWeight: mode === 'JOIN' ? 'bold' : 'normal' }}>
-                     Join
-                  </button>
+         {!user && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#fff', padding: '1rem', borderRadius: '8px' }}>
+               <h3>Sign Up / Login Form</h3>
+               <div style={{ marginBottom: '0.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem' }}>Email:</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box' }} placeholder="test@example.com" />
+               </div>
+               <div style={{ marginBottom: '0.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem' }}>Password:</label>
+                  <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box' }} placeholder="password" />
+               </div>
+               <div style={{ marginBottom: '0.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem' }}>Name (Sign Up Only):</label>
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={{ width: '100%', padding: '0.5rem', boxSizing: 'border-box' }} placeholder="Your Name" />
                </div>
 
-               <h2>{mode === 'LOGIN' ? 'Login' : 'Join'}</h2>
-               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div>
-                     <label>Email: </label>
-                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '0.5rem' }} />
-                  </div>
-                  <div>
-                     <label>Password: </label>
-                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: '100%', padding: '0.5rem' }} />
-                  </div>
-
-                  {mode === 'JOIN' && (
-                     <>
-                        <div>
-                           <label>Name: </label>
-                           <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: '100%', padding: '0.5rem' }} />
-                        </div>
-                     </>
-                  )}
-
-                  <button
-                     type="submit"
-                     disabled={loading}
-                     style={{
-                        padding: '0.75rem',
-                        background: 'blue',
-                        color: 'white',
-                        border: 'none',
-                        cursor: 'pointer',
-                     }}
-                  >
-                     {loading ? 'Processing...' : mode === 'LOGIN' ? 'Login' : 'Join'}
+               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                  <button onClick={handleLogin} disabled={loading} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                     Login
                   </button>
-
-                  {error && <p style={{ color: 'red' }}>{error}</p>}
-               </form>
+                  <button onClick={handleSignUp} disabled={loading} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                     Sign Up
+                  </button>
+               </div>
             </div>
          )}
       </div>

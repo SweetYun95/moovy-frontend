@@ -10,4 +10,9 @@ const test_moovy = axios.create({
    withCredentials: true,
 })
 
+export interface ApiResponse<T> {
+   success: boolean
+   data?: T
+}
+
 export default test_moovy
