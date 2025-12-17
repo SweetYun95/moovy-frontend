@@ -31,3 +31,8 @@ export const logout = async (): Promise<ApiResponse<{}>> => {
    const result = await moovy.post('/auth/logout')
    return result.data
 }
+
+export const checkAuth = async (): Promise<ApiResponse<loginResponse>> => {
+   const result = await moovy.get('/auth/me')
+   return result.data
+}

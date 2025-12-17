@@ -1,7 +1,7 @@
 // moovy-frontend/src/features/auth/test_authSlice.ts
 import { createAsyncThunk, createSlice, isPending, isRejected } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { loginLocal, logout, signUpLocal } from '@/services/api/test_authApi'
+import { loginLocal, logout, signUpLocal, checkAuth } from '@/services/api/test_authApi'
 
 const initialState: AuthState = {
    user: null,
@@ -58,6 +58,18 @@ export const logoutThunk = createAsyncThunk('Auth/logout', async (_, { rejectWit
    }
 })
 
+export const checkAuthThunk = createAsyncThunk('Auth/checkAuth', async (_, { rejectWithValue }) => {
+   try {
+      const response = await checkAuth()
+      return response.data
+   } catch (error) {
+      if (axios.isAxiosError(error)) {
+         return rejectWithValue(error.response?.data)
+      }
+      return rejectWithValue('알 수 없는 에러')
+   }
+})
+
 const slice = createSlice({
    name: 'testAuth',
    initialState,
@@ -75,6 +87,10 @@ const slice = createSlice({
          .addCase(logoutThunk.fulfilled, (state) => {
             state.loading = false
             state.user = null
+         })
+         .addCase(checkAuthThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload?.user ?? null
          })
       builder
          .addMatcher(isPending, (state) => {

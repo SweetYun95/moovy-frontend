@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { localLoginThunk, localSignUpThunk, logoutThunk } from '@/features/auth/test_authSlice'
+import { localLoginThunk, localSignUpThunk, logoutThunk, checkAuthThunk } from '@/features/auth/test_authSlice'
 
 export default function TestAuthPage() {
    const dispatch = useAppDispatch()
@@ -29,6 +29,39 @@ export default function TestAuthPage() {
    const handleLogout = () => {
       dispatch(logoutThunk())
    }
+
+   const handleSocialLogin = (provider: string) => {
+      const width = 500
+      const height = 600
+      const left = window.screen.width / 2 - width / 2
+      const top = window.screen.height / 2 - height / 2
+
+      window.open(`/oauth?provider=${provider}`, 'oauthPopup', `width=${width},height=${height},left=${left},top=${top}`)
+   }
+
+   useEffect(() => {
+      // 1. Window Message Listener
+      const handleMessage = (event: MessageEvent) => {
+         if (event.origin !== window.location.origin) return
+         if (event.data.type === 'OAUTH_SUCCESS') {
+            dispatch(checkAuthThunk())
+         }
+      }
+      window.addEventListener('message', handleMessage)
+
+      // 2. BroadcastChannel Listener
+      const channel = new BroadcastChannel('oauth_channel')
+      channel.onmessage = (event) => {
+         if (event.data.type === 'OAUTH_SUCCESS') {
+            dispatch(checkAuthThunk())
+         }
+      }
+
+      return () => {
+         window.removeEventListener('message', handleMessage)
+         channel.close()
+      }
+   }, [dispatch])
 
    return (
       <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto', color: '#333' }}>
@@ -69,6 +102,18 @@ export default function TestAuthPage() {
                   <button onClick={handleSignUp} disabled={loading} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
                      Sign Up
                   </button>
+               </div>
+
+               <div style={{ marginTop: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
+                  <h3>Social Login</h3>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                     <button onClick={() => handleSocialLogin('google')} style={{ padding: '0.5rem 1rem', cursor: 'pointer', background: '#db4437', color: 'white', border: 'none' }}>
+                        Google Login
+                     </button>
+                     <button onClick={() => handleSocialLogin('kakao')} style={{ padding: '0.5rem 1rem', cursor: 'pointer', background: '#fee500', color: 'black', border: 'none' }}>
+                        Kakao Login
+                     </button>
+                  </div>
                </div>
             </div>
          )}
