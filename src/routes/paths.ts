@@ -25,6 +25,7 @@ export const PATHS = {
   reviewDetail: (id: string | number) => `/reviews/${id}`,
 
   profile: "/profile",
+  admin: "/admin",
 } as const;
 
 // 상수 키 타입 (오타 방지용)

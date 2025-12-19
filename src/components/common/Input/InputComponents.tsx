@@ -1,71 +1,77 @@
 import React, { useState } from "react";
 import { Input } from "./InputStyle";
 
-export const EmailInput: React.FC = () => {
-  const [value, setValue] = useState("");
-
+export const EmailInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
   return (
     <Input
       type="email"
       placeholder="이메일을 입력하세요"
       value={value}
-      onChange={setValue}
+      onChange={onChange}
       id="email"
     />
   );
 };
 
-export const PasswordInput: React.FC = () => {
-  const [value, setValue] = useState("");
-
+export const PasswordInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
   return (
     <Input
       type="password"
       placeholder="비밀번호를 입력하세요"
       value={value}
-      onChange={setValue}
-      showPasswordToggle={true}
+      onChange={onChange}
+      showPasswordToggle
       id="password"
     />
   );
 };
-export const PasswordCheckInput: React.FC = () => {
-  const [value, setValue] = useState("");
 
+export const PasswordCheckInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
   return (
     <Input
       type="password"
       placeholder="비밀번호를 다시 입력하세요"
       value={value}
-      onChange={setValue}
+      onChange={onChange}
       showPasswordToggle={true}
       id="password"
     />
   );
 };
-export const NameInput: React.FC = () => {
-  const [value, setValue] = useState("");
-
+export const NameInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
   return (
     <Input
       type="text"
       placeholder="이름을 입력하세요"
       value={value}
-      onChange={setValue}
+      onChange={onChange}
       id="name"
     />
   );
 };
 
-export const NicknameInput: React.FC = () => {
-  const [value, setValue] = useState("");
-
+export const NicknameInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
   return (
     <Input
       type="text"
       placeholder="닉네임을 입력하세요"
       value={value}
-      onChange={setValue}
+      onChange={onChange}
       rightButton={{
         text: "중복 확인",
         onClick: () => alert("중복 확인 클릭!"),

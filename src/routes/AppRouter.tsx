@@ -15,6 +15,7 @@ import GuestOnly from "./guards/GuestOnly.tsx";
 import UserOnly from "./guards/UserOnly.tsx";
 import AdminOnly from "./guards/AdminOnly.tsx";
 import MyPage from "@/pages/profile/MyPage.tsx";
+import AdminPage from "@/pages/admin/AdminPage.tsx";
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null;
@@ -51,13 +52,12 @@ export default function AppRouter() {
           {/* TODO: /user 등 실제 페이지 붙이기 */}
           <Route path={PATHS.mypage} element={<MyPage />} />
         </Route>
-
       </Route>
 
       {/* 관리자 전용 (전역 레이아웃 제외) */}
       <Route element={<AdminOnly />}>
         {/* TODO: /admin 등 실제 페이지 붙이기 */}
-        <Route path={PATHS.adminHome} element={<Placeholder />} />
+        <Route path={PATHS.adminHome} element={<AdminPage />} />
       </Route>
     </Routes>
   );
