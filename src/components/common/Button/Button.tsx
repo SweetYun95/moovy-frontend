@@ -128,6 +128,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       variant = "modal-close";
       defaultText = "취소";
       break;
+    case "edit":
+      variant = "primary";
+      defaultText = "수정";
+      break;
     default:
       variant = "primary";
       defaultText = "액션 버튼";
