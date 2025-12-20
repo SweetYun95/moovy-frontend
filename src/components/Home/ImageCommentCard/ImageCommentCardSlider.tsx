@@ -8,7 +8,7 @@ import 'swiper/css';
 
 // 내부 유틸/전역/서비스
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { fetchCommentsThunk } from '@/features/comments/commentSlice';
+import { fetchCommentsThunk, type CommentItem } from '@/features/comments/commentSlice';
 import { fetchContentsThunk } from '@/features/content/contentSlice';
 import { buildCommentSections, type CommentSortType } from '@/utils/homeSections';
 import { convertCommentItemToCard } from '@/utils/contentUtils';
@@ -165,6 +165,9 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
           >
             {section.comments.map((comment: any) => {
               const content = comment.contentId ? contents.find(c => c.id === comment.contentId) : null;
+              // 원본 CommentItem 찾기 (comment.id는 comment_id)
+              const originalCommentItem = comments.find((item: CommentItem) => item.comment_id === comment.id);
+              
               return (
                 <SwiperSlide key={comment.id}>
                   <div className="image-comment-card-section__grid">
@@ -176,14 +179,28 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                       likes={comment.likes ?? 0}
                       replies={comment.replies ?? 0}
                       movieImageUrl={content?.imageUrl}
-                      onReplyClick={() => onCardClick?.({
-                        id: comment.id,
-                        title: content?.title || '',
-                        likes: comment.likes ?? 0,
-                        replies: comment.replies ?? 0,
-                        comment: comment.comment || '',
-                        username: comment.username || '익명',
-                      })}
+                      commentItem={originalCommentItem}
+                      onClick={(commentItem) => {
+                        if (commentItem && onCardClick) {
+                          onCardClick({
+                            id: commentItem.comment_id,
+                            title: content?.title || '',
+                            likes: commentItem.likes ?? 0,
+                            replies: commentItem.replies ?? 0,
+                            comment: commentItem.content || '',
+                            username: comment.username || '익명',
+                          });
+                        } else if (onCardClick) {
+                          onCardClick({
+                            id: comment.id,
+                            title: content?.title || '',
+                            likes: comment.likes ?? 0,
+                            replies: comment.replies ?? 0,
+                            comment: comment.comment || '',
+                            username: comment.username || '익명',
+                          });
+                        }
+                      }}
                     />
                   </div>
                 </SwiperSlide>
@@ -290,6 +307,9 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                     <div className="image-comment-card-section__grid">
                       {section.comments.map((comment: any) => {
                         const content = comment.contentId ? contents.find(c => c.id === comment.contentId) : null;
+                        // 원본 CommentItem 찾기 (comment.id는 comment_id)
+                        const originalCommentItem = comments.find((item: CommentItem) => item.comment_id === comment.id);
+                        
                         return (
                           <ImageCommentCard
                             key={comment.id}
@@ -300,14 +320,28 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
                             likes={comment.likes ?? 0}
                             replies={comment.replies ?? 0}
                             movieImageUrl={content?.imageUrl}
-                            onReplyClick={() => onCardClick?.({
-                              id: comment.id,
-                              title: content?.title || '',
-                              likes: comment.likes ?? 0,
-                              replies: comment.replies ?? 0,
-                              comment: comment.comment || '',
-                              username: comment.username || '익명',
-                            })}
+                            commentItem={originalCommentItem}
+                            onClick={(commentItem) => {
+                              if (commentItem && onCardClick) {
+                                onCardClick({
+                                  id: commentItem.comment_id,
+                                  title: content?.title || '',
+                                  likes: commentItem.likes ?? 0,
+                                  replies: commentItem.replies ?? 0,
+                                  comment: commentItem.content || '',
+                                  username: comment.username || '익명',
+                                });
+                              } else if (onCardClick) {
+                                onCardClick({
+                                  id: comment.id,
+                                  title: content?.title || '',
+                                  likes: comment.likes ?? 0,
+                                  replies: comment.replies ?? 0,
+                                  comment: comment.comment || '',
+                                  username: comment.username || '익명',
+                                });
+                              }
+                            }}
                           />
                         );
                       })}
