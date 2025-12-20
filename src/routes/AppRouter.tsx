@@ -28,6 +28,8 @@ export default function AppRouter() {
         {/* AuthPage는 특별한 Header 표시 */}
         <Route path={PATHS.login} element={<AuthPage />} />
         <Route path={PATHS.register} element={<AuthPage />} />
+        <Route path={PATHS.findId} element={<AuthPage />} />
+        <Route path={PATHS.findPassword} element={<AuthPage />} />
         {/* 공개/게스트 영역 */}
         <Route element={<GuestOnly />}>
           {/* / → MainPage */}
