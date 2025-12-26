@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { localLoginThunk, localSignUpThunk, logoutThunk, checkAuthThunk } from '@/features/auth/test_authSlice'
+import { localLoginThunk, localSignUpThunk, logoutThunk, checkAuthThunk } from '@/features/auth/authSlice'
 
 export default function TestAuthPage() {
    const dispatch = useAppDispatch()
-   const { user, loading, error } = useAppSelector((state) => state.testAuth)
+   const { user, loading, error } = useAppSelector((state) => state.auth)
 
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
