@@ -1,5 +1,5 @@
 // 외부 라이브러리
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 interface UseInfiniteScrollOptions {
   items: unknown[];
@@ -31,6 +31,8 @@ export function useInfiniteScroll<T>({
 }: UseInfiniteScrollOptions): UseInfiniteScrollReturn<T> {
   const [displayCount, setDisplayCount] = useState(initialCount);
   const observerRef = useRef<HTMLDivElement>(null);
+  const itemsLengthRef = useRef(items.length);
+  const prevItemsLengthRef = useRef(items.length);
 
   // 표시할 아이템 리스트
   const displayedItems = useMemo(() => {
@@ -39,35 +41,66 @@ export function useInfiniteScroll<T>({
 
   const hasMore = displayCount < items.length;
 
+  // items.length 변경 추적
+  useEffect(() => {
+    prevItemsLengthRef.current = itemsLengthRef.current;
+    itemsLengthRef.current = items.length;
+  }, [items.length]);
+
+  // items가 완전히 새로 로드되었을 때만 displayCount 리셋 (length가 감소하거나 크게 증가한 경우)
+  useEffect(() => {
+    // items.length가 크게 감소했거나, 초기 로드인 경우 리셋
+    if (items.length < prevItemsLengthRef.current || (items.length > 0 && displayCount > items.length)) {
+      setDisplayCount(initialCount);
+    }
+  }, [items.length, initialCount, displayCount]);
+
   // Intersection Observer로 하단 감지
   useEffect(() => {
-    if (!hasMore) return;
+    const currentRef = observerRef.current;
+    if (!currentRef) {
+      return;
+    }
+
+    // hasMore가 false면 observer를 설정하지 않음
+    if (!hasMore) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setDisplayCount((prev) => Math.min(prev + incrementCount, items.length));
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setDisplayCount((prev) => {
+            // 현재 items.length를 직접 참조하여 최신 값 사용
+            const currentItemsLength = items.length;
+            const newCount = Math.min(prev + incrementCount, currentItemsLength);
+            // 실제로 증가했을 때만 업데이트
+            if (newCount > prev) {
+              return newCount;
+            }
+            return prev;
+          });
         }
       },
-      { threshold }
+      { 
+        threshold,
+        rootMargin: '50px', // 미리 로드하기 위해 여유 공간 추가
+      }
     );
 
-    const currentRef = observerRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
+    // 약간의 지연 후 observe (DOM이 완전히 렌더링된 후)
+    const timeoutId = setTimeout(() => {
+      if (currentRef && hasMore) {
+        observer.observe(currentRef);
+      }
+    }, 100);
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      clearTimeout(timeoutId);
+      observer.disconnect();
     };
   }, [hasMore, items.length, incrementCount, threshold]);
-
-  // items 변경 시 displayCount 리셋
-  useEffect(() => {
-    setDisplayCount(initialCount);
-  }, [items, initialCount]);
 
   return {
     displayedItems,
