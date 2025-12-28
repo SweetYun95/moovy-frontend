@@ -7,7 +7,9 @@
 }
 
 #loginform,
-#registerform {
+#registerform,
+#findidform,
+#findpasswordform {
   margin: $spacing-9; // 72px
   width: 100%;
   max-width: 646px;

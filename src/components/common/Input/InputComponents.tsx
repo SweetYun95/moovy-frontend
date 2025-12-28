@@ -1,41 +1,68 @@
 import React, { useState } from "react";
 import { Input } from "./InputStyle";
+import type { InputProps } from "./InputStyle";
 
-export const EmailInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+export interface EmailInputProps extends Omit<InputProps, 'type' | 'placeholder' | 'id'> {
+  value?: string;
+  onChange?: (value: string) => void;
+  id?: string;
+}
+
+export const EmailInput: React.FC<EmailInputProps> = ({
+  value = "",
+  onChange,
+  id = "email",
+  ...props
+}) => {
   return (
     <Input
       type="email"
       placeholder="이메일을 입력하세요"
       value={value}
       onChange={onChange}
-      id="email"
+      id={id}
+      {...props}
     />
   );
 };
 
-export const PasswordInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+export interface PasswordInputProps extends Omit<InputProps, 'type' | 'placeholder' | 'id' | 'showPasswordToggle'> {
+  value?: string;
+  onChange?: (value: string) => void;
+  id?: string;
+}
+
+export const PasswordInput: React.FC<PasswordInputProps> = ({
+  value = "",
+  onChange,
+  id = "password",
+  ...props
+}) => {
   return (
     <Input
       type="password"
       placeholder="비밀번호를 입력하세요"
       value={value}
       onChange={onChange}
-      showPasswordToggle
-      id="password"
+      showPasswordToggle={true}
+      id={id}
+      {...props}
     />
   );
 };
 
-export const PasswordCheckInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+export interface PasswordCheckInputProps extends Omit<InputProps, 'type' | 'placeholder' | 'id' | 'showPasswordToggle'> {
+  value?: string;
+  onChange?: (value: string) => void;
+  id?: string;
+}
+
+export const PasswordCheckInput: React.FC<PasswordCheckInputProps> = ({
+  value = "",
+  onChange,
+  id = "password-check",
+  ...props
+}) => {
   return (
     <Input
       type="password"
@@ -43,29 +70,48 @@ export const PasswordCheckInput: React.FC<{
       value={value}
       onChange={onChange}
       showPasswordToggle={true}
-      id="password"
+      id={id}
+      {...props}
     />
   );
 };
-export const NameInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+
+export interface NameInputProps extends Omit<InputProps, 'type' | 'placeholder' | 'id'> {
+  value?: string;
+  onChange?: (value: string) => void;
+  id?: string;
+}
+
+export const NameInput: React.FC<NameInputProps> = ({
+  value = "",
+  onChange,
+  id = "name",
+  ...props
+}) => {
   return (
     <Input
       type="text"
       placeholder="이름을 입력하세요"
       value={value}
       onChange={onChange}
-      id="name"
+      id={id}
+      {...props}
     />
   );
 };
 
-export const NicknameInput: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+export interface NicknameInputProps extends Omit<InputProps, 'type' | 'placeholder' | 'id'> {
+  value?: string;
+  onChange?: (value: string) => void;
+  id?: string;
+}
+
+export const NicknameInput: React.FC<NicknameInputProps> = ({
+  value = "",
+  onChange,
+  id = "nickname",
+  ...props
+}) => {
   return (
     <Input
       type="text"
@@ -78,7 +124,8 @@ export const NicknameInput: React.FC<{
         variant: "primary",
         size: "sm",
       }}
-      id="nickname"
+      id={id}
+      {...props}
     />
   );
 };

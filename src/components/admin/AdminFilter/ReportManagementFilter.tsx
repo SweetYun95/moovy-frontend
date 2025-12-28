@@ -62,7 +62,7 @@ export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">신고 관리</h3>
+          <h3 className="filter-title mb-0">신고내역 관리</h3>
         </div>
 
         {isExpanded ? (
