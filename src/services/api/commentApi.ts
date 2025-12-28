@@ -1,6 +1,10 @@
 // moovy-frontend/src/services/api/commentApi.ts
 import moovy from "./http";
 
+// ─────────────────────────────────────────────────────────────
+// Legacy (홈/카드용) API
+// ─────────────────────────────────────────────────────────────
+
 export type CommentCard = {
   id: number;
   username: string;
@@ -12,19 +16,18 @@ export type CommentCard = {
 };
 
 /** 코멘트 카드 목록 조회 */
-
 export async function getCommentCards() {
   const res = await moovy.get("/comment/list");
   return res.data as CommentCard[];
 }
 
-/** 코멘트 조회 */
+/** 코멘트 단건 조회 */
 export async function getComment(id: number) {
   const res = await moovy.get(`/comment/${id}`);
   return res.data as CommentCard;
 }
 
-// 코멘트 생성/수정/삭제 타입
+// 코멘트 생성/수정/삭제 타입 (Legacy)
 export type CreateCommentRequest = {
   content: string;
   isSpoiler?: boolean;
@@ -37,25 +40,27 @@ export type UpdateCommentRequest = {
   isSpoiler?: boolean;
 };
 
-/** 코멘트 생성 */
+/** 코멘트 생성 (Legacy) */
 export async function createComment(data: CreateCommentRequest) {
   const res = await moovy.post("/comment", data);
   return res.data;
 }
 
-/** 코멘트 수정 */
+/** 코멘트 수정 (Legacy) */
 export async function updateComment(id: number, data: UpdateCommentRequest) {
   const res = await moovy.put(`/comment/${id}`, data);
   return res.data;
 }
 
-/** 코멘트 삭제 */
+/** 코멘트 삭제 (Legacy) */
 export async function deleteComment(id: number) {
   const res = await moovy.delete(`/comment/${id}`);
   return res.data;
 }
 
-// ===== 신고 API =====
+// ─────────────────────────────────────────────────────────────
+// Report API (Legacy)
+/// ─────────────────────────────────────────────────────────────
 
 export type ReportCategory =
   | "spam"
@@ -77,9 +82,10 @@ export async function createReport(data: CreateReportRequest) {
   return res.data;
 }
 
-// ------------------------------------------------------------
-// 신규 백엔드 REST API (/api/comments/*)
-// ------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────
+// New REST API (/api/comments/*)  — 무한 스크롤(page/limit)
+// ─────────────────────────────────────────────────────────────
+
 export type CommentAuthor = {
   user_id: number;
   name: string;
@@ -93,13 +99,25 @@ export type CommentEntity = {
   created_at?: string;
   updated_at?: string;
   deleted_at?: string | null;
-  User?: CommentAuthor;
-  user?: CommentAuthor;
+  User?: CommentAuthor; // include(User)
+  user?: CommentAuthor; // 혹시 소문자 키로 올 수도 있어 방어
 };
 
-/** 코멘트 목록 조회 (특정 토픽 기준) */
-export async function fetchComments(topic_id: number) {
-  const { data } = await moovy.get(`/api/comments/${topic_id}`);
+export type FetchCommentsParams = {
+  page?: number;
+  limit?: number;
+};
+
+/**
+ * 코멘트 목록 조회 (특정 토픽 기준) - 무한 스크롤
+ * GET /api/comments/:topic_id?page=&limit=
+ * 응답: CommentEntity[]
+ */
+export async function fetchComments(
+  topic_id: number,
+  params?: FetchCommentsParams,
+) {
+  const { data } = await moovy.get(`/api/comments/${topic_id}`, { params });
   return data as CommentEntity[];
 }
 
