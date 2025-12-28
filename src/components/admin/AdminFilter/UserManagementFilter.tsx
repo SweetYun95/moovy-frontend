@@ -61,7 +61,7 @@ export const UserManagementFilter: React.FC<UserManagementFilterProps> = ({
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">유저 관리</h3>
+          <h3 className="filter-title mb-0">유저관리</h3>
         </div>
 
         {isExpanded ? (

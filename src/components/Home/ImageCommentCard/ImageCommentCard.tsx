@@ -2,6 +2,7 @@ import React from 'react';
 
 import './ImageCommentCard.scss';
 import { Icon } from '@iconify/react';
+import type { CommentItem } from '@/features/comments/commentSlice';
 
 export interface ImageCommentCardProps {
   username: string;
@@ -13,9 +14,10 @@ export interface ImageCommentCardProps {
   profileImageUrl?: string;
   movieImageUrl?: string;
   className?: string;
+  commentItem?: CommentItem; // CommentItem 데이터 (onClick에 자동 전달)
   onLikeClick?: () => void;
   onReplyClick?: () => void;
-  onClick?: () => void; // 카드 전체 클릭 핸들러 (CommentCard와 통일)
+  onClick?: (commentItem?: CommentItem) => void; // 카드 전체 클릭 핸들러 (commentItem 자동 전달)
 }
 
 export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
@@ -28,6 +30,7 @@ export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
   profileImageUrl,
   movieImageUrl,
   className = '',
+  commentItem,
   onLikeClick,
   onReplyClick,
   onClick,
@@ -45,44 +48,40 @@ export const ImageCommentCard: React.FC<ImageCommentCardProps> = ({
   };
 
   const handleReplyClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
-    // 댓글 액션 버튼 클릭 시 모달 열기
+    e.stopPropagation();
     if (onClick) {
-      onClick();
+      onClick(commentItem);
     }
-    // 기존 onReplyClick도 호출 (필요한 경우)
     if (onReplyClick) {
       onReplyClick();
     }
   };
 
-  // 댓글 아이콘 클릭 핸들러 (모달 열기)
   const handleReplyIconClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
-    // 댓글 아이콘 클릭 시 모달 열기
+    e.stopPropagation();
     if (onClick) {
-      onClick();
+      onClick(commentItem);
     }
   };
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // 클릭된 요소가 버튼 또는 버튼의 자식 요소인지 확인
     const target = e.target as HTMLElement;
     
-    // 버튼 영역 내부를 클릭한 경우만 무시
-    const clickedButton = target.closest('button');
-    const isInsideActions = target.closest('.comment-card__actions');
-    const isInsideIconActions = target.closest('.comment-card__icon-actions');
-    
-    // 액션 버튼이나 아이콘 액션 영역 내부의 버튼이 아닌 경우에만 클릭 처리
-    if (clickedButton || (isInsideActions && target.closest('button')) || (isInsideIconActions && target.closest('button'))) {
-      // 버튼 클릭은 기존 핸들러가 처리하도록 stopPropagation만 호출
+    // 좋아요 버튼 클릭 시에는 모달이 열리지 않도록
+    const clickedLikeButton = target.closest('.comment-card__icon-button--like');
+    if (clickedLikeButton) {
       return;
     }
     
-    // 카드의 다른 영역(텍스트, 헤더 등)을 클릭한 경우
+    // 댓글 버튼이나 아이콘은 각각의 핸들러가 처리하므로 여기서는 무시
+    const clickedButton = target.closest('button');
+    if (clickedButton) {
+      return;
+    }
+    
+    // 카드의 다른 영역 클릭 시 모달 열기
     if (onClick) {
-      onClick();
+      onClick(commentItem);
     }
   };
 
