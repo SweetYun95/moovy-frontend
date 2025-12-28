@@ -1,130 +1,117 @@
 // moovy-frontend/src/features/auth/authSlice.ts
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Provider, User } from "@/services/api/authApi";
-import {
-  loginLocal,
-  logout,
-  meLocal,
-  meGoogle,
-  meKakao,
-} from "@/services/api/authApi";
-
-export type AuthState = {
-  hydrated: boolean;
-  loading: boolean;
-  isAuthenticated: boolean;
-  user: User | null;
-  provider: Provider | "none";
-  error?: string | null;
-};
+import { createAsyncThunk, createSlice, isPending, isRejected } from '@reduxjs/toolkit'
+import axios from 'axios'
+import { loginLocal, logout, signUpLocal, checkAuth } from '@/services/api/authApi'
 
 const initialState: AuthState = {
-  hydrated: false,
-  loading: false,
-  isAuthenticated: false,
-  user: null,
-  provider: "none",
-  error: null,
-};
+   user: null,
+   loading: false,
+   error: null,
+   isLoggedIn: false,
+}
 
-/** ✅ 앱 부팅 시: 로컬/구글/카카오 중 하나라도 로그인되어 있으면 통과 */
-export const hydrateAuthThunk = createAsyncThunk(
-  "auth/hydrate",
-  async (_: void, { rejectWithValue }) => {
-    // 세 가지 체크를 병렬로 시도 → 성공한 것 하나라도 있으면 로그인 상태
-    const checks = await Promise.allSettled([meLocal(), meGoogle(), meKakao()]);
+type AuthState = {
+   user: AuthUser | null
+   loading: boolean
+   error: string | null
+   isLoggedIn: boolean
+}
 
-    for (const r of checks) {
-      if (r.status === "fulfilled") {
-        return r.value; // { ...user, provider }
+interface AuthUser {
+   user_id: string
+   email: string
+   name: string
+   google?: boolean
+   kakao?: boolean
+   googleId?: string
+   kakaoId?: string
+   state?: string
+   profileImage?: string
+}
+
+// 로컬 회원가입
+export const localSignUpThunk = createAsyncThunk('Auth/localsignup', async (payload: { email: string; password: string; name: string }, { rejectWithValue }) => {
+   try {
+      const response = await signUpLocal(payload)
+      return response.data
+   } catch (error) {
+      if (axios.isAxiosError(error)) {
+         return rejectWithValue(error.response?.data)
       }
-    }
-    // 모두 실패면 게스트
-    return rejectWithValue("NO_SESSION");
-  },
-);
+      return rejectWithValue('알 수 없는 에러')
+   }
+})
 
-/** ✅ 로컬 로그인 */
-export const loginThunk = createAsyncThunk(
-  "auth/login",
-  async (
-    payload: { idOrEmail: string; password: string },
-    { rejectWithValue },
-  ) => {
-    try {
-      const res = await loginLocal(payload);
-      // token 저장은 authApi에서 처리
-      return { ...res.user, provider: "local" as const };
-    } catch (e: any) {
-      return rejectWithValue(e?.response?.data?.message ?? "LOGIN_FAILED");
-    }
-  },
-);
+// 로컬 로그인
+export const localLoginThunk = createAsyncThunk('Auth/localLogin', async (payload: { email: string; password: string }, { rejectWithValue }) => {
+   try {
+      const response = await loginLocal(payload)
+      return response.data
+   } catch (error) {
+      if (axios.isAxiosError(error)) {
+         return rejectWithValue(error.response?.data)
+      }
+      return rejectWithValue('알 수 없는 에러')
+   }
+})
 
-/** ✅ 로그아웃 */
-export const logoutThunk = createAsyncThunk("auth/logout", async () => {
-  await logout();
-});
+// 로그아웃
+export const logoutThunk = createAsyncThunk('Auth/logout', async (_, { rejectWithValue }) => {
+   try {
+      await logout()
+   } catch (error) {
+      if (axios.isAxiosError(error)) {
+         return rejectWithValue(error.response?.data)
+      }
+      return rejectWithValue('알 수 없는 에러')
+   }
+})
+
+// 인증 상태 확인
+export const checkAuthThunk = createAsyncThunk('Auth/checkAuth', async (_, { rejectWithValue }) => {
+   try {
+      const response = await checkAuth()
+      return response.data
+   } catch (error) {
+      if (axios.isAxiosError(error)) {
+         return rejectWithValue(error.response?.data)
+      }
+      return rejectWithValue('알 수 없는 에러')
+   }
+})
 
 const slice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {
-    // 필요 시 사용자 정보 일부 갱신
-    setUser(state, action: PayloadAction<User | null>) {
-      state.user = action.payload;
-      state.isAuthenticated = !!action.payload;
-      state.provider = action.payload
-        ? (action.payload.provider ?? "local")
-        : "none";
-    },
-  },
-  extraReducers: (b) => {
-    // hydrate
-    b.addCase(hydrateAuthThunk.pending, (s) => {
-      s.loading = true;
-      s.error = null;
-    });
-    b.addCase(hydrateAuthThunk.fulfilled, (s, a) => {
-      s.loading = false;
-      s.hydrated = true;
-      s.user = a.payload as User;
-      s.isAuthenticated = true;
-      s.provider = (a.payload as any)?.provider ?? "local";
-    });
-    b.addCase(hydrateAuthThunk.rejected, (s) => {
-      s.loading = false;
-      s.hydrated = true;
-      s.user = null;
-      s.isAuthenticated = false;
-      s.provider = "none";
-    });
+   name: 'auth',
+   initialState,
+   reducers: {},
+   extraReducers: (builder) => {
+      builder
+         .addCase(localSignUpThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload?.newUser ?? null
+         })
+         .addCase(localLoginThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload?.user ?? null
+         })
+         .addCase(logoutThunk.fulfilled, (state) => {
+            state.loading = false
+            state.user = null
+         })
+         .addCase(checkAuthThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload?.user ?? null
+         })
+      builder
+         .addMatcher(isPending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addMatcher(isRejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload as string
+         })
+   },
+})
 
-    // login
-    b.addCase(loginThunk.pending, (s) => {
-      s.loading = true;
-      s.error = null;
-    });
-    b.addCase(loginThunk.fulfilled, (s, a) => {
-      s.loading = false;
-      s.user = a.payload as User;
-      s.isAuthenticated = true;
-      s.provider = "local";
-    });
-    b.addCase(loginThunk.rejected, (s, a) => {
-      s.loading = false;
-      s.error = (a.payload as string) ?? "LOGIN_FAILED";
-    });
-
-    // logout
-    b.addCase(logoutThunk.fulfilled, (s) => {
-      s.user = null;
-      s.isAuthenticated = false;
-      s.provider = "none";
-    });
-  },
-});
-
-export const { setUser } = slice.actions;
-export default slice.reducer;
+export default slice.reducer
