@@ -290,19 +290,15 @@ li {
   }
 
   &.user-table ul {
-    grid-template-columns: minmax(120px, auto) 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(120px, 1fr) 1fr 1fr minmax(80px, auto) minmax(80px, auto) minmax(100px, auto);
   }
 
   &.topic-table ul {
-    grid-template-columns: minmax(150px, auto) 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(150px, 1fr) 1fr 1fr 1fr 1fr;
   }
 
   &.inquiry-table ul {
-    grid-template-columns: minmax(120px, auto) 1fr 1fr 1fr 1fr;
-  }
-
-  &.report-table ul {
-    grid-template-columns: minmax(120px, auto) minmax(120px, auto) 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(120px, 1fr) minmax(180px, auto) minmax(120px, auto) minmax(80px, auto);
 
     li:nth-child(2) {
       overflow: visible;
@@ -313,6 +309,34 @@ li {
         text-overflow: clip;
         white-space: nowrap;
         min-width: fit-content;
+      }
+    }
+  }
+
+  &.report-table ul {
+    grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) minmax(180px, auto) minmax(120px, auto) minmax(80px, auto);
+
+    li:nth-child(3) {
+      overflow: visible;
+      min-width: fit-content;
+
+      > * {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+        min-width: fit-content;
+      }
+    }
+
+    li:nth-child(2) {
+      overflow: visible;
+      min-width: 0;
+
+      > * {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+        min-width: 0;
       }
 
       img {
@@ -326,7 +350,7 @@ li {
   }
 
   &.comment-table ul {
-    grid-template-columns: minmax(120px, auto) 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: minmax(120px, 1fr) 1fr 1fr 1fr 1fr 1fr;
   }
   ul.header {
     color: $gray4;
@@ -375,13 +399,13 @@ li {
 
     &:first-child {
       overflow: visible;
-      min-width: fit-content;
+      min-width: 0;
 
       > * {
         overflow: visible;
         text-overflow: clip;
         white-space: nowrap;
-        min-width: fit-content;
+        min-width: 0;
       }
 
       img {
@@ -407,6 +431,53 @@ li {
       text-overflow: clip;
       white-space: normal;
       flex-shrink: 0;
+    }
+
+    &.status {
+      cursor: pointer;
+
+      &--completed {
+        color: $success-color;
+      }
+
+      &--pending {
+        color: $info-color;
+      }
+
+      &--reported {
+        color: $warning-color;
+      }
+
+      &--clickable {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // inquiry-table 상태 색상
+  &.inquiry-table ul li.status {
+    &--completed {
+      color: $success-color;
+    }
+
+    &--pending {
+      color: $danger-color;
+    }
+
+    &--reported {
+      color: $warning-color;
+    }
+  }
+
+  // report-table 상태 색상
+  &.report-table ul li.status {
+    &--completed {
+      color: $success-color;
+    }
+
+    &--pending {
+      color: $info-color;
+      text-decoration: underline;
     }
   }
 }

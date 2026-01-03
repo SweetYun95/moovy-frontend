@@ -14,6 +14,8 @@ import {
   WorkManagementFilter,
   QnAManagementFilter,
 } from "./AdminFilter";
+import InquiryModal from "../modals/InquiryModal/InquiryModal";
+import ReportModal from "../modals/ReportModal/ReportModal";
 
 interface TableProps {
   content: "dashboard" | "user" | "topic" | "inquiry" | "report";
@@ -21,10 +23,54 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ content }) => {
   const tableRef = React.useRef<HTMLDivElement>(null);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
+  const [selectedData, setSelectedData] = React.useState<any>(null);
+  const [totalItems, setTotalItems] = React.useState(0);
+  
+  // 상태별 모달 열기 함수
+  const openModalByStatus = (data: any) => {
+    setSelectedData(data);
+    if (content === "inquiry") {
+      // 1:1 문의: "신고" 상태는 ReportModal, 나머지는 InquiryModal
+      if (data.state === "신고") {
+        setIsReportModalOpen(true);
+      } else {
+        setIsInquiryModalOpen(true);
+      }
+    } else if (content === "report") {
+      // 신고 내역: 모든 상태에서 ReportModal
+      setIsReportModalOpen(true);
+    }
+  };
+  
+  // 모달이 읽기 전용인지 확인
+  const isReadOnly = (state: string) => {
+    if (content === "inquiry") {
+      return state === "답변완료"; // 답변완료는 읽기 전용
+    } else if (content === "report") {
+      return state === "처리완료"; // 처리완료는 읽기 전용
+    }
+    return false;
+  };
 
   const handleRowClick = (data: any) => {
-    // TODO: 모달 열기 로직 추가
-    console.log("Row clicked:", data);
+    setSelectedData(data);
+    if (content === "inquiry") {
+      // 1:1 문의: "신고" 상태는 ReportModal, 나머지는 InquiryModal
+      if (data.state === "신고") {
+        setIsReportModalOpen(true);
+      } else {
+        setIsInquiryModalOpen(true);
+      }
+    } else if (content === "report") {
+      setIsReportModalOpen(true);
+    }
+  };
+
+  const handleStatusClick = (e: React.MouseEvent, data: any) => {
+    e.stopPropagation();
+    openModalByStatus(data);
   };
 
   // ul.header와 ul.data의 li 너비를 동기화
@@ -86,9 +132,9 @@ const Table: React.FC<TableProps> = ({ content }) => {
       case "topic":
         return ["작품 제목", "작품 정보", "시작일", "종료일", "조회수"];
       case "inquiry":
-        return ["유저", "분류", "내용", "작성일", "상태"];
+        return ["유저", "분류", "작성일", "상태"];
       case "report":
-        return ["유저", "신고한 유저", "분류", "내용", "작성일", "상태"];
+        return ["유저", "신고한 유저", "분류", "작성일", "상태"];
       default:
         return [];
     }
@@ -150,6 +196,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
                       columns={columns} 
                       content={content}
                       onRowClick={handleRowClick}
+                      onDataCountChange={setTotalItems}
                     />
                   )}
                   {content === "inquiry" && (
@@ -157,6 +204,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                       columns={columns} 
                       content={content}
                       onRowClick={handleRowClick}
+                      onStatusClick={handleStatusClick}
+                      onDataCountChange={setTotalItems}
                     />
                   )}
                   {content === "report" && (
@@ -164,15 +213,63 @@ const Table: React.FC<TableProps> = ({ content }) => {
                       columns={columns} 
                       content={content}
                       onRowClick={handleRowClick}
+                      onStatusClick={handleStatusClick}
+                      onDataCountChange={setTotalItems}
                     />
                   )}
                 </div>
 
-                <StandardPagination className="mt-4" />
+                <StandardPagination className="mt-4" totalItems={totalItems} />
               </>
             )}
           </div>
         </>
+      )}
+
+      {/* 1:1 문의 모달 */}
+      {content === "inquiry" && selectedData?.state !== "신고" && (
+        <InquiryModal
+          isOpen={isInquiryModalOpen}
+          onClose={() => setIsInquiryModalOpen(false)}
+          mode="admin"
+          inquiryData={selectedData ? {
+            category: selectedData.category || "",
+            content: selectedData.content || "문의 내용입니다.",
+            initialReply: selectedData.state === "답변완료" ? "답변 완료되었습니다." : ""
+          } : undefined}
+          readOnly={selectedData?.state === "답변완료"}
+          onSubmit={(data) => {
+            console.log("Inquiry submitted:", data);
+            setIsInquiryModalOpen(false);
+          }}
+          onReport={() => {
+            console.log("Report inquiry");
+          }}
+        />
+      )}
+
+      {/* 신고 모달 - 신고 내역 또는 1:1 문의의 신고 상태 */}
+      {(content === "report" || (content === "inquiry" && selectedData?.state === "신고")) && (
+        <ReportModal
+          isOpen={isReportModalOpen}
+          onClose={() => setIsReportModalOpen(false)}
+          mode="admin"
+          reportData={selectedData ? {
+            category: selectedData.category || "",
+            content: selectedData.content || "신고 내용입니다.",
+            targetUser: {
+              name: content === "report" ? (selectedData.reported_id || "") : (selectedData.user_id || ""),
+              reportCount: 0
+            },
+            sanctionLevel: selectedData.sanctionLevel || "",
+            notification: selectedData.notification || ""
+          } : undefined}
+          readOnly={(content === "report" && selectedData?.state === "처리완료") || (content === "inquiry" && selectedData?.state === "신고")}
+          onSubmit={(data) => {
+            console.log("Report submitted:", data);
+            setIsReportModalOpen(false);
+          }}
+        />
       )}
     </>
   );
