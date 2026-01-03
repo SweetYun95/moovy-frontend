@@ -33,13 +33,14 @@
   &--underline {
     .tabs__list {
       display: flex;
+      justify-content: center; // 가운데 정렬 (기본)
     }
     
     .tabs__tab {
       padding: $spacing-2 $spacing-3; // 16px 24px
       color: $gray4;
       width: 120px;
-      text-align: center;
+      text-align: center; // 가운데 정렬
       
       &::after {
         content: '';
@@ -67,10 +68,44 @@
     }
   }
   
+  // 관리자 페이지용 스타일
+  &.tabs--admin {
+    &.tabs--underline {
+      .tabs__list {
+        justify-content: flex-start; // 왼쪽 정렬
+      }
+      
+      .tabs__tab {
+        &:hover:not(&--disabled):not(&--active) {
+          color: $gray1;
+        }
+        
+        &--active {
+          color: $gray1;
+        }
+      }
+    }
+    
+    &.tabs--button {
+      .tabs__list {
+        justify-content: flex-start; // 왼쪽 정렬
+      }
+      
+      .tabs__tab {
+        color: $gray1;
+        
+        &:hover:not(&--disabled):not(&--active) {
+          color: $gray1;
+        }
+      }
+    }
+  }
+  
   // 버튼 스타일
   &--button {
     .tabs__list {
       gap: $spacing-1; // 8px
+      justify-content: center; // 가운데 정렬 (기본)
     }
     
     .tabs__tab {
