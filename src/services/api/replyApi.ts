@@ -1,4 +1,4 @@
-// moovy-frontend/src/services/api/http.ts
+// moovy-frontend/src/services/api/replyApi.ts
 import moovy from './http'
 
 const base = '/api/replies'
