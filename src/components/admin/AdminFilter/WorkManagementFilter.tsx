@@ -15,7 +15,7 @@ export const WorkManagementFilter: React.FC<WorkManagementFilterProps> = ({
   onSearch,
 }) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [openSelector, setOpenSelector] = useState<string | null>(null);
 

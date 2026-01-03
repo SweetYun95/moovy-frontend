@@ -15,6 +15,7 @@ import GuestOnly from './guards/GuestOnly.tsx'
 import UserOnly from './guards/UserOnly.tsx'
 import AdminOnly from './guards/AdminOnly.tsx'
 import MyPage from '@/pages/profile/MyPage.tsx'
+import UserPage from '@/pages/user/UserPage.tsx'
 import AdminPage from '@/pages/admin/AdminPage.tsx'
 import TestAuthPage from '@/pages/auth/TestAuthPage'
 import OAuthRedirectPage from '@/pages/auth/OAuthRedirectPage'
@@ -50,19 +51,23 @@ export default function AppRouter() {
 
                {/* /comments → CommentsListPage */}
                <Route path={PATHS.comments} element={<CommentsListPage />} />
+               
+               {/* 임시: 로그인 없이 접근 가능하도록 */}
+               <Route path={PATHS.mypagePath} element={<MyPage />} />
+               <Route path={PATHS.mypage} element={<MyPage />} />
             </Route>
 
             {/* 로그인 유저 전용 */}
-            <Route element={<UserOnly />}>
-               {/* TODO: /user 등 실제 페이지 붙이기 */}
+            {/* <Route element={<UserOnly />}> */}
+               {/* <Route path={PATHS.userHome} element={<UserPage />} /> */}
                <Route path={PATHS.mypage} element={<MyPage />} />
-            </Route>
+            {/* </Route> */}
          </Route>
 
          {/* 관리자 전용 (전역 레이아웃 제외) */}
          <Route element={<AdminOnly />}>
             {/* TODO: /admin 등 실제 페이지 붙이기 */}
-            <Route path={PATHS.adminHome} element={<AdminPage />} />
+            <Route path={PATHS.adminHome} element={<AdminPage content="dashboard" />} />
          </Route>
       </Routes>
    )

@@ -13,6 +13,7 @@ export interface TabsProps {
   onTabChange: (tabId: string) => void;
   variant?: 'underline' | 'button'; // 언더라인 스타일 or 버튼 스타일
   className?: string;
+  admin?: boolean; // 관리자 페이지용 스타일 적용
 }
 
 export const Tabs: React.FC<TabsProps> = ({
@@ -21,6 +22,7 @@ export const Tabs: React.FC<TabsProps> = ({
   onTabChange,
   variant = 'underline',
   className = '',
+  admin = false,
 }) => {
   const handleTabClick = (tabId: string, disabled?: boolean) => {
     if (!disabled && tabId !== activeTab) {
@@ -29,7 +31,7 @@ export const Tabs: React.FC<TabsProps> = ({
   };
 
   return (
-    <div className={`tabs tabs--${variant} ${className}`}>
+    <div className={`tabs tabs--${variant} ${admin ? 'tabs--admin' : ''} ${className}`}>
       <div className="tabs__list" role="tablist">
         {tabs.map((tab) => (
           <button

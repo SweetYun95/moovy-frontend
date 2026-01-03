@@ -1,0 +1,76 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.dashboard-charts {
+  width: 100%;
+
+  .admin-content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+    padding: $spacing-4;
+    max-width: 100%;
+    
+    * {
+      max-width: none;
+    }
+  }
+
+  &__bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-4;
+    width: 100%;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.dashboard-chart {
+  background-color: $gray5;
+  border-radius: $border-radius-lg;
+  padding: $spacing-4;
+  width: 100%;
+
+  &--full {
+    width: 100%;
+  }
+
+  &--half {
+    width: 100%;
+  }
+
+  &__title {
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+    font-weight: 600;
+    color: $gray1;
+    margin-bottom: $spacing-3;
+    padding-bottom: $spacing-2;
+    border-bottom: 1px solid $gray5;
+  }
+
+  // Recharts 스타일 오버라이드
+  :global {
+    .recharts-wrapper {
+      font-family: $font-family-base;
+    }
+
+    .recharts-cartesian-axis-tick-value {
+      fill: $gray3;
+      font-size: $body-small-size;
+    }
+
+    .recharts-legend-wrapper {
+      padding-top: $spacing-2;
+    }
+
+    .recharts-legend-item {
+      margin-right: $spacing-3;
+    }
+  }
+}
+

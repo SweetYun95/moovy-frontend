@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Pagination } from './PaginationStyle';
 
-export const StandardPagination: React.FC = () => {
+interface StandardPaginationProps {
+  className?: string;
+}
+
+export const StandardPagination: React.FC<StandardPaginationProps> = ({ className }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
@@ -9,6 +13,7 @@ export const StandardPagination: React.FC = () => {
       currentPage={currentPage}
       totalPages={10}
       onPageChange={setCurrentPage}
+      className={className}
     />
   );
 };

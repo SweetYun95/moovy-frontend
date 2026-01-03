@@ -7,9 +7,10 @@ import Avatar from "../../../assets/Avatar.png";
 interface TableProps {
   content: string;
   columns: string[];
+  onRowClick?: (data: any) => void;
 }
 
-const UserTable: React.FC<TableProps> = ({ content, columns }) => {
+const UserTable: React.FC<TableProps> = ({ content, columns, onRowClick }) => {
   const tableData = [
     {
       report_id: 1,
@@ -44,10 +45,12 @@ const UserTable: React.FC<TableProps> = ({ content, columns }) => {
   return (
     <>
       {tableData.map((data) => (
-        <ul className="data" key={data.report_id}>
-          <li>
-            <input type="checkbox" />
-          </li>
+        <ul 
+          className="data" 
+          key={data.report_id}
+          onClick={() => onRowClick?.(data)}
+          style={{ cursor: "pointer" }}
+        >
           <li>
             <img src={Avatar} /> {data.reported_id}
           </li>

@@ -7,9 +7,10 @@ import Avatar from "../../../assets/Avatar.png";
 interface TableProps {
   content: string;
   columns: string[];
+  onRowClick?: (data: any) => void;
 }
 
-const InquiryTable: React.FC<TableProps> = ({ content, columns }) => {
+const InquiryTable: React.FC<TableProps> = ({ content, columns, onRowClick }) => {
   const tableData = [
     {
       qna_id: 1,
@@ -55,9 +56,13 @@ const InquiryTable: React.FC<TableProps> = ({ content, columns }) => {
 
   return (
     <>
-      {/* index 추후 수정 */}
-      {tableData.map((data, index) => (
-        <ul className="data" key={index}>
+      {tableData.map((data) => (
+        <ul 
+          className="data" 
+          key={data.qna_id}
+          onClick={() => onRowClick?.(data)}
+          style={{ cursor: "pointer" }}
+        >
           <li>
             <img src={Avatar} /> {data.user_id}
           </li>
