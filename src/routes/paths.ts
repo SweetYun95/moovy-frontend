@@ -6,9 +6,12 @@ export const PATHS = {
   home: "/",
   login: "/login",
   register: "/register",
+  findId: "/find-id",
+  findPassword: "/find-password",
   userHome: "/user",
   adminHome: "/admin",
   mypage: "/my",
+  mypagePath: "/mypage",
   favorites: "/my/favorites", // ✅ 보관함(찜) 경로 추가
 
   movies: "/movies",

@@ -9,6 +9,7 @@ interface TableProps {
    content: string
    columns: string[]
    filters?: Record<string, any>
+   onDataCountChange?: (count: number) => void
 }
 
 const parseNumberOrNull = (value: unknown): number | null => {
@@ -19,11 +20,6 @@ const parseNumberOrNull = (value: unknown): number | null => {
    if (!trimmed) return null
    const n = Number(trimmed)
    return Number.isFinite(n) ? n : null
-}
-
-const parseDigitsOrEmpty = (value: unknown): string => {
-   const raw = parseStringOrEmpty(value)
-   return raw.replace(/\D/g, '')
 }
 
 const parseStringOrEmpty = (value: unknown): string => {
@@ -40,7 +36,7 @@ const getSanctionCount = (sanction: unknown): number => {
    return 0
 }
 
-const UserTable: React.FC<TableProps> = ({ content, columns, filters }) => {
+const UserTable: React.FC<TableProps> = ({ content, columns, filters, onDataCountChange }) => {
    const [tableData, setTableData] = useState([
       {
          user_id: 1,
@@ -80,7 +76,7 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters }) => {
    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
    const filteredTableData = useMemo(() => {
-      const userIdQuery = parseDigitsOrEmpty(filters?.userId)
+      const userId = parseNumberOrNull(filters?.userId)
       const nickname = parseStringOrEmpty(filters?.nickname).toLowerCase()
       const email = parseStringOrEmpty(filters?.email).toLowerCase()
       const replyMin = parseNumberOrNull(filters?.reply_min)
@@ -89,13 +85,12 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters }) => {
       const commentMax = parseNumberOrNull(filters?.comment_max)
       const warning = parseStringOrEmpty(filters?.warning)
 
-      const hasAnyFilter =
-         userIdQuery.length > 0 || nickname.length > 0 || email.length > 0 || replyMin !== null || replyMax !== null || commentMin !== null || commentMax !== null || warning.length > 0
+      const hasAnyFilter = userId !== null || nickname.length > 0 || email.length > 0 || replyMin !== null || replyMax !== null || commentMin !== null || commentMax !== null || warning.length > 0
 
       if (!hasAnyFilter) return tableData
 
       return tableData.filter((row) => {
-         if (userIdQuery && !String(row.user_id).includes(userIdQuery)) return false
+         if (userId !== null && row.user_id !== userId) return false
          if (nickname && !row.name.toLowerCase().includes(nickname)) return false
          if (email && !row.email.toLowerCase().includes(email)) return false
 
@@ -111,6 +106,10 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters }) => {
          return true
       })
    }, [filters, tableData])
+
+   React.useEffect(() => {
+      onDataCountChange?.(filteredTableData.length)
+   }, [filteredTableData.length, onDataCountChange])
 
    const selectedUser: AdminUserTableRow | null = useMemo(() => {
       if (!selectedUserId) return null

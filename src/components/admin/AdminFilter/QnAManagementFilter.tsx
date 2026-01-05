@@ -5,11 +5,11 @@ import { Selector } from '../../common/Selector/SelectorStyle';
 import { DatePicker } from '../../common/DatePicker/DatePicker';
 import { Icon } from '@iconify/react';
 
-interface ReportManagementFilterProps {
+interface QnAManagementFilterProps {
   onSearch?: (filters: Record<string, any>) => void;
 }
 
-export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
+export const QnAManagementFilter: React.FC<QnAManagementFilterProps> = ({
   onSearch,
 }) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -62,7 +62,7 @@ export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">신고내역 관리</h3>
+          <h3 className="filter-title mb-0">1:1문의 관리</h3>
         </div>
 
         {isExpanded ? (
@@ -98,39 +98,13 @@ export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
         <div className="filter-content">
           <div className="row g-3">
             <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">신고 유저</label>
+              <label className="field-label d-block">유저 이름</label>
               <Input
                 type="text"
                 placeholder="이름을 입력하세요."
-                value={filters.reporter || ''}
-                onChange={(value) => handleFieldChange('reporter', value)}
+                value={filters.userName || ''}
+                onChange={(value) => handleFieldChange('userName', value)}
                 theme="light"
-              />
-            </div>
-            <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">신고한 유저</label>
-              <Input
-                type="text"
-                placeholder="이름을 입력하세요."
-                value={filters.reported || ''}
-                onChange={(value) => handleFieldChange('reported', value)}
-                theme="light"
-              />
-            </div>
-            <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">분류</label>
-              <Selector
-                options={[
-                  { value: 'spam', label: '스팸' },
-                  { value: 'abuse', label: '욕설' },
-                  { value: 'inappropriate', label: '부적절한 내용' }
-                ]}
-                value={filters.category || ''}
-                onChange={(value) => handleFieldChange('category', value)}
-                placeholder="분류"
-                theme="light"
-                isOpen={openSelector === 'category'}
-                onOpenChange={(isOpen) => handleSelectorOpen('category', isOpen)}
               />
             </div>
             <div className="col-12 col-lg-4 mb-3">
@@ -153,12 +127,32 @@ export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
               />
             </div>
             <div className="col-12 col-lg-4 mb-3">
+              <label className="field-label d-block">분류</label>
+              <Selector
+                options={[
+                  { value: 'general', label: '일반' },
+                  { value: 'account', label: '계정' },
+                  { value: 'payment', label: '결제' },
+                  { value: 'content', label: '콘텐츠' },
+                  { value: 'technical', label: '기술지원' },
+                  { value: 'other', label: '기타' }
+                ]}
+                value={filters.category || ''}
+                onChange={(value) => handleFieldChange('category', value)}
+                placeholder="분류"
+                theme="light"
+                isOpen={openSelector === 'category'}
+                onOpenChange={(isOpen) => handleSelectorOpen('category', isOpen)}
+              />
+            </div>
+            <div className="col-12 col-lg-4 mb-3">
               <label className="field-label d-block">상태</label>
               <Selector
                 options={[
                   { value: 'pending', label: '대기중' },
                   { value: 'processing', label: '처리중' },
-                  { value: 'resolved', label: '해결됨' }
+                  { value: 'answered', label: '답변완료' },
+                  { value: 'closed', label: '종료' }
                 ]}
                 value={filters.status || ''}
                 onChange={(value) => handleFieldChange('status', value)}
@@ -174,3 +168,4 @@ export const ReportManagementFilter: React.FC<ReportManagementFilterProps> = ({
     </div>
   );
 };
+

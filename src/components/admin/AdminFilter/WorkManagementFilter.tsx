@@ -15,7 +15,7 @@ export const WorkManagementFilter: React.FC<WorkManagementFilterProps> = ({
   onSearch,
 }) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [openSelector, setOpenSelector] = useState<string | null>(null);
 
@@ -64,7 +64,7 @@ export const WorkManagementFilter: React.FC<WorkManagementFilterProps> = ({
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">작품 관리</h3>
+          <h3 className="filter-title mb-0">역대토픽관리</h3>
         </div>
 
         {isExpanded ? (

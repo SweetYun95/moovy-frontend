@@ -34,6 +34,7 @@ export interface InquiryModalProps {
   mode?: 'user' | 'admin';
   inquiryData?: { category: string; content: string; initialReply?: string };
   onReport?: () => void;
+  readOnly?: boolean;
 }
 
 const InquiryModal: React.FC<InquiryModalProps> = ({
@@ -44,6 +45,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
   mode = 'user',
   inquiryData,
   onReport,
+  readOnly = false,
 }) => {
   const defaultTitle = mode === 'admin' ? '문의 관리' : '1:1 문의하기';
   
@@ -122,14 +124,18 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
             <div className="col-12">
               <div className="inquiry-modal__field">
                 <label className="form-label">답변 내용</label>
-                <Textarea
-                  placeholder="답변내용을 적어주세요."
-                  value={reply}
-                  onChange={setReply}
-                  rows={8}
-                  maxLength={10000}
-                  showCounter
-                />
+                {readOnly ? (
+                  <div className="inquiry-modal__readonly-value">{reply || "답변 내용이 없습니다."}</div>
+                ) : (
+                  <Textarea
+                    placeholder="답변내용을 적어주세요."
+                    value={reply}
+                    onChange={setReply}
+                    rows={8}
+                    maxLength={10000}
+                    showCounter
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -138,14 +144,16 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="inquiry-modal__actions">
-              {mode === 'admin' && onReport && (
+              {mode === 'admin' && onReport && !readOnly && (
                 <Button variant="danger" onClick={onReport}>
                   신고
                 </Button>
               )}
-              <ActionButton action="confirm" onClick={handleSubmit}>
-                확인
-              </ActionButton>
+              {!readOnly && (
+                <ActionButton action="confirm" onClick={handleSubmit}>
+                  확인
+                </ActionButton>
+              )}
             </div>
           </div>
         </div>

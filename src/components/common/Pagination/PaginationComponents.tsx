@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import { Pagination } from './PaginationStyle';
 
-export const StandardPagination: React.FC = () => {
+interface StandardPaginationProps {
+  className?: string;
+  totalItems?: number;
+  itemsPerPage?: number;
+}
+
+export const StandardPagination: React.FC<StandardPaginationProps> = ({ 
+  className,
+  totalItems = 0,
+  itemsPerPage = 10
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   return (
     <Pagination
       currentPage={currentPage}
-      totalPages={10}
+      totalPages={totalPages}
       onPageChange={setCurrentPage}
+      className={className}
     />
   );
 };

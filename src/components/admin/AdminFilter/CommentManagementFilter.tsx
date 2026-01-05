@@ -14,7 +14,7 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
   onSearch,
 }) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [openSelector, setOpenSelector] = useState<string | null>(null);
 
@@ -63,7 +63,7 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">댓글 관리</h3>
+          <h3 className="filter-title mb-0">토픽관리</h3>
         </div>
 
         {isExpanded ? (
