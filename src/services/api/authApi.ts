@@ -36,3 +36,8 @@ export const checkAuth = async (): Promise<ApiResponse<loginResponse>> => {
    const result = await moovy.get('/auth/me')
    return result.data
 }
+
+export const checkEmail = async () => {
+   const reuslt = await moovy.post('/auth/check-email')
+   return reuslt.data
+}
