@@ -18,14 +18,12 @@ export interface loginResponse {
 }
 
 export const signUpLocal = async (prop: { email: string; password: string; name: string }): Promise<ApiResponse<SignUpResponse>> => {
-   console.log('prop:', prop)
    const result = await moovy.post('/api/auth/register', prop)
-   console.log('result 생성 완료')
    return result
 }
 
 export const loginLocal = async (prop: { email: string; password: string }): Promise<ApiResponse<loginResponse>> => {
-   const result = await moovy.post('/auth/login', prop)
+   const result = await moovy.post('/api/auth/login', prop)
    return result.data
 }
 

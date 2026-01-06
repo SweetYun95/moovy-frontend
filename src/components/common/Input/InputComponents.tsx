@@ -7,21 +7,26 @@ export interface EmailInputProps extends Omit<InputProps, 'type' | 'placeholder'
    onChange?: (value: string) => void
    id?: string
    onClick?: (value: string) => void
+   showRightButton?: boolean
 }
 
-export const EmailInput: React.FC<EmailInputProps> = ({ value = '', onChange, id = 'email', onClick, ...props }) => {
+export const EmailInput: React.FC<EmailInputProps> = ({ value = '', onChange, id = 'email', onClick, showRightButton = true, ...props }) => {
    return (
       <Input
          type="email"
          placeholder="이메일을 입력하세요"
          value={value}
          onChange={onChange}
-         rightButton={{
-            text: '중복 확인',
-            onClick: () => onClick?.(value),
-            variant: 'primary',
-            size: 'sm',
-         }}
+         rightButton={
+            showRightButton
+               ? {
+                    text: '중복 확인',
+                    onClick: () => onClick?.(value),
+                    variant: 'primary',
+                    size: 'sm',
+                 }
+               : undefined
+         }
          id={id}
          {...props}
       />
