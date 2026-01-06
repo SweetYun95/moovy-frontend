@@ -74,7 +74,7 @@ const ContentDetailPage: React.FC = () => {
     close: closeCommentDetail,
   } = useDisclosure(false);
   const [commentDetailData, setCommentDetailData] = useState<{
-    id?: number;
+    id: number;
     username: string;
     date: string;
     content: string;
@@ -145,23 +145,29 @@ const ContentDetailPage: React.FC = () => {
     // UI(0.5~5.0) → 정수 1~10
     const point = Math.max(1, Math.min(10, Math.round(uiRating * 2)));
     try {
-      await dispatch(
+      const result = await dispatch(
         upsertMyRatingThunk({ contentId: topicId, point }),
       ).unwrap();
       // 저장 후 요약은 서비스가 반환하므로 추가 fetch 불필요
+      // 별점 요약 자동 업데이트됨
+      console.log("별점 저장 성공:", result);
     } catch (e) {
       console.error("별점 저장 실패:", e);
+      // TODO: 에러 토스트 메시지 표시
     }
   };
 
-  // 별점 별점 삭제
+  // 별점 삭제
   const deleteMyRating = async () => {
     if (!topicId || !user?.id) return;
     try {
-      await dispatch(deleteMyRatingThunk(topicId)).unwrap();
+      const result = await dispatch(deleteMyRatingThunk(topicId)).unwrap();
       setMyRating(undefined);
+      // 별점 요약 자동 업데이트됨
+      console.log("별점 삭제 성공:", result);
     } catch (e) {
       console.error("별점 삭제 실패:", e);
+      // TODO: 에러 토스트 메시지 표시
     }
   };
 
@@ -310,13 +316,15 @@ const ContentDetailPage: React.FC = () => {
     if (!myCommentItem) return;
 
     try {
-      await dispatch(
+      const result = await dispatch(
         deleteCommentThunk({ comment_id: myCommentItem.comment_id }),
       ).unwrap();
+      console.log("코멘트 삭제 성공:", result);
       // 코멘트 목록 새로고침
-      dispatch(getCommentsByTopic({ topicId }));
+      await dispatch(getCommentsByTopic({ topicId })).unwrap();
     } catch (error) {
       console.error("코멘트 삭제 실패:", error);
+      // TODO: 에러 토스트 메시지 표시
     }
   };
 
@@ -325,31 +333,42 @@ const ContentDetailPage: React.FC = () => {
     content: string;
     isSpoiler: boolean;
   }) => {
+    if (!topicId || !user?.id) {
+      console.warn("코멘트 작성 실패: 로그인이 필요합니다.");
+      // TODO: 로그인 필요 토스트 메시지 표시
+      return;
+    }
+
     try {
       if (myCommentItem) {
         // 수정
-        await dispatch(
+        const updatedComment = await dispatch(
           updateCommentThunk({
             comment_id: myCommentItem.comment_id,
             content: data.content,
           }),
         ).unwrap();
+        console.log("코멘트 수정 성공:", updatedComment);
       } else {
         // 생성
-        await dispatch(
+        const newComment = await dispatch(
           createCommentThunk({ topic_id: topicId, content: data.content }),
         ).unwrap();
+        console.log("코멘트 작성 성공:", newComment);
       }
       closeCommentEdit();
       // 코멘트 목록 새로고침으로 상태 동기화
       await dispatch(getCommentsByTopic({ topicId })).unwrap();
     } catch (error) {
       console.error("코멘트 저장 실패:", error);
+      // TODO: 에러 토스트 메시지 표시
     }
   };
 
   // 코멘트 카드 클릭 핸들러
-  const handleCommentCardClick = (comment: CommentItem) => {
+  const handleCommentCardClick = (comment?: CommentItem) => {
+    if (!comment) return;
+    
     const createdDate = comment.created_at
       ? new Date(comment.created_at)
       : new Date();
@@ -546,7 +565,8 @@ const ContentDetailPage: React.FC = () => {
                         rating={5}
                         likes={c.likes ?? 0}
                         replies={c.replies ?? 0}
-                        onClick={() => handleCommentCardClick(c)}
+                        commentItem={c}
+                        onClick={handleCommentCardClick}
                       />
                     </div>
                   ))}

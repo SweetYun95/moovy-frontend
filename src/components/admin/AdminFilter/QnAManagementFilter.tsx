@@ -3,14 +3,13 @@ import './AdminFilter.scss';
 import { Input } from '../../common/Input/InputStyle';
 import { Selector } from '../../common/Selector/SelectorStyle';
 import { DatePicker } from '../../common/DatePicker/DatePicker';
-import { RatingPicker } from '../../common/RatingPicker/RatingPicker';
 import { Icon } from '@iconify/react';
 
-interface CommentManagementFilterProps {
+interface QnAManagementFilterProps {
   onSearch?: (filters: Record<string, any>) => void;
 }
 
-export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = ({
+export const QnAManagementFilter: React.FC<QnAManagementFilterProps> = ({
   onSearch,
 }) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -63,7 +62,7 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
           >
             <Icon icon={isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down'} style={{ fontSize: 'icon-md' }} />
           </button>
-          <h3 className="filter-title mb-0">토픽관리</h3>
+          <h3 className="filter-title mb-0">1:1문의 관리</h3>
         </div>
 
         {isExpanded ? (
@@ -109,36 +108,14 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
               />
             </div>
             <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">제목</label>
+              <label className="field-label d-block">내용</label>
               <Input
                 type="text"
-                placeholder="제목을 입력하세요."
-                value={filters.title || ''}
-                onChange={(value) => handleFieldChange('title', value)}
+                placeholder="내용을 입력하세요."
+                value={filters.content || ''}
+                onChange={(value) => handleFieldChange('content', value)}
                 theme="light"
               />
-            </div>
-            <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">댓글</label>
-              <div className="number-range-field">
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={filters.comments_min || ''}
-                  onChange={(value) => handleFieldChange('comments_min', value)}
-                  theme="light"
-                  min={0}
-                />
-                <span className="range-separator">~</span>
-                <Input
-                  type="number"
-                  placeholder="10000"
-                  value={filters.comments_max || ''}
-                  onChange={(value) => handleFieldChange('comments_max', value)}
-                  theme="light"
-                  min={0}
-                />
-              </div>
             </div>
             <div className="col-12 col-lg-4 mb-3">
               <label className="field-label d-block">작성일</label>
@@ -150,30 +127,32 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
               />
             </div>
             <div className="col-12 col-lg-4 mb-3">
-              <label className="field-label d-block">평점</label>
-              <div className="rating-range-field">
-                <RatingPicker
-                  placeholder="최소 평점"
-                  value={parseFloat(filters.rating_min) || undefined}
-                  onChange={(rating) => handleFieldChange('rating_min', rating.toString())}
-                  theme="light"
-                />
-                <span className="range-separator">~</span>
-                <RatingPicker
-                  placeholder="최대 평점"
-                  value={parseFloat(filters.rating_max) || undefined}
-                  onChange={(rating) => handleFieldChange('rating_max', rating.toString())}
-                  theme="light"
-                />
-              </div>
+              <label className="field-label d-block">분류</label>
+              <Selector
+                options={[
+                  { value: 'general', label: '일반' },
+                  { value: 'account', label: '계정' },
+                  { value: 'payment', label: '결제' },
+                  { value: 'content', label: '콘텐츠' },
+                  { value: 'technical', label: '기술지원' },
+                  { value: 'other', label: '기타' }
+                ]}
+                value={filters.category || ''}
+                onChange={(value) => handleFieldChange('category', value)}
+                placeholder="분류"
+                theme="light"
+                isOpen={openSelector === 'category'}
+                onOpenChange={(isOpen) => handleSelectorOpen('category', isOpen)}
+              />
             </div>
             <div className="col-12 col-lg-4 mb-3">
               <label className="field-label d-block">상태</label>
               <Selector
                 options={[
-                  { value: 'active', label: '활성' },
-                  { value: 'hidden', label: '숨김' },
-                  { value: 'deleted', label: '삭제됨' }
+                  { value: 'pending', label: '대기중' },
+                  { value: 'processing', label: '처리중' },
+                  { value: 'answered', label: '답변완료' },
+                  { value: 'closed', label: '종료' }
                 ]}
                 value={filters.status || ''}
                 onChange={(value) => handleFieldChange('status', value)}
@@ -189,3 +168,4 @@ export const CommentManagementFilter: React.FC<CommentManagementFilterProps> = (
     </div>
   );
 };
+
