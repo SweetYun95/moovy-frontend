@@ -4,7 +4,8 @@ import ProfileEditModal from '../ProfileEditModal/ProfileEditModal'
 import ConfirmModal from '../ConfirmModal/ConfirmModal'
 import WithdrawalConfirmModal from '../WithdrawalConfirmModal/WithdrawalConfirmModal'
 import SanctionHistoryModal, { type SanctionHistory } from '../SanctionHistoryModal/SanctionHistoryModal'
-import { createUserSanction, getAdminUserProfile } from '../../../services/api/userApi'
+import { createUserSanction, getAdminUserProfile, resetAdminUserProfileImage, updateAdminUserProfile } from '../../../services/api/userApi'
+import DefaultAvatar from '../../../assets/Avatar.png'
 
 export type AdminUserTableRow = {
    user_id: number
@@ -80,11 +81,16 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalProps> = ({ isOpen, onC
    const handleSubmit = async (data: { name: string; nickname: string; email: string; profileImage?: string }) => {
       if (!user) return
 
-      // 관리자 수정 제한: 닉네임은 16자리 숫자(기본 닉네임 버튼으로만 생성되는 값)만 허용
-      const isNicknameAllowed = /^건전한닉네임\d{4}$/.test(data.nickname)
-      if (!isNicknameAllowed) {
-         setConfirmMessage('관리자 수정은 기본 닉네임(건전한닉네임+4자리)으로만 가능합니다.')
-         return
+      const nicknameChanged = user.name !== data.nickname
+      const profileChanged = (user.profileImage || '') !== (data.profileImage || '')
+
+      // 관리자 수정 제한: 닉네임 변경이 있는 경우에만 기본 닉네임 패턴 허용
+      if (nicknameChanged) {
+         const isNicknameAllowed = /^건전한닉네임\d{4}$/.test(data.nickname)
+         if (!isNicknameAllowed) {
+            setConfirmMessage('관리자 수정은 기본 닉네임(건전한닉네임+4자리)으로만 가능합니다.')
+            return
+         }
       }
 
       // 이메일은 수정 불가
@@ -92,12 +98,6 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalProps> = ({ isOpen, onC
          setConfirmMessage('이메일은 수정할 수 없습니다.')
          return
       }
-
-      const now = new Date()
-      const endAt = toIso(addDays(now, 1))
-
-      const nicknameChanged = user.name !== data.nickname
-      const profileChanged = (user.profileImage || '') !== (data.profileImage || '')
 
       if (!nicknameChanged && !profileChanged) {
          setConfirmMessage('변경 사항이 없습니다.')
@@ -117,31 +117,38 @@ const AdminUserDetailModal: React.FC<AdminUserDetailModalProps> = ({ isOpen, onC
 
       const nicknameChanged = user.name !== pendingSubmit.nickname
       const profileChanged = (user.profileImage || '') !== (pendingSubmit.profileImage || '')
+      const wantsDefaultAvatar = !pendingSubmit.profileImage || pendingSubmit.profileImage === DefaultAvatar
 
       setIsSaving(true)
       try {
+         // 1) 실제 사용자 정보 업데이트(DB 반영)
          if (nicknameChanged) {
-            await createUserSanction(user.user_id, {
-               reason: '부적절한 닉네임',
-               start_at: toIso(now),
-               end_at: endAt,
+            await updateAdminUserProfile(user.user_id, {
+               name: pendingSubmit.nickname,
+               email: pendingSubmit.email,
             })
-            setSanctions((prev) => [{ id: Date.now(), reason: '부적절한 닉네임' }, ...prev])
-         }
-         if (profileChanged) {
-            await createUserSanction(user.user_id, {
-               reason: '부적절한 프로필이미지',
-               start_at: toIso(now),
-               end_at: endAt,
-            })
-            setSanctions((prev) => [{ id: Date.now() + 1, reason: '부적절한 프로필이미지' }, ...prev])
          }
 
-         const added = (nicknameChanged ? 1 : 0) + (profileChanged ? 1 : 0)
+         // 현재 관리자 UI에서는 "기본 이미지 적용"만 지원하므로 기본 이미지 요청이면 profile_img를 비움
+         if (profileChanged && wantsDefaultAvatar) {
+            await resetAdminUserProfileImage(user.user_id)
+         }
+
+         // 2) 제재 1건 생성 (닉네임+이미지 동시 변경이면 사유 합치기)
+         const reason = nicknameChanged && profileChanged ? '부적절한 닉네임과 프로필 이미지' : nicknameChanged ? '부적절한 닉네임' : '부적절한 프로필이미지'
+
+         await createUserSanction(user.user_id, {
+            reason,
+            start_at: toIso(now),
+            end_at: endAt,
+         })
+         setSanctions((prev) => [{ id: Date.now(), reason }, ...prev])
+
+         const added = nicknameChanged || profileChanged ? 1 : 0
          const nextUser: AdminUserTableRow = {
             ...user,
             name: pendingSubmit.nickname,
-            profileImage: pendingSubmit.profileImage,
+            profileImage: profileChanged ? (wantsDefaultAvatar ? undefined : pendingSubmit.profileImage) : user.profileImage,
             sanctionCount: (sanctionCount || user.sanctionCount) + added,
          }
 
