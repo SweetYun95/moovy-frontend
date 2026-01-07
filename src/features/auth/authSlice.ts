@@ -46,7 +46,11 @@ interface AuthUser {
 // ─────────────────────────────
 export const localSignUpThunk = createAsyncThunk('Auth/localsignup', async (payload: { email: string; password: string; name: string }, { rejectWithValue }) => {
    try {
+      console.log('함수 시작')
+      console.log('전달받은 값:', payload)
       const response = await signUpLocal(payload)
+      console.log('응답 확인 완료: ', response)
+
       return response.data
    } catch (error) {
       if (axios.isAxiosError(error)) {

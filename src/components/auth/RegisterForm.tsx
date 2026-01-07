@@ -10,42 +10,50 @@ import { PasswordCheckInput } from '../common/Input/InputComponents'
 
 const RegisterForm = () => {
    const [name, setName] = useState('')
-   const [nick, setNick] = useState('')
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [checkPassword, setCheckPassword] = useState('')
 
    const dispatch = useDispatch()
 
+   const onClick = () => {
+      // 이메일 중복확인 로직
+      if (!email || email.length <= 1) {
+         alert('올바른 이메일을 입력해 주세요.')
+         return
+      }
+      console.log(email)
+   }
+
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
+      if (password != checkPassword) {
+         alert('비밀번호가 일치하지 않습니다.')
+         return
+      }
+
       const registerData = {
          name,
-         nick,
          email,
          password,
-         checkPassword,
       }
-      // 회원가입 함수 넣기
-      dispatch(localSignUpThunk({ email, password, name }))
+
+      dispatch(localSignUpThunk(registerData))
    }
 
    return (
       <div id="registerform">
-         <form action="submit">
+         <form onSubmit={handleSubmit}>
             <div className="form-group">
                <h3>회원가입</h3>
+
                <div className="mb-3 mt-5 form-item">
                   <label htmlFor="name">이름</label>
                   <NameInput value={name} onChange={setName} />
                </div>
                <div className="mb-3 form-item">
-                  <label htmlFor="nickname">닉네임</label>
-                  <NicknameInput value={nick} onChange={setNick} />
-               </div>
-               <div className="mb-3 form-item">
                   <label htmlFor="email">이메일</label>
-                  <EmailInput value={email} onChange={setEmail} />
+                  <EmailInput value={email} onChange={setEmail} onClick={onClick} />
                </div>
                <div className="mb-3 form-item gap">
                   <label htmlFor="password">비밀번호</label>
@@ -54,13 +62,13 @@ const RegisterForm = () => {
                </div>
 
                <div className="row mt-5 form-item">
-                  <LoginButton loginType="register" />
+                  <LoginButton loginType="register" type="submit" />
                </div>
             </div>
          </form>
 
          <div className="row mt-6 auth-link">
-            <a href="">회원가입</a>
+            {/* 기능 추가 후 처리 */}
             <a href="">아이디 찾기</a>
             <a href="">비밀번호 찾기</a>
          </div>
