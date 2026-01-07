@@ -78,7 +78,7 @@ export const Input: React.FC<InputProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
-  // ✅ develop 기준: 외부 value 변경(리셋/자동입력 등)을 내부 state에 동기화
+  // develop 기준: 외부 value 변경을 내부 state에 동기화
   useEffect(() => {
     setInputValue(value);
   }, [value]);
