@@ -18,6 +18,11 @@ export interface loginResponse {
    }
 }
 
+export interface CheckEmailResponse {
+   success: boolean
+   isDuplicate: boolean
+}
+
 // ✅ (선택) 응답 타입: 백엔드가 message만 내려주는 형태로 가정
 export interface MessageResponse {
    message: string
@@ -50,6 +55,15 @@ export const checkAuth = async (): Promise<ApiResponse<loginResponse>> => {
 // ─────────────────────────────
 // ✅ 추가: 비밀번호 재설정
 // ─────────────────────────────
+
+/**
+ * 이메일 중복 확인
+ * POST /api/auth/check-email
+ */
+export const checkEmail = async (prop: { email: string }): Promise<ApiResponse<CheckEmailResponse>> => {
+   const result = await moovy.post('/auth/check-email', prop)
+   return result.data
+}
 
 /**
  * 비밀번호 재설정 요청(메일 발송)

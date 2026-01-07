@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import './Input.scss';
-import { Button } from '../Button/ButtonStyle';
-import { Icon } from '@iconify/react';
+import React, { useEffect, useState } from 'react'
+import './Input.scss'
+import { Button } from '../Button/ButtonStyle'
+import { Icon } from '@iconify/react'
 
 /**
  * Input Props:
@@ -24,115 +24,74 @@ import { Icon } from '@iconify/react';
  */
 
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'number';
-  placeholder?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-  onBlur?: () => void;
-  disabled?: boolean;
-  required?: boolean;
-  className?: string;
-  id?: string;
-  name?: string;
-  state?: 'success' | 'warning' | 'error';
-  showPasswordToggle?: boolean;
-  min?: number;
-  max?: number;
-  theme?: 'dark' | 'light';
-  rightButton?: {
-    text: string;
-    onClick: () => void;
-    variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'modal-close' | 'local-login' | 'kakao' | 'google';
-    size?: 'sm' | 'md' | 'lg';
-  };
+   type?: 'text' | 'email' | 'password' | 'number'
+   placeholder?: string
+   value?: string
+   onChange?: (value: string) => void
+   onBlur?: () => void
+   disabled?: boolean
+   required?: boolean
+   className?: string
+   id?: string
+   name?: string
+   state?: 'success' | 'warning' | 'error'
+   showPasswordToggle?: boolean
+   min?: number
+   max?: number
+   theme?: 'dark' | 'light'
+   rightButton?: {
+      text: string
+      onClick: () => void
+      variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'modal-close' | 'local-login' | 'kakao' | 'google'
+      size?: 'sm' | 'md' | 'lg'
+   }
 }
 
-export const Input: React.FC<InputProps> = ({
-  type = 'text',
-  placeholder,
-  value = '',
-  onChange,
-  onBlur,
-  disabled = false,
-  required = false,
-  className = '',
-  id,
-  name,
-  state,
-  showPasswordToggle = false,
-  min,
-  max,
-  theme = 'dark',
-  rightButton,
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
+export const Input: React.FC<InputProps> = ({ type = 'text', placeholder, value = '', onChange, onBlur, disabled = false, required = false, className = '', id, name, state, showPasswordToggle = false, min, max, theme = 'dark', rightButton }) => {
+   const [showPassword, setShowPassword] = useState(false)
+   const [inputValue, setInputValue] = useState(value)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
-    onChange?.(newValue);
-  };
+   useEffect(() => {
+      setInputValue(value)
+   }, [value])
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value
+      setInputValue(newValue)
+      onChange?.(newValue)
+   }
 
-  const inputType = type === 'password' && showPassword ? 'text' : type;
+   const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword)
+   }
 
-  const inputClasses = [
-    'moovy-input',
-    state && `moovy-input--${state}`,
-    theme === 'light' && 'light-theme',
-    className,
-  ].filter(Boolean).join(' ');
+   const inputType = type === 'password' && showPassword ? 'text' : type
 
-  const inputElement = (
-    <input
-      type={inputType}
-      className={inputClasses}
-      placeholder={placeholder}
-      value={inputValue}
-      onChange={handleChange}
-      onBlur={onBlur}
-      disabled={disabled}
-      required={required}
-      id={id}
-      name={name}
-      min={min}
-      max={max}
-    />
-  );
+   const inputClasses = ['moovy-input', state && `moovy-input--${state}`, theme === 'light' && 'light-theme', className].filter(Boolean).join(' ')
 
-  if (showPasswordToggle || rightButton) {
-    return (
-      <div className={`moovy-input-wrapper ${theme === 'light' ? 'light-theme' : ''}`}>
-        {inputElement}
-        {showPasswordToggle && (
-          <button
-            className="password-toggle-icon"
-            type="button"
-            onClick={togglePasswordVisibility}
-          >
-            <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} />
-          </button>
-        )}
-        {rightButton && (
-          <div className="right-button-wrapper">
-            <Button
-              variant={rightButton.variant || 'primary'}
-              size={rightButton.size || 'sm'}
-              onClick={rightButton.onClick}
-            >
-              {rightButton.text}
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
+   const inputElement = <input type={inputType} className={inputClasses} placeholder={placeholder} value={inputValue} onChange={handleChange} onBlur={onBlur} disabled={disabled} required={required} id={id} name={name} min={min} max={max} />
 
-  return inputElement;
-};
+   if (showPasswordToggle || rightButton) {
+      return (
+         <div className={`moovy-input-wrapper ${theme === 'light' ? 'light-theme' : ''}`}>
+            {inputElement}
+            {showPasswordToggle && (
+               <button className="password-toggle-icon" type="button" onClick={togglePasswordVisibility}>
+                  <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} />
+               </button>
+            )}
+            {rightButton && (
+               <div className="right-button-wrapper">
+                  <Button variant={rightButton.variant || 'primary'} size={rightButton.size || 'sm'} onClick={rightButton.onClick}>
+                     {rightButton.text}
+                  </Button>
+               </div>
+            )}
+         </div>
+      )
+   }
 
-export default Input;
+   return inputElement
+}
+
+export default Input
