@@ -4,10 +4,12 @@ import { Button } from '../../common/Button/ButtonStyle'
 import { ActionButton } from '../../common/Button/Button'
 import { Input } from '../../common/Input/InputStyle'
 import ConfirmModal from '../ConfirmModal/ConfirmModal'
-import { updateProfile, checkNickname, getAdminUserProfile, updateAdminUserProfile, forceWithdrawUser, getUserSanctions, type UserProfile } from '../../../services/api/userApi'
+import { updateProfile, checkNickname, getAdminUserProfile, updateAdminUserProfile, type UserProfile } from '../../../services/api/userApi'
 import { useAppSelector, useAppDispatch } from '../../../app/hooks'
 // import { setUser } from '../../../features/auth/authSlice'
 import './ProfileEditModal.scss'
+
+import DefaultAvatar from '../../../assets/Avatar.png'
 
 export interface ProfileEditModalComponentProps {
    isOpen: boolean
@@ -41,7 +43,9 @@ export interface ProfileEditModalProps {
    onSubmit: (data: { name: string; nickname: string; email: string; profileImage?: string; password?: string }) => void
    title?: string
    mode?: 'user' | 'admin'
+   disabled?: boolean
    userData?: {
+      userId?: number
       name: string
       nickname: string
       email: string
@@ -53,7 +57,7 @@ export interface ProfileEditModalProps {
    onDetailClick?: () => void
 }
 
-const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose, onSubmit, title, mode = 'user', userData, onWithdraw, onCheckNickname, onDetailClick }) => {
+const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose, onSubmit, title, mode = 'user', disabled = false, userData, onWithdraw, onCheckNickname, onDetailClick }) => {
    const defaultTitle = mode === 'admin' ? '프로필 관리' : '프로필 수정'
 
    const [name, setName] = useState(userData?.name || '')
@@ -62,6 +66,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose, on
    const [profileImage, setProfileImage] = useState(userData?.profileImage || '')
    const [password, setPassword] = useState('')
    const [passwordConfirm, setPasswordConfirm] = useState('')
+   const [infoMessage, setInfoMessage] = useState<string | null>(null)
 
    // userData가 변경되면 state 업데이트
    useEffect(() => {
@@ -87,8 +92,10 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose, on
    }
 
    const handleSubmit = () => {
-      if (!name.trim() || !nickname.trim() || !email.trim()) {
-         return
+      if (mode === 'admin') {
+         if (!nickname.trim() || !email.trim()) return
+      } else {
+         if (!name.trim() || !nickname.trim() || !email.trim()) return
       }
 
       // 비밀번호 변경이 있는 경우 검증 (비밀번호나 확인 입력이 하나라도 있으면 검증)
@@ -134,123 +141,185 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose, on
 
    const modalTitle = title || defaultTitle
 
+   const generate4Digits = () => {
+      // 0000~9999
+      const n = Math.floor(Math.random() * 10000)
+      return String(n).padStart(4, '0')
+   }
+
+   const handleApplyDefaultNickname = async () => {
+      if (mode !== 'admin') return
+
+      let lastErrorMessage: string | null = null
+
+      // "중복이 안되는" 기본 닉네임(건전한닉네임+4자리)을 위해 재시도
+      for (let i = 0; i < 20; i++) {
+         const candidate = `건전한닉네임${generate4Digits()}`
+         try {
+            const result = await checkNickname({ name: candidate })
+            if (result.available) {
+               setNickname(candidate)
+               return
+            }
+         } catch (e: any) {
+            // 서버/네트워크 에러는 메시지로 기록
+            const data = e?.response?.data
+            const serverMessage = data?.message
+            const nameErrors: string[] | undefined = data?.errors?.fieldErrors?.name
+            if (Array.isArray(nameErrors) && nameErrors.length > 0) {
+               lastErrorMessage = nameErrors[0]
+            } else if (serverMessage) {
+               lastErrorMessage = String(serverMessage)
+            } else if (e?.message) lastErrorMessage = String(e.message)
+         }
+      }
+
+      setInfoMessage(lastErrorMessage ? `기본 닉네임 생성 실패: ${lastErrorMessage}` : '기본 닉네임 생성에 실패했습니다. 잠시 후 다시 시도해주세요.')
+   }
+
+   const handleApplyDefaultAvatar = () => {
+      if (mode !== 'admin') return
+      setProfileImage(DefaultAvatar)
+   }
+
    return (
-      <Modal isOpen={isOpen} onClose={handleClose} size="480px" showCloseButton={true} titleAlign="center" title={modalTitle}>
-         <div className="profile-edit-modal">
-            <div className="row">
-               <div className="col-12">
-                  <div className="profile-edit-modal__avatar">
-                     <label htmlFor="profile-image-input" className="profile-edit-modal__avatar-wrapper">
-                        {profileImage ? (
-                           <img src={profileImage} alt="Profile" className="profile-edit-modal__avatar-img" />
-                        ) : (
-                           <div className="profile-edit-modal__avatar-placeholder">
-                              <span>👤</span>
-                           </div>
-                        )}
-                     </label>
-                     {mode === 'user' && <input type="file" id="profile-image-input" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />}
-                  </div>
-               </div>
-            </div>
-
-            <div className="row">
-               <div className="col-12">
-                  <div className="profile-edit-modal__field">
-                     <label className="form-label">이름</label>
-                     <Input placeholder="유저 이름" value={name} onChange={setName} />
-                  </div>
-               </div>
-            </div>
-
-            <div className="row">
-               <div className="col-12">
-                  <div className="profile-edit-modal__field">
-                     <label className="form-label">닉네임</label>
-                     <Input
-                        placeholder="유저 닉네임"
-                        value={nickname}
-                        onChange={setNickname}
-                        rightButton={
-                           mode === 'user' && onCheckNickname
-                              ? {
-                                   text: '중복확인',
-                                   onClick: handleCheckNickname,
-                                   variant: 'primary',
-                                   size: 'sm',
-                                }
-                              : undefined
-                        }
-                     />
-                  </div>
-               </div>
-            </div>
-
-            <div className="row">
-               <div className="col-12">
-                  <div className="profile-edit-modal__field">
-                     <label className="form-label">이메일</label>
-                     <Input type="email" placeholder="유저 이메일" value={email} onChange={setEmail} />
-                  </div>
-               </div>
-            </div>
-
-            {mode === 'user' && (
-               <>
-                  <div className="row">
-                     <div className="col-12">
-                        <div className="profile-edit-modal__field">
-                           <label className="form-label">비밀번호</label>
-                           <Input type="password" placeholder="비밀번호를 입력하세요." value={password} onChange={setPassword} />
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="row">
-                     <div className="col-12">
-                        <div className="profile-edit-modal__field">
-                           <label className="form-label">비밀번호 확인</label>
-                           <Input type="password" placeholder="비밀번호를 다시 입력하세요." value={passwordConfirm} onChange={setPasswordConfirm} />
-                        </div>
-                     </div>
-                  </div>
-               </>
-            )}
-
-            {mode === 'admin' && (
+      <>
+         <Modal isOpen={isOpen} onClose={handleClose} size="480px" showCloseButton={true} titleAlign="center" title={modalTitle}>
+            <div className="profile-edit-modal">
                <div className="row">
                   <div className="col-12">
-                     <div className="profile-edit-modal__info">
-                        <div className="profile-edit-modal__info-left">
-                           <div className="profile-edit-modal__info-row">
-                              <span className="profile-edit-modal__label">관리자 경고</span>
-                              <span className="profile-edit-modal__report-count">{userData?.reportCount || 0}회</span>
+                     <div className="profile-edit-modal__avatar">
+                        <label htmlFor="profile-image-input" className="profile-edit-modal__avatar-wrapper">
+                           {profileImage ? (
+                              <img src={profileImage} alt="Profile" className="profile-edit-modal__avatar-img" />
+                           ) : (
+                              <div className="profile-edit-modal__avatar-placeholder">
+                                 <span>👤</span>
+                              </div>
+                           )}
+                        </label>
+                        {mode === 'user' && <input type="file" id="profile-image-input" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />}
+                        {mode === 'admin' && (
+                           <div className="profile-edit-modal__avatar-actions">
+                              <Button variant="secondary" onClick={handleApplyDefaultAvatar} size="md">
+                                 기본 이미지 적용
+                              </Button>
                            </div>
-                           <div className="profile-edit-modal__info-detail" onClick={onDetailClick} style={{ cursor: 'pointer' }}>
-                              상세보기
-                           </div>
-                        </div>
-                        {onWithdraw && (
-                           <Button variant="danger" onClick={onWithdraw} size="md">
-                              탈퇴
-                           </Button>
                         )}
                      </div>
                   </div>
                </div>
-            )}
 
-            <div className="row">
-               <div className="col-12">
-                  <div className="profile-edit-modal__actions">
-                     <ActionButton action="confirm" onClick={handleSubmit}>
-                        {mode === 'admin' ? '수정' : '수정'}
-                     </ActionButton>
+               {mode !== 'admin' && (
+                  <div className="row">
+                     <div className="col-12">
+                        <div className="profile-edit-modal__field">
+                           <label className="form-label">이름</label>
+                           <Input placeholder="유저 이름" value={name} onChange={setName} disabled={disabled} />
+                        </div>
+                     </div>
+                  </div>
+               )}
+
+               <div className="row">
+                  <div className="col-12">
+                     <div className="profile-edit-modal__field">
+                        <label className="form-label">닉네임</label>
+                        <Input
+                           placeholder="유저 닉네임"
+                           value={nickname}
+                           onChange={setNickname}
+                           disabled={mode === 'admin' || disabled}
+                           rightButton={
+                              mode === 'admin'
+                                 ? {
+                                      text: '기본 닉네임',
+                                      onClick: handleApplyDefaultNickname,
+                                      variant: 'primary',
+                                      size: 'sm',
+                                   }
+                                 : mode === 'user' && onCheckNickname
+                                   ? {
+                                        text: '중복확인',
+                                        onClick: handleCheckNickname,
+                                        variant: 'primary',
+                                        size: 'sm',
+                                     }
+                                   : undefined
+                           }
+                        />
+                     </div>
+                  </div>
+               </div>
+
+               <div className="row">
+                  <div className="col-12">
+                     <div className="profile-edit-modal__field">
+                        <label className="form-label">이메일</label>
+                        <Input type="email" placeholder="유저 이메일" value={email} onChange={setEmail} disabled={mode === 'admin' || disabled} />
+                     </div>
+                  </div>
+               </div>
+
+               {mode === 'user' && (
+                  <>
+                     <div className="row">
+                        <div className="col-12">
+                           <div className="profile-edit-modal__field">
+                              <label className="form-label">비밀번호</label>
+                              <Input type="password" placeholder="비밀번호를 입력하세요." value={password} onChange={setPassword} />
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="row">
+                        <div className="col-12">
+                           <div className="profile-edit-modal__field">
+                              <label className="form-label">비밀번호 확인</label>
+                              <Input type="password" placeholder="비밀번호를 다시 입력하세요." value={passwordConfirm} onChange={setPasswordConfirm} />
+                           </div>
+                        </div>
+                     </div>
+                  </>
+               )}
+
+               {mode === 'admin' && (
+                  <div className="row">
+                     <div className="col-12">
+                        <div className="profile-edit-modal__info">
+                           <div className="profile-edit-modal__info-left">
+                              <div className="profile-edit-modal__info-row">
+                                 <span className="profile-edit-modal__label">관리자 경고</span>
+                                 <span className="profile-edit-modal__report-count">{userData?.reportCount || 0}회</span>
+                              </div>
+                              <div className="profile-edit-modal__info-detail" onClick={onDetailClick} style={{ cursor: 'pointer' }}>
+                                 상세보기
+                              </div>
+                           </div>
+                           {onWithdraw && (
+                              <Button variant="danger" onClick={onWithdraw} size="md">
+                                 탈퇴
+                              </Button>
+                           )}
+                        </div>
+                     </div>
+                  </div>
+               )}
+
+               <div className="row">
+                  <div className="col-12">
+                     <div className="profile-edit-modal__actions">
+                        <ActionButton action="confirm" onClick={handleSubmit} disabled={disabled}>
+                           {mode === 'admin' ? '수정' : '수정'}
+                        </ActionButton>
+                     </div>
                   </div>
                </div>
             </div>
-         </div>
-      </Modal>
+         </Modal>
+
+         <ConfirmModal isOpen={!!infoMessage} onClose={() => setInfoMessage(null)} message={infoMessage || ''} />
+      </>
    )
 }
 
@@ -266,6 +335,7 @@ export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: Profil
    const userData = user
       ? {
            name: user.name || '',
+           nickname: user.name || '',
            email: user.email || '',
            profileImage: user.profileImage || '',
         }
@@ -304,7 +374,7 @@ export function ProfileEditModalComponent({ isOpen, onClose, onSuccess }: Profil
 
    const handleCheckNickname = async (nickname: string): Promise<boolean> => {
       try {
-         const result = await checkNickname({ nickname })
+         const result = await checkNickname({ name: nickname })
          return result.available
       } catch (error) {
          console.error('닉네임 중복 확인 실패:', error)
@@ -333,19 +403,21 @@ export function AdminProfileEditModalComponent({ isOpen, onClose, userId, onWith
    useEffect(() => {
       if (isOpen && userId) {
          loadUserData()
-         loadSanctionCount()
       }
    }, [isOpen, userId])
 
    const loadUserData = async () => {
       try {
          const data = await getAdminUserProfile(userId)
+         const sanctionsData = (data as any)?.sanctions ?? []
+         setSanctions(sanctionsData)
+         setSanctionCount(sanctionsData.length)
          setUserData({
             name: data.name,
-            nickname: data.nickname,
+            nickname: data.name,
             email: data.email,
-            profileImage: data.avatarUrl,
-            reportCount: data.reportCount,
+            profileImage: (data as any)?.profileImage,
+            reportCount: sanctionsData.length,
          })
       } catch (error) {
          console.error('사용자 데이터 로드 실패:', error)
@@ -357,19 +429,6 @@ export function AdminProfileEditModalComponent({ isOpen, onClose, userId, onWith
             profileImage: undefined,
             reportCount: 5,
          })
-      }
-   }
-
-   const loadSanctionCount = async () => {
-      try {
-         const sanctionsData = await getUserSanctions(userId)
-         setSanctions(sanctionsData)
-         setSanctionCount(sanctionsData.length)
-         // reportCount도 업데이트
-         setUserData((prev) => (prev ? { ...prev, reportCount: sanctionsData.length } : null))
-      } catch (error) {
-         console.error('제제 이력 로드 실패:', error)
-         // Mock 데이터
          const mockSanctions = [
             { id: 1, reason: '부적절한 언어 사용' },
             { id: 2, reason: '광고글' },
@@ -379,7 +438,6 @@ export function AdminProfileEditModalComponent({ isOpen, onClose, userId, onWith
          ]
          setSanctions(mockSanctions)
          setSanctionCount(mockSanctions.length)
-         setUserData((prev) => (prev ? { ...prev, reportCount: mockSanctions.length } : null))
       }
    }
 
@@ -387,10 +445,8 @@ export function AdminProfileEditModalComponent({ isOpen, onClose, userId, onWith
       setIsLoading(true)
       try {
          await updateAdminUserProfile(userId, {
-            name: data.name,
-            nickname: data.nickname,
+            name: data.nickname,
             email: data.email,
-            profileImage: data.profileImage,
          })
          onClose()
          // TODO: 성공 토스트 메시지

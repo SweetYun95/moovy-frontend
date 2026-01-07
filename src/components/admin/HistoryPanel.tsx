@@ -3,9 +3,22 @@
 import React from "react";
 
 import Human from "../../assets/Human.svg";
-const HistoryPanel: React.FC = () => {
+
+interface HistoryPanelProps {
+  className?: string;
+}
+
+const HistoryPanel: React.FC<HistoryPanelProps> = ({ className }) => {
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    // 히스토리 패널 내부 클릭 시 이벤트 전파 방지 (오버레이 닫기 방지)
+    e.stopPropagation();
+  };
+
   return (
-    <aside className="history-panel">
+    <aside
+      className={`history-panel ${className || ""}`}
+      onClick={handleClick}
+    >
       <p>히스토리</p>
       <ul>
         <li>

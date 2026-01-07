@@ -5,6 +5,7 @@ export type UserProfile = {
    user_id: string
    email: string
    name: string
+   sanctions?: SanctionRecord[]
    google?: boolean
    kakao?: boolean
    googleId?: string
@@ -34,6 +35,12 @@ export type WithdrawRequest = {
    reason?: string
 }
 
+export type CreateSanctionRequest = {
+   start_at?: string
+   end_at: string
+   reason: string
+}
+
 /** 현재 사용자 프로필 조회 */
 export async function getProfile() {
    const res = await moovy.get('/user/profile')
@@ -49,7 +56,8 @@ export async function updateProfile(data: UpdateProfileRequest) {
 /** 닉네임 중복 확인 */
 export async function checkNickname(data: CheckNicknameRequest) {
    const res = await moovy.post('/user/check-nickname', data)
-   return res.data as { available: boolean; message?: string }
+   const isAvailable = !!res.data?.data?.isAvailable
+   return { available: isAvailable }
 }
 
 /** 회원 탈퇴 */
@@ -116,7 +124,7 @@ export async function getUserList() {
 /** 특정 사용자 프로필 조회 (관리자) */
 export async function getAdminUserProfile(userId: number) {
    const res = await moovy.get(`/admin/users/${userId}`)
-   return res.data as UserProfile
+   return (res.data?.user ?? res.data) as UserProfile
 }
 
 /** 사용자 프로필 수정 (관리자) */
@@ -132,15 +140,16 @@ export async function toggleUserStatus(userId: number, status: 'active' | 'suspe
 }
 
 /** 사용자 강제 탈퇴 (관리자) */
-export async function forceWithdrawUser(userId: number, reason?: string) {
-   const res = await moovy.delete(`/admin/users/${userId}`, {
-      data: { reason },
+export async function forceWithdrawUser(userId: number, reason: string, confirm: boolean) {
+   const res = await moovy.post(`/admin/users/${userId}/force-withdrawal`, {
+      reason,
+      confirm,
    })
    return res.data
 }
 
-/** 사용자 제제 이력 조회 (관리자) */
-export async function getUserSanctions(userId: number) {
-   const res = await moovy.get(`/admin/users/${userId}/sanctions`)
-   return res.data as SanctionRecord[]
+/** 사용자 제재 생성 (관리자) */
+export async function createUserSanction(userId: number, data: CreateSanctionRequest) {
+   const res = await moovy.post(`/admin/users/${userId}/sanctions`, data)
+   return res.data
 }

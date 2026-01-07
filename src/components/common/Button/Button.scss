@@ -70,9 +70,11 @@
   &--info {
     background-color: $info-color;
     color: $white;
+    border: 1px solid $info-color;
     
     &:hover:not(:disabled) {
       background-color: $white;
+      border: 1px solid $info-color;
       color: $info-color;
     }
   }
