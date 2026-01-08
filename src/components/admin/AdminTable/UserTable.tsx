@@ -4,12 +4,14 @@ import React, { useMemo, useState } from 'react'
 
 import Avatar from '../../../assets/Avatar.png'
 import AdminUserDetailModal, { type AdminUserTableRow } from '../../modals/AdminUserDetailModal/AdminUserDetailModal'
+import type { AdminUserSummary } from '../../../services/api/admin/adminUserApi'
 
 interface TableProps {
    content: string
    columns: string[]
    filters?: Record<string, any>
-   onDataCountChange?: (count: number) => void
+   users: AdminUserSummary[]
+   onRefresh?: () => void
 }
 
 const parseNumberOrNull = (value: unknown): number | null => {
@@ -27,52 +29,32 @@ const parseStringOrEmpty = (value: unknown): string => {
    return String(value).trim()
 }
 
-const getSanctionCount = (sanction: unknown): number => {
-   if (typeof sanction !== 'string') return 0
-   if (sanction.includes('회')) {
-      const n = Number(sanction.replace('회', ''))
+const toSafeNumber = (value: unknown): number => {
+   if (typeof value === 'number') return Number.isFinite(value) ? value : 0
+   if (typeof value === 'string') {
+      const n = Number(value)
       return Number.isFinite(n) ? n : 0
    }
    return 0
 }
 
-const UserTable: React.FC<TableProps> = ({ content, columns, filters, onDataCountChange }) => {
-   const [tableData, setTableData] = useState([
-      {
-         user_id: 1,
-         name: 'Natali Craig',
-         email: 'natali.craig@example.com',
-         comment: 12,
-         reply: 3,
-         sanction: '없음',
-      },
-      {
-         user_id: 2,
-         name: 'Drew Cano',
-         email: 'drew.cano@example.com',
-         comment: 0,
-         reply: 8,
-         sanction: '1회',
-      },
-      {
-         user_id: 3,
-         name: 'Orlando Diggs',
-         email: 'orlando.diggs@example.com',
-         comment: 31,
-         reply: 21,
-         sanction: '없음',
-      },
-      {
-         user_id: 4,
-         name: 'Andi Lane',
-         email: 'andi.lane@example.com',
-         comment: 4,
-         reply: 0,
-         sanction: '3회',
-      },
-   ])
+const isHttpUrl = (value: string) => /^https?:\/\//i.test(value)
 
-   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
+const toProfileImageUrl = (raw: unknown): string | null => {
+   if (typeof raw !== 'string') return null
+   const trimmed = raw.trim()
+   if (!trimmed) return null
+   if (isHttpUrl(trimmed)) return trimmed
+
+   // local uploads: VITE_APP_API_URL은 보통 .../api 이므로 origin으로 환원
+   const apiBase = (import.meta.env.VITE_APP_API_URL as string) || ''
+   const origin = apiBase.replace(/\/?api\/?$/i, '')
+   const path = trimmed.startsWith('/') ? trimmed : `/${trimmed}`
+   return `${origin}${path}`
+}
+
+const UserTable: React.FC<TableProps> = ({ content, columns, filters, users, onRefresh }) => {
+   const [selectedUser, setSelectedUser] = useState<AdminUserTableRow | null>(null)
    const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
    const filteredTableData = useMemo(() => {
@@ -87,47 +69,39 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters, onDataCoun
 
       const hasAnyFilter = userId !== null || nickname.length > 0 || email.length > 0 || replyMin !== null || replyMax !== null || commentMin !== null || commentMax !== null || warning.length > 0
 
-      if (!hasAnyFilter) return tableData
+      if (!hasAnyFilter) return users
 
-      return tableData.filter((row) => {
+      return users.filter((row) => {
          if (userId !== null && row.user_id !== userId) return false
          if (nickname && !row.name.toLowerCase().includes(nickname)) return false
          if (email && !row.email.toLowerCase().includes(email)) return false
 
-         if (replyMin !== null && row.reply < replyMin) return false
-         if (replyMax !== null && row.reply > replyMax) return false
-         if (commentMin !== null && row.comment < commentMin) return false
-         if (commentMax !== null && row.comment > commentMax) return false
+         const replyCount = toSafeNumber(row.reply_count)
+         const commentCount = toSafeNumber(row.comment_count)
+         const sanctionCount = toSafeNumber(row.sanction_count)
 
-         const sanctionCount = getSanctionCount(row.sanction)
+         if (replyMin !== null && replyCount < replyMin) return false
+         if (replyMax !== null && replyCount > replyMax) return false
+         if (commentMin !== null && commentCount < commentMin) return false
+         if (commentMax !== null && commentCount > commentMax) return false
+
          if (warning === 'none' && sanctionCount > 0) return false
          if (warning === 'warning' && sanctionCount === 0) return false
 
          return true
       })
-   }, [filters, tableData])
+   }, [filters, users])
 
-   React.useEffect(() => {
-      onDataCountChange?.(filteredTableData.length)
-   }, [filteredTableData.length, onDataCountChange])
-
-   const selectedUser: AdminUserTableRow | null = useMemo(() => {
-      if (!selectedUserId) return null
-      const row = tableData.find((u) => u.user_id === selectedUserId)
-      if (!row) return null
-      const sanctionCount = getSanctionCount(row.sanction)
-
-      return {
+   const openUserModal = (row: AdminUserSummary) => {
+      const sanctionCount = toSafeNumber(row.sanction_count)
+      const profileImage = toProfileImageUrl(row.profile_img) ?? Avatar
+      setSelectedUser({
          user_id: row.user_id,
          name: row.name,
          email: row.email,
          sanctionCount,
-         profileImage: Avatar,
-      }
-   }, [selectedUserId, tableData])
-
-   const openUserModal = (userId: number) => {
-      setSelectedUserId(userId)
+         profileImage,
+      })
       setIsUserModalOpen(true)
    }
 
@@ -138,28 +112,18 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters, onDataCoun
    return (
       <>
          {filteredTableData.map((data) => (
-            <ul className="data" key={data.user_id}>
+            <ul className="data" key={data.user_id} style={{ cursor: 'pointer' }} onClick={() => openUserModal(data)}>
                <li>
                   <input type="checkbox" onClick={(e) => e.stopPropagation()} />
                </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  <img src={Avatar} alt="user avatar" /> {data.user_id}
+               <li>
+                  <img src={toProfileImageUrl(data.profile_img) ?? Avatar} alt="user avatar" /> {data.user_id}
                </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  {data.name}
-               </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  {data.email}
-               </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  {data.comment}
-               </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  {data.reply}
-               </li>
-               <li style={{ cursor: 'pointer' }} onClick={() => openUserModal(data.user_id)}>
-                  {data.sanction}
-               </li>
+               <li>{data.name}</li>
+               <li>{data.email}</li>
+               <li>{toSafeNumber(data.comment_count)}</li>
+               <li>{toSafeNumber(data.reply_count)}</li>
+               <li>{toSafeNumber(data.sanction_count)}회</li>
             </ul>
          ))}
 
@@ -168,16 +132,8 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters, onDataCoun
             onClose={closeUserModal}
             user={selectedUser}
             onUpdated={(next) => {
-               setTableData((prev) =>
-                  prev.map((row) => {
-                     if (row.user_id !== next.user_id) return row
-                     return {
-                        ...row,
-                        name: next.name,
-                        sanction: next.sanctionCount > 0 ? `${next.sanctionCount}회` : '없음',
-                     }
-                  }),
-               )
+               setSelectedUser(next)
+               onRefresh?.()
             }}
          />
       </>

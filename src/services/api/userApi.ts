@@ -129,7 +129,13 @@ export async function getAdminUserProfile(userId: number) {
 
 /** 사용자 프로필 수정 (관리자) */
 export async function updateAdminUserProfile(userId: number, data: UpdateProfileRequest) {
-   const res = await moovy.put(`/admin/users/${userId}`, data)
+   const res = await moovy.put(`/admin/users/${userId}/profile`, data)
+   return res.data
+}
+
+/** 사용자 프로필 이미지 기본값 적용 (관리자) */
+export async function resetAdminUserProfileImage(userId: number) {
+   const res = await moovy.delete(`/admin/users/${userId}/profile/image`)
    return res.data
 }
 
