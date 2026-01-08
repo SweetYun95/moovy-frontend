@@ -330,7 +330,7 @@ li {
    }
 
    &.report-table ul {
-      grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) minmax(180px, auto) minmax(120px, auto) minmax(80px, auto);
+      grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) minmax(180px, auto) minmax(140px, auto) minmax(120px, auto) minmax(80px, auto);
 
       li:nth-child(3) {
          overflow: visible;
