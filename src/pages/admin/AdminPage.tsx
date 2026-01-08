@@ -1,18 +1,27 @@
+// moovy-frontend/src/pages/admin/AdminPage.tsx
 import React, { useState } from 'react'
+
 import Sidebar from '../../components/admin/Sidebar'
 import Header from '../../components/admin/Header'
 import HistoryPanel from '../../components/admin/HistoryPanel'
-import './AdminPage.scss'
 import Table from '@/components/admin/Table'
+
+import './AdminPage.scss'
 
 interface AdminProps {
    content: 'dashboard' | 'user' | 'topic' | 'inquiry' | 'report'
 }
 
 const AdminPage: React.FC<AdminProps> = ({ content }) => {
-   const [activeSideBar, setActiveSideBar] = useState<'dashboard' | 'user' | 'topic' | 'inquiry' | 'report'>('dashboard')
+   // ✅ content prop을 초기값으로 반영
+   const [activeSideBar, setActiveSideBar] = useState<'dashboard' | 'user' | 'topic' | 'inquiry' | 'report'>(content)
    const [isSidebarVisible, setIsSidebarVisible] = useState(true)
    const [isHistoryVisible, setIsHistoryVisible] = useState(true)
+
+   // ✅ 라우터에서 content가 바뀌면(예: /admin/users -> /admin/topics) activeSideBar도 동기화
+   React.useEffect(() => {
+      setActiveSideBar(content)
+   }, [content])
 
    // 모바일에서는 기본적으로 사이드바 숨김, 히스토리 패널은 항상 숨김
    React.useEffect(() => {

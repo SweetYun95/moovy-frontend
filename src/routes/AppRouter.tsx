@@ -15,13 +15,15 @@ import GuestOnly from './guards/GuestOnly.tsx'
 import UserOnly from './guards/UserOnly.tsx'
 import AdminOnly from './guards/AdminOnly.tsx'
 
-// 페이지 import 예정
+// 유저 페이지
 import MyPage from '@/pages/profile/MyPage.tsx'
 import UserPage from '@/pages/user/UserPage.tsx'
-import AdminPage from '@/pages/admin/AdminPage.tsx'
 import TestAuthPage from '@/pages/auth/TestAuthPage'
 import OAuthRedirectPage from '@/pages/auth/OAuthRedirectPage'
 import OAuthSuccessPage from '@/pages/auth/OAuthSuccessPage'
+
+// 어드민 페이지
+import AdminPage from '@/pages/admin/AdminPage.tsx'
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null
@@ -52,7 +54,7 @@ export default function AppRouter() {
 
                {/* /comments → CommentsListPage */}
                <Route path={PATHS.comments} element={<CommentsListPage />} />
-               
+
                {/* 임시: 로그인 없이 접근 가능하도록 */}
                <Route path={PATHS.mypagePath} element={<MyPage />} />
                <Route path={PATHS.mypage} element={<MyPage />} />
@@ -60,15 +62,30 @@ export default function AppRouter() {
 
             {/* 로그인 유저 전용 */}
             {/* <Route element={<UserOnly />}> */}
-               {/* <Route path={PATHS.userHome} element={<UserPage />} /> */}
-               <Route path={PATHS.mypage} element={<MyPage />} />
+            {/* <Route path={PATHS.userHome} element={<UserPage />} /> */}
+            <Route path={PATHS.mypage} element={<MyPage />} />
             {/* </Route> */}
          </Route>
 
          {/* 관리자 전용 (전역 레이아웃 제외) */}
          <Route element={<AdminOnly />}>
-            {/* TODO: /admin 등 실제 페이지 붙이기 */}
+            {/* /admin */}
             <Route path={PATHS.adminHome} element={<AdminPage content="dashboard" />} />
+
+            {/* /admin/dashboard */}
+            <Route path={PATHS.adminDashboard} element={<AdminPage content="dashboard" />} />
+
+            {/* /admin/users */}
+            <Route path={PATHS.adminUsers} element={<AdminPage content="user" />} />
+
+            {/* /admin/topics */}
+            <Route path={PATHS.adminTopics} element={<AdminPage content="topic" />} />
+
+            {/* /admin/inquiries */}
+            <Route path={PATHS.adminInquiries} element={<AdminPage content="inquiry" />} />
+
+            {/* /admin/reports */}
+            <Route path={PATHS.adminReports} element={<AdminPage content="report" />} />
          </Route>
       </Routes>
    )

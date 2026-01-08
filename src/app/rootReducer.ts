@@ -10,10 +10,11 @@ import content from '@/features/content/contentSlice'
 import rating from '@/features/rating/ratingSlice'
 import topics from '@/features/topic/topicSlice'
 import favorite from '@/features/favorite/favoriteSlice'
-import popular from '@/features/popular/popularSlice' // ★ 추가
+import popular from '@/features/popular/popularSlice'
 
 // admin
 import adminUsers from '../features/admin/usersSlice'
+import adminDashboard from '../features/admin/dashboardSlice' // ✅ 추가
 
 const rootReducer = combineReducers({
    auth,
@@ -24,10 +25,11 @@ const rootReducer = combineReducers({
    rating,
    topics,
    favorite,
-   popular, // ★ 추가
+   popular,
 
    // admin
    adminUsers,
+   adminDashboard, // ✅ 추가
 })
 
 export type RootReducer = ReturnType<typeof rootReducer>
