@@ -15,6 +15,7 @@ import popular from '@/features/popular/popularSlice'
 // admin
 import adminUsers from '../features/admin/usersSlice'
 import adminDashboard from '../features/admin/dashboardSlice' // ✅ 추가
+import adminTopics from '../features/admin/topicsSlice' // ✅ 추가
 
 const rootReducer = combineReducers({
    auth,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
    // admin
    adminUsers,
    adminDashboard, // ✅ 추가
+   adminTopics, // ✅ 추가
 })
 
 export type RootReducer = ReturnType<typeof rootReducer>
