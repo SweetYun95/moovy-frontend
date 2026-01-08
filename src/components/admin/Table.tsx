@@ -4,6 +4,7 @@ import React from 'react'
 import { StandardPagination } from '../common/Pagination'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getAdminUsers } from '../../features/admin/usersSlice'
+import { answerAdminInquiry, getAdminInquiryDetail, getAdminInquiries } from '../../features/admin/adminInquirySlice'
 import DashboardTable from './AdminTable/DashboardTable'
 import UserTable from './AdminTable/UserTable'
 import TopicManagement from './TopicManagement/TopicManagement'
@@ -20,13 +21,17 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ content }) => {
    const dispatch = useAppDispatch()
    const adminUsersList = useAppSelector((s) => s.adminUsers.list)
+   const adminInquiryList = useAppSelector((s) => s.adminInquiry.list)
+   const adminInquiryDetailById = useAppSelector((s) => s.adminInquiry.detailById)
 
    const tableRef = React.useRef<HTMLDivElement>(null)
    const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false)
    const [isReportModalOpen, setIsReportModalOpen] = React.useState(false)
    const [selectedData, setSelectedData] = React.useState<any>(null)
+   const [selectedInquiryId, setSelectedInquiryId] = React.useState<number | null>(null)
    const [totalItems, setTotalItems] = React.useState(0)
    const [appliedUserFilters, setAppliedUserFilters] = React.useState<Record<string, any>>({})
+   const [appliedInquiryFilters, setAppliedInquiryFilters] = React.useState<Record<string, any>>({})
 
    // user 목록: 서버 페이징 연동
    React.useEffect(() => {
@@ -43,14 +48,25 @@ const Table: React.FC<TableProps> = ({ content }) => {
       )
    }, [content, dispatch])
 
+   // inquiry 목록: 서버 페이징/필터 연동
+   React.useEffect(() => {
+      if (content !== 'inquiry') return
+      dispatch(
+         getAdminInquiries({
+            ...appliedInquiryFilters,
+            page: 1,
+            size: adminInquiryList.size || 10,
+         }),
+      )
+   }, [content, dispatch])
+
    const openModalByStatus = (data: any) => {
       setSelectedData(data)
       if (content === 'inquiry') {
-         if (data.state === '신고') {
-            setIsReportModalOpen(true)
-         } else {
-            setIsInquiryModalOpen(true)
-         }
+         const qnaId = data?.qna_id
+         setSelectedInquiryId(typeof qnaId === 'number' ? qnaId : null)
+         if (typeof qnaId === 'number') dispatch(getAdminInquiryDetail(qnaId))
+         setIsInquiryModalOpen(true)
       } else if (content === 'report') {
          setIsReportModalOpen(true)
       }
@@ -59,11 +75,10 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const handleRowClick = (data: any) => {
       setSelectedData(data)
       if (content === 'inquiry') {
-         if (data.state === '신고') {
-            setIsReportModalOpen(true)
-         } else {
-            setIsInquiryModalOpen(true)
-         }
+         const qnaId = data?.qna_id
+         setSelectedInquiryId(typeof qnaId === 'number' ? qnaId : null)
+         if (typeof qnaId === 'number') dispatch(getAdminInquiryDetail(qnaId))
+         setIsInquiryModalOpen(true)
       } else if (content === 'report') {
          setIsReportModalOpen(true)
       }
@@ -116,7 +131,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
          case 'topic':
             return ['작품 제목', '작품 정보', '시작일', '종료일', '조회수']
          case 'inquiry':
-            return ['유저', '분류', '작성일', '상태']
+            return ['유저ID', '유저', '문의 제목', '작성일', '답변일', '상태']
          case 'report':
             return ['유저', '신고한 유저', '분류', '작성일', '상태']
          default:
@@ -132,7 +147,20 @@ const Table: React.FC<TableProps> = ({ content }) => {
             <>
                <div className="admin-content">
                   {content === 'user' && <UserManagementFilter onSearch={setAppliedUserFilters} />}
-                  {content === 'inquiry' && <QnAManagementFilter />}
+                  {content === 'inquiry' && (
+                     <QnAManagementFilter
+                        onSearch={(filters) => {
+                           setAppliedInquiryFilters(filters)
+                           dispatch(
+                              getAdminInquiries({
+                                 ...filters,
+                                 page: 1,
+                                 size: adminInquiryList.size || 10,
+                              }),
+                           )
+                        }}
+                     />
+                  )}
                   {content === 'report' && <ReportManagementFilter />}
                   {content === 'topic' ? (
                      <TopicManagement />
@@ -146,21 +174,31 @@ const Table: React.FC<TableProps> = ({ content }) => {
                            </ul>
 
                            {content === 'user' && <UserTable columns={columns} content={content} filters={appliedUserFilters} users={adminUsersList.items} onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))} />}
-                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} />}
+                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} rows={adminInquiryList.items} onRowClick={handleRowClick} onStatusClick={handleStatusClick} />}
                            {content === 'report' && <ReportTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} />}
                         </div>
 
                         <StandardPagination
                            className="mt-4"
-                           totalItems={content === 'user' ? adminUsersList.total : totalItems}
-                           itemsPerPage={content === 'user' ? adminUsersList.size : undefined}
-                           currentPage={content === 'user' ? adminUsersList.page : undefined}
+                           totalItems={content === 'user' ? adminUsersList.total : content === 'inquiry' ? adminInquiryList.total : totalItems}
+                           itemsPerPage={content === 'user' ? adminUsersList.size : content === 'inquiry' ? adminInquiryList.size : undefined}
+                           currentPage={content === 'user' ? adminUsersList.page : content === 'inquiry' ? adminInquiryList.page : undefined}
                            onPageChange={
                               content === 'user'
                                  ? (nextPage) => {
                                       dispatch(getAdminUsers({ page: nextPage, size: adminUsersList.size }))
                                    }
-                                 : undefined
+                                 : content === 'inquiry'
+                                   ? (nextPage) => {
+                                        dispatch(
+                                           getAdminInquiries({
+                                              ...appliedInquiryFilters,
+                                              page: nextPage,
+                                              size: adminInquiryList.size || 10,
+                                           }),
+                                        )
+                                     }
+                                   : undefined
                            }
                         />
                      </>
@@ -169,32 +207,49 @@ const Table: React.FC<TableProps> = ({ content }) => {
             </>
          )}
 
-         {content === 'inquiry' && selectedData?.state !== '신고' && (
+         {content === 'inquiry' && (
             <InquiryModal
                isOpen={isInquiryModalOpen}
-               onClose={() => setIsInquiryModalOpen(false)}
+               onClose={() => {
+                  setIsInquiryModalOpen(false)
+                  setSelectedInquiryId(null)
+               }}
                mode="admin"
-               inquiryData={
-                  selectedData
+               inquiryData={(() => {
+                  const qnaId = selectedInquiryId
+                  const detail = qnaId ? adminInquiryDetailById[qnaId]?.item : null
+                  const qna = detail?.qna
+                  const fallback = selectedData
+                  return qna || fallback
                      ? {
-                          category: selectedData.category || '',
-                          content: selectedData.content || '문의 내용입니다.',
-                          initialReply: selectedData.state === '답변완료' ? '답변 완료되었습니다.' : '',
+                          title: (qna?.q_title ?? fallback?.q_title ?? '').toString(),
+                          content: (qna?.q_contnet ?? qna?.q_content ?? fallback?.q_contnet ?? fallback?.q_content ?? '').toString(),
+                          initialReplyTitle: (qna?.a_title ?? fallback?.a_title ?? '').toString(),
+                          initialReply: (qna?.a_content ?? fallback?.a_content ?? '').toString(),
+                          answererName: (qna?.AdminUser?.name ?? fallback?.AdminUser?.name ?? '').toString(),
                        }
                      : undefined
-               }
-               readOnly={selectedData?.state === '답변완료'}
-               onSubmit={(data) => {
-                  console.log('Inquiry submitted:', data)
-                  setIsInquiryModalOpen(false)
-               }}
-               onReport={() => {
-                  console.log('Report inquiry')
+               })()}
+               readOnly={(() => {
+                  const qnaId = selectedInquiryId
+                  const detail = qnaId ? adminInquiryDetailById[qnaId]?.item : null
+                  const state = detail?.qna?.state ?? selectedData?.state
+                  return state === 'FULFILLED' || state === '답변완료'
+               })()}
+               onSubmit={async (data) => {
+                  const qnaId = selectedInquiryId
+                  if (!qnaId) return
+                  if (!data.title?.trim() || !data.content?.trim()) return
+                  if (!data.replyTitle?.trim() || !data.reply?.trim()) return
+
+                  await dispatch(answerAdminInquiry({ qna_id: qnaId, a_title: data.replyTitle, a_content: data.reply }))
+                  dispatch(getAdminInquiryDetail(qnaId))
+                  dispatch(getAdminInquiries({ ...appliedInquiryFilters, page: adminInquiryList.page, size: adminInquiryList.size || 10 }))
                }}
             />
          )}
 
-         {(content === 'report' || (content === 'inquiry' && selectedData?.state === '신고')) && (
+         {content === 'report' && (
             <ReportModal
                isOpen={isReportModalOpen}
                onClose={() => setIsReportModalOpen(false)}
@@ -213,7 +268,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
                        }
                      : undefined
                }
-               readOnly={(content === 'report' && selectedData?.state === '처리완료') || (content === 'inquiry' && selectedData?.state === '신고')}
+               readOnly={content === 'report' && selectedData?.state === '처리완료'}
                onSubmit={(data) => {
                   console.log('Report submitted:', data)
                   setIsReportModalOpen(false)
