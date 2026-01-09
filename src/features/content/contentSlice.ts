@@ -2,6 +2,7 @@
 //컨텐츠(토픽) 전용 슬라이스
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "@/app/store";
 import {
   getTopics,
   type Topic as ContentCardType,
@@ -670,5 +671,10 @@ const contentSlice = createSlice({
       });
   },
 });
+
+// Selectors
+export const selectContents = (state: RootState) => state.content.contents;
+export const selectContentsLoading = (state: RootState) => state.content.loading;
+export const selectContentsError = (state: RootState) => state.content.error;
 
 export default contentSlice.reducer;
