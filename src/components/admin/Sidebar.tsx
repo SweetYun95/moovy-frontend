@@ -32,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className={`sidebar ${className || ""}`} onClick={handleClick}>
       <div className="sidebar-header">
-        <img src={Moovy} alt="logo" />
+      <img src={Moovy} alt="logo" />
         {onClose && (
           <button
             className="sidebar-back-button"

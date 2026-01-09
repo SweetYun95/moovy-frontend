@@ -135,12 +135,12 @@ const ReportModal: React.FC<ReportModalProps> = ({
               {readOnly && mode === 'admin' ? (
                 <div className="report-modal__readonly-value">{category || "분류 없음"}</div>
               ) : (
-                <ReportSelector
-                  value={category}
-                  onChange={setCategory}
-                  placeholder="분류"
+              <ReportSelector
+                value={category}
+                onChange={setCategory}
+                placeholder="분류"
                   disabled={readOnly}
-                />
+              />
               )}
             </div>
           </div>
@@ -155,14 +155,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {readOnly ? (
                     <div className="report-modal__readonly-value">{content || "신고 내용이 없습니다."}</div>
                   ) : (
-                    <Textarea
-                      placeholder="신고내용을 적어주세요."
-                      value={content}
-                      onChange={setContent}
-                      rows={6}
-                      maxLength={10000}
-                      showCounter
-                    />
+                  <Textarea
+                    placeholder="신고내용을 적어주세요."
+                    value={content}
+                    onChange={setContent}
+                    rows={6}
+                    maxLength={10000}
+                    showCounter
+                  />
                   )}
                 </div>
               </div>
@@ -175,11 +175,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {readOnly ? (
                     <div className="report-modal__readonly-value">{sanctionLevel || "제재 없음"}</div>
                   ) : (
-                    <SanctionLevelSelector
-                      value={sanctionLevel}
-                      onChange={setSanctionLevel}
-                      placeholder="제제단계"
-                    />
+                  <SanctionLevelSelector
+                    value={sanctionLevel}
+                    onChange={setSanctionLevel}
+                    placeholder="제제단계"
+                  />
                   )}
                 </div>
               </div>
@@ -192,11 +192,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
                   {readOnly ? (
                     <div className="report-modal__readonly-value">{notification || "알림 없음"}</div>
                   ) : (
-                    <ReportStatusSelector
-                      value={notification}
-                      onChange={setNotification}
-                      placeholder="처리 상태"
-                    />
+                  <ReportStatusSelector
+                    value={notification}
+                    onChange={setNotification}
+                    placeholder="처리 상태"
+                  />
                   )}
                 </div>
               </div>
@@ -208,9 +208,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
           <div className="col-12">
             <div className="report-modal__actions">
               {!readOnly && (
-                <ActionButton action="confirm" onClick={handleSubmit}>
-                  확인
-                </ActionButton>
+              <ActionButton action="confirm" onClick={handleSubmit}>
+                확인
+              </ActionButton>
               )}
             </div>
           </div>

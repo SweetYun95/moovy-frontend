@@ -43,7 +43,7 @@ const AdminPage: React.FC<AdminProps> = ({ content }) => {
         value === "inquiry" ||
         value === "report")
     ) {
-      setActiveSideBar(value);
+    setActiveSideBar(value);
       // 반응형(1024px 이하)에서는 메뉴 클릭 시 사이드바 자동으로 닫기
       if (window.innerWidth <= 1024) {
         setIsSidebarVisible(false);

@@ -367,13 +367,13 @@ li {
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: $gray5;
-    }
+    background-color: $gray5;
+  }
 
     img {
-      max-width: 24px;
-      margin-right: $spacing-1;
-    }
+    max-width: 24px;
+    margin-right: $spacing-1;
+  }
   }
 
   ul.header + ul.data {

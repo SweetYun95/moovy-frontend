@@ -127,14 +127,14 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
                 {readOnly ? (
                   <div className="inquiry-modal__readonly-value">{reply || "답변 내용이 없습니다."}</div>
                 ) : (
-                  <Textarea
-                    placeholder="답변내용을 적어주세요."
-                    value={reply}
-                    onChange={setReply}
-                    rows={8}
-                    maxLength={10000}
-                    showCounter
-                  />
+                <Textarea
+                  placeholder="답변내용을 적어주세요."
+                  value={reply}
+                  onChange={setReply}
+                  rows={8}
+                  maxLength={10000}
+                  showCounter
+                />
                 )}
               </div>
             </div>
@@ -150,9 +150,9 @@ const InquiryModal: React.FC<InquiryModalProps> = ({
                 </Button>
               )}
               {!readOnly && (
-                <ActionButton action="confirm" onClick={handleSubmit}>
-                  확인
-                </ActionButton>
+              <ActionButton action="confirm" onClick={handleSubmit}>
+                확인
+              </ActionButton>
               )}
             </div>
           </div>

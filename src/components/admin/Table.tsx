@@ -185,21 +185,21 @@ const Table: React.FC<TableProps> = ({ content }) => {
             ) : (
               <>
                 <div className={`table ${content}-table`} ref={tableRef}>
-                  <ul className="header">
-                    {columns.map((column) => (
-                      <li key={column}>{column}</li>
-                    ))}
-                  </ul>
+              <ul className="header">
+                {columns.map((column) => (
+                  <li key={column}>{column}</li>
+                ))}
+              </ul>
 
-                  {content === "user" && (
+              {content === "user" && (
                     <UserTable 
                       columns={columns} 
                       content={content}
                       onRowClick={handleRowClick}
                       onDataCountChange={setTotalItems}
                     />
-                  )}
-                  {content === "inquiry" && (
+              )}
+              {content === "inquiry" && (
                     <InquiryTable 
                       columns={columns} 
                       content={content}
@@ -207,8 +207,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                       onStatusClick={handleStatusClick}
                       onDataCountChange={setTotalItems}
                     />
-                  )}
-                  {content === "report" && (
+              )}
+              {content === "report" && (
                     <ReportTable 
                       columns={columns} 
                       content={content}
@@ -216,8 +216,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                       onStatusClick={handleStatusClick}
                       onDataCountChange={setTotalItems}
                     />
-                  )}
-                </div>
+              )}
+            </div>
 
                 <StandardPagination className="mt-4" totalItems={totalItems} />
               </>

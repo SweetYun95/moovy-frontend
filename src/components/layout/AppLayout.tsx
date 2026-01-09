@@ -17,6 +17,7 @@ export default function AppLayout() {
   const isAuthPage = location.pathname === PATHS.login || location.pathname === PATHS.register;
   const isLoginPage = location.pathname === PATHS.login;
   const isRegisterPage = location.pathname === PATHS.register;
+  const isMyPage = location.pathname === PATHS.mypage || location.pathname === PATHS.mypagePath;
 
   // AuthPage일 때 body에 클래스 추가
   useEffect(() => {
@@ -31,6 +32,20 @@ export default function AppLayout() {
       document.body.classList.remove('auth-page-background');
     };
   }, [isAuthPage]);
+
+  // 마이페이지일 때 body에 theme-light 클래스 추가
+  useEffect(() => {
+    if (isMyPage) {
+      document.body.classList.add('theme-light');
+    } else {
+      document.body.classList.remove('theme-light');
+    }
+
+    // cleanup
+    return () => {
+      document.body.classList.remove('theme-light');
+    };
+  }, [isMyPage]);
   
   if (isAuthPage) {
     return (
