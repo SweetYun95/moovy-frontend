@@ -13,6 +13,10 @@ export const MypageTabs: React.FC<MypageTabsProps> = ({
   activeTab,
   setActiveTab,
 }) => {
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId as TabId);
+  };
+
   return (
     <Tabs
       tabs={[
@@ -22,7 +26,7 @@ export const MypageTabs: React.FC<MypageTabsProps> = ({
         { id: "inquiry", label: "1:1문의" },
       ]}
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       variant="underline"
     />
   );

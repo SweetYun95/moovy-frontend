@@ -112,7 +112,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const columns = React.useMemo(() => {
       switch (content) {
          case 'user':
-            return ['', '유저', '닉네임', '이메일', '코멘트', '댓글', '경고']
+            return ['유저', '닉네임', '이메일', '코멘트', '댓글', '관리자 경고']
          case 'topic':
             return ['작품 제목', '작품 정보', '시작일', '종료일', '조회수']
          case 'inquiry':
@@ -145,9 +145,33 @@ const Table: React.FC<TableProps> = ({ content }) => {
                               ))}
                            </ul>
 
-                           {content === 'user' && <UserTable columns={columns} content={content} filters={appliedUserFilters} users={adminUsersList.items} onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))} />}
-                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} />}
-                           {content === 'report' && <ReportTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} />}
+                           {content === 'user' && (
+                              <UserTable
+                                 columns={columns}
+                                 content={content}
+                                 filters={appliedUserFilters}
+                                 users={adminUsersList.items}
+                                 onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))}
+                              />
+                           )}
+                           {content === 'inquiry' && (
+                              <InquiryTable
+                                 columns={columns}
+                                 content={content}
+                                 onRowClick={handleRowClick}
+                                 onStatusClick={handleStatusClick}
+                                 onDataCountChange={setTotalItems}
+                              />
+                           )}
+                           {content === 'report' && (
+                              <ReportTable
+                                 columns={columns}
+                                 content={content}
+                                 onRowClick={handleRowClick}
+                                 onStatusClick={handleStatusClick}
+                                 onDataCountChange={setTotalItems}
+                              />
+                           )}
                         </div>
 
                         <StandardPagination
