@@ -8,7 +8,7 @@ import 'swiper/css';
 // 내부 유틸/전역/서비스
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchContentsThunk } from '@/features/content/contentSlice';
-import { fetchTodayPopularMoviesThunk, selectPopularItems, selectPopularLoading } from '@/features/popular/popularSlice';
+import { fetchTodayPopularMoviesThunk, selectPopularItems, selectPopularLoading, selectPopularError } from '@/features/popular/popularSlice';
 import { buildMovieSections } from '@/utils/homeSections';
 
 // 컴포넌트
@@ -34,6 +34,7 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
   const { contents, loading: contentsLoading } = useAppSelector((s) => s.content);
   const popularMovies = useAppSelector(selectPopularItems);
   const popularLoading = useAppSelector(selectPopularLoading);
+  const popularError = useAppSelector(selectPopularError);
 
   // 인기 영화 데이터를 MovieCard 형태로 변환
   const transformedPopularMovies = useMemo(() => {
@@ -72,15 +73,15 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
 
   // 초기 데이터 로드: 인기 영화 우선, 없으면 contents
   useEffect(() => {
-    // 인기 영화가 없고 로딩 중이 아니면 가져오기
-    if (popularMovies.length === 0 && !popularLoading) {
+    // 인기 영화가 없고, 로딩 중이 아니고, 에러가 없을 때만 가져오기 (무한 루프 방지)
+    if (popularMovies.length === 0 && !popularLoading && !popularError) {
       dispatch(fetchTodayPopularMoviesThunk());
     }
     // 인기 영화도 없고 contents도 없고 로딩 중이 아니면 contents 가져오기
     if (popularMovies.length === 0 && contents.length === 0 && !contentsLoading && !popularLoading) {
       dispatch(fetchContentsThunk());
     }
-  }, [dispatch, popularMovies.length, popularLoading, contents.length, contentsLoading]);
+  }, [dispatch, popularMovies.length, popularLoading, popularError, contents.length, contentsLoading]);
   const swiperRef = useRef<any>(null);
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
