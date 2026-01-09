@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import './Input.scss';
-import { Button } from '../Button/ButtonStyle';
-import { Icon } from '@iconify/react';
+import React, { useEffect, useState } from "react";
+import "./Input.scss";
+import { Button } from "../Button/ButtonStyle";
+import { Icon } from "@iconify/react";
 
 /**
  * Input Props:
@@ -24,7 +24,7 @@ import { Icon } from '@iconify/react';
  */
 
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'number';
+  type?: "text" | "email" | "password" | "number";
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
@@ -34,39 +34,54 @@ export interface InputProps {
   className?: string;
   id?: string;
   name?: string;
-  state?: 'success' | 'warning' | 'error';
+  state?: "success" | "warning" | "error";
   showPasswordToggle?: boolean;
   min?: number;
   max?: number;
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   rightButton?: {
     text: string;
     onClick: () => void;
-    variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'modal-close' | 'local-login' | 'kakao' | 'google';
-    size?: 'sm' | 'md' | 'lg';
+    variant?:
+      | "primary"
+      | "secondary"
+      | "success"
+      | "danger"
+      | "warning"
+      | "info"
+      | "modal-close"
+      | "local-login"
+      | "kakao"
+      | "google";
+    size?: "sm" | "md" | "lg";
   };
 }
 
 export const Input: React.FC<InputProps> = ({
-  type = 'text',
+  type = "text",
   placeholder,
-  value = '',
+  value = "",
   onChange,
   onBlur,
   disabled = false,
   required = false,
-  className = '',
+  className = "",
   id,
   name,
   state,
   showPasswordToggle = false,
   min,
   max,
-  theme = 'dark',
+  theme = "dark",
   rightButton,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+
+  // develop 기준: 외부 value 변경을 내부 state에 동기화
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -75,17 +90,19 @@ export const Input: React.FC<InputProps> = ({
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prev) => !prev);
   };
 
-  const inputType = type === 'password' && showPassword ? 'text' : type;
+  const inputType = type === "password" && showPassword ? "text" : type;
 
   const inputClasses = [
-    'moovy-input',
+    "moovy-input",
     state && `moovy-input--${state}`,
-    theme === 'light' && 'light-theme',
+    theme === "light" && "light-theme",
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const inputElement = (
     <input
@@ -106,22 +123,24 @@ export const Input: React.FC<InputProps> = ({
 
   if (showPasswordToggle || rightButton) {
     return (
-      <div className={`moovy-input-wrapper ${theme === 'light' ? 'light-theme' : ''}`}>
+      <div className={`moovy-input-wrapper ${theme === "light" ? "light-theme" : ""}`}>
         {inputElement}
+
         {showPasswordToggle && (
           <button
             className="password-toggle-icon"
             type="button"
             onClick={togglePasswordVisibility}
           >
-            <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} />
+            <Icon icon={showPassword ? "mdi:eye-off" : "mdi:eye"} />
           </button>
         )}
+
         {rightButton && (
           <div className="right-button-wrapper">
             <Button
-              variant={rightButton.variant || 'primary'}
-              size={rightButton.size || 'sm'}
+              variant={rightButton.variant || "primary"}
+              size={rightButton.size || "sm"}
               onClick={rightButton.onClick}
             >
               {rightButton.text}

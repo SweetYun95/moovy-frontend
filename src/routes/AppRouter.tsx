@@ -14,6 +14,8 @@ import AppLayout from '@/components/layout/AppLayout'
 import GuestOnly from './guards/GuestOnly.tsx'
 import UserOnly from './guards/UserOnly.tsx'
 import AdminOnly from './guards/AdminOnly.tsx'
+
+// 페이지 import 예정
 import MyPage from '@/pages/profile/MyPage.tsx'
 import UserPage from '@/pages/user/UserPage.tsx'
 import AdminPage from '@/pages/admin/AdminPage.tsx'
@@ -23,7 +25,6 @@ import OAuthSuccessPage from '@/pages/auth/OAuthSuccessPage'
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null
-// 페이지 import 예정
 
 export default function AppRouter() {
    return (
