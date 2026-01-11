@@ -45,9 +45,10 @@ export interface InputProps {
       variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'modal-close' | 'local-login' | 'kakao' | 'google'
       size?: 'sm' | 'md' | 'lg'
    }
+   matched?: boolean
 }
 
-export const Input: React.FC<InputProps> = ({ type = 'text', placeholder, value = '', onChange, onBlur, disabled = false, required = false, className = '', id, name, state, showPasswordToggle = false, min, max, theme = 'dark', rightButton }) => {
+export const Input: React.FC<InputProps> = ({ type = 'text', placeholder, value = '', onChange, onBlur, disabled = false, required = false, className = '', id, name, state, showPasswordToggle = false, min, max, theme = 'dark', rightButton, matched }) => {
    const [showPassword, setShowPassword] = useState(false)
    const [inputValue, setInputValue] = useState(value)
 
@@ -63,7 +64,7 @@ export const Input: React.FC<InputProps> = ({ type = 'text', placeholder, value 
 
    const inputType = type === 'password' && showPassword ? 'text' : type
 
-   const inputClasses = ['moovy-input', state && `moovy-input--${state}`, theme === 'light' && 'light-theme', className].filter(Boolean).join(' ')
+   const inputClasses = ['moovy-input', state && `moovy-input--${state}`, theme === 'light' && 'light-theme', className, !matched && '--warning'].filter(Boolean).join(' ')
 
    const inputElement = <input type={inputType} className={inputClasses} placeholder={placeholder} value={inputValue} onChange={handleChange} onBlur={onBlur} disabled={disabled} required={required} id={id} name={name} min={min} max={max} />
 

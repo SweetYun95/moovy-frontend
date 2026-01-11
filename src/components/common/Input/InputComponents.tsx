@@ -47,9 +47,10 @@ export interface PasswordCheckInputProps extends Omit<InputProps, 'type' | 'plac
    value?: string
    onChange?: (value: string) => void
    id?: string
+   matched?: boolean
 }
 
-export const PasswordCheckInput: React.FC<PasswordCheckInputProps> = ({ value = '', onChange, id = 'password-check', ...props }) => {
+export const PasswordCheckInput: React.FC<PasswordCheckInputProps> = ({ value = '', onChange, id = 'password-check', matched, ...props }) => {
    return <Input type="password" placeholder="비밀번호를 다시 입력하세요" value={value} onChange={onChange} showPasswordToggle={true} id={id} {...props} />
 }
 

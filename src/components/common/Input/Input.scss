@@ -6,221 +6,218 @@
 
 // 기본 입력 필드
 .moovy-input {
-  @include input-base;
-  height: $spacing-6; // 56px
-  width: 100%;
-  padding: $spacing-2 $spacing-3; // 16px 24px
-  font-size: $body-normal-size;
-  line-height: $body-normal-line-height;
-  border: 1px solid $white;
-  background-color: rgba($white, 0.1);
-  border-radius: $border-radius;
-  color: $white;
-  font-family: $font-family-base;
-  transition: $transition-base;
-  
-  // 입력 상태
-  &--success { 
-    border-color: $success-color; 
-  }
-  
-  &--warning { 
-    border-color: $warning-color; 
-  }
-  
-  &--error { 
-    border-color: $danger-color; 
-  }
-  
-  // 읽기 전용
-  &--readonly {
-    background-color: $black1;
-    border-color: $gray1;
-    cursor: default;
-    
-    &:focus {
-      border-color: $gray1;
-      box-shadow: none;
-    }
-  }
-  
-  // 라이트 테마
-  &.light-theme {
-    height: 36px;
-    border: 1px solid $gray4;
-    background-color: $white;
-    color: $gray1;
-    border-radius: $border-radius-lg;
-    padding: $spacing-2 $spacing-3;
-    font-size: $body-small-size;
-    line-height: $body-small-line-height;
-    font-family: $font-family-base;
-    cursor: pointer;
-    transition: all 0.15s 
-ease-in-out;
-    
-    &:focus {
-      border-color: $primary-color;
-      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
-    }
-    
-    &--success {
+   @include input-base;
+   height: $spacing-6; // 56px
+   width: 100%;
+   padding: $spacing-2 $spacing-3; // 16px 24px
+   font-size: $body-normal-size;
+   line-height: $body-normal-line-height;
+   border: 1px solid $white;
+   background-color: rgba($white, 0.1);
+   border-radius: $border-radius;
+   color: $white;
+   font-family: $font-family-base;
+   transition: $transition-base;
+
+   // 입력 상태
+   &--success {
       border-color: $success-color;
-    }
-    
-    &--warning {
+   }
+
+   &--warning {
       border-color: $warning-color;
-    }
-    
-    &--error {
+   }
+
+   &--error {
       border-color: $danger-color;
-    }
-  }
-  
-  // 자동완성 스타일 제거
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus,
-  &:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px rgba($white, 0.1) inset;
-    -webkit-text-fill-color: $white;
-    background-color: rgba($white, 0.1);
-    background-image: none;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-  
-  // 라이트 테마 자동완성
-  &.light-theme:-webkit-autofill,
-  &.light-theme:-webkit-autofill:hover,
-  &.light-theme:-webkit-autofill:focus,
-  &.light-theme:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px $white inset;
-    -webkit-text-fill-color: $black1;
-    background-color: $white;
-  }
+   }
+
+   // 읽기 전용
+   &--readonly {
+      background-color: $black1;
+      border-color: $gray1;
+      cursor: default;
+
+      &:focus {
+         border-color: $gray1;
+         box-shadow: none;
+      }
+   }
+
+   // 라이트 테마
+   &.light-theme {
+      height: 36px;
+      border: 1px solid $gray4;
+      background-color: $white;
+      color: $gray1;
+      border-radius: $border-radius-lg;
+      padding: $spacing-2 $spacing-3;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+
+      &:focus {
+         border-color: $primary-color;
+         box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+
+      &--success {
+         border-color: $success-color;
+      }
+
+      &--warning {
+         border-color: $warning-color;
+      }
+
+      &--error {
+         border-color: $danger-color;
+      }
+   }
+
+   // 자동완성 스타일 제거
+   &:-webkit-autofill,
+   &:-webkit-autofill:hover,
+   &:-webkit-autofill:focus,
+   &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px rgba($white, 0.1) inset;
+      -webkit-text-fill-color: $white;
+      background-color: rgba($white, 0.1);
+      background-image: none;
+      transition: background-color 5000s ease-in-out 0s;
+   }
+
+   // 라이트 테마 자동완성
+   &.light-theme:-webkit-autofill,
+   &.light-theme:-webkit-autofill:hover,
+   &.light-theme:-webkit-autofill:focus,
+   &.light-theme:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px $white inset;
+      -webkit-text-fill-color: $black1;
+      background-color: $white;
+   }
 }
 
 // 입력 래퍼 (아이콘용)
 .moovy-input-wrapper {
-  position: relative;
-  display: inline-block;
-  @include form-width;
-  
-  .moovy-input {
-    padding-right: $spacing-6; // 아이콘 공간 확보
-  }
-  
-  &.light-theme {
-    .moovy-input {
-      border: 1px solid $gray3;
-      background-color: $white;
-      color: $black1;
-      
-      &:focus {
-        border-color: $primary-color;
-        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+   position: relative;
+   display: inline-block;
+   @include form-width;
+
+   .moovy-input {
+      padding-right: $spacing-6; // 아이콘 공간 확보
+   }
+
+   &.light-theme {
+      .moovy-input {
+         border: 1px solid $gray3;
+         background-color: $white;
+         color: $black1;
+
+         &:focus {
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+         }
       }
-    }
-  }
-  
-  .password-toggle-icon {
-    position: absolute;
-    right: $spacing-2;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: $primary-color;
-    font-size: $icon-md;
-    cursor: pointer;
-    padding: $spacing-1;
-    transition: $transition-base;
-    z-index: 2;
-    
-    &:hover {
-      color: $white;
-    }
-    
-    &:focus {
-      outline: none;
+   }
+
+   .password-toggle-icon {
+      position: absolute;
+      right: $spacing-2;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
       color: $primary-color;
-    }
-  }
-  
-  &.light-theme .password-toggle-icon {
-    color: $gray1;
-    
-    &:hover {
-      color: $primary-color;
-    }
-  }
-  
-  .right-button-wrapper {
-    position: absolute;
-    right: $spacing-2;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-  }
+      font-size: $icon-md;
+      cursor: pointer;
+      padding: $spacing-1;
+      transition: $transition-base;
+      z-index: 2;
+
+      &:hover {
+         color: $white;
+      }
+
+      &:focus {
+         outline: none;
+         color: $primary-color;
+      }
+   }
+
+   &.light-theme .password-toggle-icon {
+      color: $gray1;
+
+      &:hover {
+         color: $primary-color;
+      }
+   }
+
+   .right-button-wrapper {
+      position: absolute;
+      right: $spacing-2;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+   }
 }
 
 // 텍스트 영역
 .moovy-textarea {
-  @include input-base;
-  width: 100%;
-  min-height: $spacing-9; // 96px
-  padding: $spacing-2 $spacing-3; // 16px 24px
-  font-size: $body-normal-size;
-  line-height: $body-normal-line-height;
-  resize: vertical;
-  margin-bottom: 0;
-  
-  // 텍스트 영역 상태
-  &--success { 
-    border-color: $success-color; 
-  }
-  
-  &--warning { 
-    border-color: $warning-color; 
-  }
-  
-  &--error { 
-    border-color: $danger-color; 
-  }
-  
-  // 읽기 전용
-  &--readonly {
-    background-color: $black1;
-    border-color: $gray1;
-    cursor: default;
-    resize: none;
-    
-    &:focus {
+   @include input-base;
+   width: 100%;
+   min-height: $spacing-9; // 96px
+   padding: $spacing-2 $spacing-3; // 16px 24px
+   font-size: $body-normal-size;
+   line-height: $body-normal-line-height;
+   resize: vertical;
+   margin-bottom: 0;
+
+   // 텍스트 영역 상태
+   &--success {
+      border-color: $success-color;
+   }
+
+   &--warning {
+      border-color: $warning-color;
+   }
+
+   &--error {
+      border-color: $danger-color;
+   }
+
+   // 읽기 전용
+   &--readonly {
+      background-color: $black1;
       border-color: $gray1;
-      box-shadow: none;
-    }
-  }
+      cursor: default;
+      resize: none;
+
+      &:focus {
+         border-color: $gray1;
+         box-shadow: none;
+      }
+   }
 }
 
 // 텍스트 영역 래퍼
 .moovy-textarea-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  
-  .textarea-counter {
-    display: block;
-    text-align: right;
-    font-size: $body-small-size;
-    color: $gray3;
-    margin-top: $spacing-1;
-  }
+   position: relative;
+   display: inline-block;
+   width: 100%;
+
+   .textarea-counter {
+      display: block;
+      text-align: right;
+      font-size: $body-small-size;
+      color: $gray3;
+      margin-top: $spacing-1;
+   }
 }
 
 // 전체 너비 클래스
 .textarea-full-width {
-  max-width: none;
-  width: 100%;
+   max-width: none;
+   width: 100%;
 }
-
-
