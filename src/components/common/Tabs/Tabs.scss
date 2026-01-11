@@ -3,7 +3,7 @@
 
 .tabs {
   width: 100%;
-  
+  padding: 0 $spacing-2;
   &__list {
     display: flex;
     position: relative;
@@ -33,13 +33,14 @@
   &--underline {
     .tabs__list {
       display: flex;
+      justify-content: flex-start; // 가운데 정렬 (기본)
     }
     
     .tabs__tab {
       padding: $spacing-2 $spacing-3; // 16px 24px
-      color: $gray4;
+      color: $gray3;
       width: 120px;
-      text-align: center;
+      text-align: center; // 가운데 정렬
       
       &::after {
         content: '';
@@ -53,11 +54,11 @@
       }
       
       &:hover:not(&--disabled):not(&--active) {
-        color: $white;
+        color: $gray1;
       }
       
       &--active {
-        color: $white;
+        color: $gray1;
         font-weight: $font-weight-bold;
         
         &::after {
@@ -67,16 +68,50 @@
     }
   }
   
+  // 관리자 페이지용 스타일
+  &.tabs--admin {
+    &.tabs--underline {
+      .tabs__list {
+        justify-content: flex-start; // 왼쪽 정렬
+      }
+      
+      .tabs__tab {
+        &:hover:not(&--disabled):not(&--active) {
+          color: $gray1;
+        }
+        
+        &--active {
+          color: $gray1;
+        }
+      }
+    }
+    
+    &.tabs--button {
+      .tabs__list {
+        justify-content: flex-start; // 왼쪽 정렬
+      }
+      
+      .tabs__tab {
+        color: $gray1;
+        
+        &:hover:not(&--disabled):not(&--active) {
+          color: $gray1;
+        }
+      }
+    }
+  }
+  
   // 버튼 스타일
   &--button {
     .tabs__list {
       gap: $spacing-1; // 8px
+      justify-content: center; // 가운데 정렬 (기본)
     }
     
     .tabs__tab {
       padding: $spacing-1 $spacing-3; // 8px 24px
       border-radius: $border-radius; // 8px
-      border: 1px solid $gray3;
+      border: 4px solid $gray3;
       color: $white;
       background-color: transparent;
       
@@ -117,12 +152,13 @@
     &--underline {
       .tabs__list {
         width: 100%;
+        justify-content: center;
       }
       
       .tabs__tab {
         padding: $spacing-1 $spacing-2; // 8px 16px
         flex: 1; 
-        width: auto;
+        width: 100%;
       }
     }
     

@@ -8,9 +8,15 @@ import Bell from "../../assets/Bell.svg";
 
 interface HeaderProps {
   content: "dashboard" | "user" | "topic" | "inquiry" | "report";
+  onToggleSidebar?: () => void;
+  onToggleHistory?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ content }) => {
+const Header: React.FC<HeaderProps> = ({
+  content,
+  onToggleSidebar,
+  onToggleHistory,
+}) => {
   let title = "";
   switch (content) {
     case "dashboard":
@@ -30,17 +36,41 @@ const Header: React.FC<HeaderProps> = ({ content }) => {
       break;
   }
 
+  const handleSidebarToggle = (e: React.MouseEvent<HTMLImageElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleSidebar?.();
+  };
+
+  const handleHistoryToggle = (e: React.MouseEvent<HTMLImageElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleHistory?.();
+  };
+
   return (
     <header className="header">
       <div className="header-left">
-        <img src={SideBar} alt="sidebar icon" />
+        <img
+          src={SideBar}
+          alt="sidebar icon"
+          onClick={handleSidebarToggle}
+          style={{ cursor: "pointer" }}
+          className="header-sidebar-icon"
+        />
         <p>{title}</p>
       </div>
       <div className="header-right">
         <div className="icons">
           <img src={Clockwise} alt="Clockwise icon" />
           <img src={Bell} alt="Bell icon" />
-          <img src={SideBar} alt="Sidebar icon" />
+          <img
+            src={SideBar}
+            alt="History panel icon"
+            onClick={handleHistoryToggle}
+            style={{ cursor: "pointer" }}
+            className="header-history-icon"
+          />
         </div>
       </div>
     </header>

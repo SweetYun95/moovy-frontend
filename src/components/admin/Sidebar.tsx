@@ -14,12 +14,35 @@ import Settings from "../../assets/settings.svg";
 interface SidebarProps {
   content: "dashboard" | "user" | "topic" | "inquiry" | "report";
   changeActiveSideBar: (e: React.MouseEvent<HTMLLIElement>) => void;
+  className?: string;
+  onClose?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ content, changeActiveSideBar }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  content,
+  changeActiveSideBar,
+  className,
+  onClose,
+}) => {
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    // 사이드바 내부 클릭 시 이벤트 전파 방지 (오버레이 닫기 방지)
+    e.stopPropagation();
+  };
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${className || ""}`} onClick={handleClick}>
+      <div className="sidebar-header">
       <img src={Moovy} alt="logo" />
+        {onClose && (
+          <button
+            className="sidebar-back-button"
+            onClick={onClose}
+            aria-label="뒤로가기"
+          >
+            ←
+          </button>
+        )}
+      </div>
       <nav className="sidebar--tap">
         <ul>
           <li

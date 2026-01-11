@@ -21,7 +21,8 @@ adminHttp.interceptors.request.use(
     const url = (config.url || "").toString();
 
     // 관리자 로그인 전용 API는 토큰 생략
-    const skipAuthHeader = /\/auth\/login-admin\b/i.test(url);
+    const skipAuthHeader = /\/auth\/(signin|signup)\b/i.test(url)
+
 
     if (token && !skipAuthHeader) {
       (config.headers as any).Authorization = `Bearer ${token}`;

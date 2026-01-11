@@ -45,12 +45,15 @@ export interface ReportModalProps {
       reportCount: number;
       avatar?: string;
     };
+    sanctionLevel?: string;
+    notification?: string;
   };
   targetUser?: {
     name: string;
     reportCount: number;
   };
   onReportCountClick?: (data: Array<{ id: number; reason: string }>) => void;
+  readOnly?: boolean;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
@@ -62,13 +65,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
   reportData,
   targetUser,
   onReportCountClick,
+  readOnly = false,
 }) => {
   const defaultTitle = mode === 'admin' ? '신고관리' : '신고하기';
   
   const [category, setCategory] = useState(reportData?.category || '');
   const [content, setContent] = useState(reportData?.content || '');
-  const [sanctionLevel, setSanctionLevel] = useState('');
-  const [notification, setNotification] = useState('');
+  const [sanctionLevel, setSanctionLevel] = useState(reportData?.sanctionLevel || '');
+  const [notification, setNotification] = useState(reportData?.notification || '');
 
   const handleSubmit = () => {
     if (!category) {
@@ -128,11 +132,16 @@ const ReportModal: React.FC<ReportModalProps> = ({
           <div className="col-12">
             <div className="report-modal__field">
               <label className="form-label">분류</label>
+              {readOnly && mode === 'admin' ? (
+                <div className="report-modal__readonly-value">{category || "분류 없음"}</div>
+              ) : (
               <ReportSelector
                 value={category}
                 onChange={setCategory}
                 placeholder="분류"
+                  disabled={readOnly}
               />
+              )}
             </div>
           </div>
         </div>
@@ -143,6 +152,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <div className="col-12">
                 <div className="report-modal__field">
                   <label className="form-label">신고내용을 적어주세요.</label>
+                  {readOnly ? (
+                    <div className="report-modal__readonly-value">{content || "신고 내용이 없습니다."}</div>
+                  ) : (
                   <Textarea
                     placeholder="신고내용을 적어주세요."
                     value={content}
@@ -151,6 +163,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                     maxLength={10000}
                     showCounter
                   />
+                  )}
                 </div>
               </div>
             </div>
@@ -159,11 +172,15 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <div className="col-12">
                 <div className="report-modal__field">
                   <label className="form-label">제재강도</label>
+                  {readOnly ? (
+                    <div className="report-modal__readonly-value">{sanctionLevel || "제재 없음"}</div>
+                  ) : (
                   <SanctionLevelSelector
                     value={sanctionLevel}
                     onChange={setSanctionLevel}
                     placeholder="제제단계"
                   />
+                  )}
                 </div>
               </div>
             </div>
@@ -172,11 +189,15 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <div className="col-12">
                 <div className="report-modal__field">
                   <label className="form-label">신고한 유저 알림 메시지</label>
+                  {readOnly ? (
+                    <div className="report-modal__readonly-value">{notification || "알림 없음"}</div>
+                  ) : (
                   <ReportStatusSelector
                     value={notification}
                     onChange={setNotification}
                     placeholder="처리 상태"
                   />
+                  )}
                 </div>
               </div>
             </div>
@@ -186,9 +207,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <div className="row">
           <div className="col-12">
             <div className="report-modal__actions">
+              {!readOnly && (
               <ActionButton action="confirm" onClick={handleSubmit}>
                 확인
               </ActionButton>
+              )}
             </div>
           </div>
         </div>

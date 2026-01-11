@@ -11,7 +11,8 @@ export const PATHS = {
    userHome: '/user',
    adminHome: '/admin',
    mypage: '/my',
-   favorites: '/my/favorites', // ✅ 보관함(찜) 경로 추가
+   mypagePath: '/mypage',
+   favorites: '/my/favorites',
 
    movies: '/movies',
    movieDetail: (id: string | number) => `/movies/${id}`,
@@ -26,19 +27,29 @@ export const PATHS = {
    reviewWrite: '/reviews/new',
    reviewDetail: (id: string | number) => `/reviews/${id}`,
 
-   profile: '/profile',
+  profile: '/profile',
+   
+  // admin 관련
    admin: '/admin',
+   adminDashboard: '/admin/dashboard',
+   adminUsers: '/admin/users',
+   adminTopics: '/admin/topics',
+   adminInquiries: '/admin/inquiries',
+   adminReports: '/admin/reports',
 } as const
 
 // 상수 키 타입 (오타 방지용)
-export type PathKey = keyof typeof PATHS
+export type PathKey = keyof typeof PATHS;
 
 // 로그인 후 “원래 가려던 곳”으로 보내기 위해 state.from 안전 추출
-export function extractReturnPath(state: unknown, fallback: string = PATHS.userHome): string {
-   try {
-      const s = state as { from?: { pathname?: string } }
-      return s?.from?.pathname || fallback
-   } catch {
-      return fallback
-   }
+export function extractReturnPath(
+  state: unknown,
+  fallback: string = PATHS.userHome,
+): string {
+  try {
+    const s = state as { from?: { pathname?: string } };
+    return s?.from?.pathname || fallback;
+  } catch {
+    return fallback;
+  }
 }
