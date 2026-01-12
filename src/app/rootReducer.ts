@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
    replies,
    rating,
    favorite,
-   like, // ✅ 여기
+   like, // ✅ 추가
    topics,
    content,
    popular,
