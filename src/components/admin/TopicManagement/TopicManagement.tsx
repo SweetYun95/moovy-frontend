@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Tabs } from '../../common/Tabs/Tabs';
 import { StandardPagination } from '../../common/Pagination';
 import { CommentManagementFilter } from '../AdminFilter';
 import { Button } from '../../common/Button/ButtonStyle';
 import { ActionButton } from '../../common/Button/Button';
 import { TopicManagementModalComponent } from '../../modals/TopicManagementModal/TopicManagementModal';
+import { getAdminTopics } from '../../../services/api/topicApi';
 import './TopicManagement.scss';
 import Avatar from '../../../assets/Avatar.png';
 import { Icon } from '@iconify/react';
@@ -16,7 +17,7 @@ interface Topic {
   start_at: string;
   end_at: string;
   views: number;
-  isAdminRecommended?: boolean; // 관리자가 직접 추가한 토픽 여부
+  isAdminRecommended?: boolean;
 }
 
 interface Comment {
@@ -38,90 +39,48 @@ const TopicManagement: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [expandedCommentId, setExpandedCommentId] = useState<number | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [allTopics, setAllTopics] = useState<Topic[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
-  // 전체 작품 목록 데이터
-  const allTopics: Topic[] = [
-    {
-      id: 1,
-      title: "다 이루어질 지니",
-      synopsis: "Meadow Lane Oakland",
-      start_at: "2025.10.01",
-      end_at: "2025.10.08",
-      views: 3420,
-      isAdminRecommended: true, // 관리자 추천
-    },
-    {
-      id: 2,
-      title: "아이언맨",
-      synopsis: "Bagwell Avenue Ocala",
-      start_at: "2025.10.01",
-      end_at: "2025.10.08",
-      views: 6737,
-    },
-    {
-      id: 3,
-      title: "대도시의 사랑법",
-      synopsis: "Nest Lane Olivette",
-      start_at: "2025.10.01",
-      end_at: "2025.10.08",
-      views: 9871,
-      isAdminRecommended: true, // 관리자 추천
-    },
-    {
-      id: 4,
-      title: "과거 작품 1",
-      synopsis: "Past Work 1",
-      start_at: "2024.01.01",
-      end_at: "2024.01.08",
-      views: 1234,
-    },
-    {
-      id: 5,
-      title: "과거 작품 2",
-      synopsis: "Past Work 2",
-      start_at: "2024.02.01",
-      end_at: "2024.02.08",
-      views: 5678,
-      isAdminRecommended: true, // 관리자 추천
-    },
-  ];
-
-  // 현재 날짜 기준으로 현재/과거 토픽 필터링
-  const filteredTopicsByMainTab = useMemo(() => {
-    const currentDate = new Date();
-    return allTopics.filter((topic) => {
-      const endDate = new Date(topic.end_at.replace(/\./g, '-'));
-      if (activeMainTab === 'current') {
-        // 현재 토픽: 종료일이 현재 날짜 이후
-        return endDate >= currentDate;
-      } else {
-        // 역대 토픽: 종료일이 현재 날짜 이전
-        return endDate < currentDate;
-      }
-    });
-  }, [activeMainTab]);
-
-  // 필터 탭에 따라 추가 필터링
-  const filteredTopics = useMemo(() => {
-    if (activeFilterTab === 'all') {
-      return filteredTopicsByMainTab;
-    } else if (activeFilterTab === 'popular') {
-      // 조회수 기준으로 정렬 (높은 순)
-      return [...filteredTopicsByMainTab].sort((a, b) => b.views - a.views);
-    } else if (activeFilterTab === 'showing') {
-      // 현재상영작: 시작일이 현재 날짜 이전이고 종료일이 현재 날짜 이후
-      const currentDate = new Date();
-      return filteredTopicsByMainTab.filter((topic) => {
-        const startDate = new Date(topic.start_at.replace(/\./g, '-'));
-        const endDate = new Date(topic.end_at.replace(/\./g, '-'));
-        return startDate <= currentDate && endDate >= currentDate;
+  const fetchTopics = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await getAdminTopics({
+        main: activeMainTab,
+        filter: activeFilterTab,
+        page: currentPage,
+        size: itemsPerPage,
+        sort: 'start_at',
+        order: 'DESC',
       });
-    } else if (activeFilterTab === 'recommended') {
-      // 관리자추천: 관리자가 직접 추가한 토픽
-      return filteredTopicsByMainTab.filter((topic) => topic.isAdminRecommended === true);
+
+      const topics: Topic[] = response.data.items.map((item) => ({
+        id: item.topic_id || 0,
+        title: item.video?.title || '',
+        synopsis: item.video?.synopsis || '',
+        start_at: item.start_at ? new Date(item.start_at).toISOString().split('T')[0].replace(/-/g, '.') : '',
+        end_at: item.end_at ? new Date(item.end_at).toISOString().split('T')[0].replace(/-/g, '.') : '',
+        views: item.video?.views || 0,
+        isAdminRecommended: item.is_admin_recommended || false,
+      }));
+
+      setAllTopics(topics);
+      setTotalItems(response.data.total);
+    } catch (error) {
+      console.error('토픽 조회 실패:', error);
+      setAllTopics([]);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
     }
-    return filteredTopicsByMainTab;
-  }, [filteredTopicsByMainTab, activeFilterTab]);
+  }, [activeMainTab, activeFilterTab, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    fetchTopics();
+  }, [fetchTopics]);
 
   // 코멘트 목록 데이터
   const comments: Comment[] = [
@@ -165,29 +124,59 @@ const TopicManagement: React.FC = () => {
     setExpandedCommentId(expandedCommentId === commentId ? null : commentId);
   };
 
-  const handleCreate = () => {
-    setIsCreateModalOpen(true);
+  const handleCreate = async () => {
+    if (activeFilterTab === 'recommended') {
+      setIsCreateModalOpen(true);
+      return;
+    }
+
+    if (activeFilterTab === 'popular' || activeFilterTab === 'showing') {
+      setIsCreateModalOpen(true);
+      return;
+    }
   };
 
   const handleCloseCreateModal = () => {
     setIsCreateModalOpen(false);
   };
 
+  const handleCreateSuccess = () => {
+    fetchTopics();
+    setSelectedTopic(null);
+    setExpandedCommentId(null);
+  };
+
   const handleEdit = () => {
-    // TODO: 토픽 수정 모달 열기
     console.log('토픽 수정', selectedTopic);
   };
 
-  const handleDelete = () => {
-    // TODO: 토픽 삭제 확인 모달 열기
-    console.log('토픽 삭제', selectedTopic);
+  const handleDelete = async () => {
+    if (!selectedTopic) return;
+
+    if (!confirm(`"${selectedTopic.title}" 토픽을 삭제하시겠습니까?\n\n삭제 후 자동으로 보충됩니다.`)) {
+      return;
+    }
+
+    try {
+      const { deleteAdminTopic } = await import('../../../services/api/topicApi');
+      await deleteAdminTopic(selectedTopic.id);
+      
+      setTimeout(() => {
+        fetchTopics();
+        setSelectedTopic(null);
+        setExpandedCommentId(null);
+      }, 500);
+    } catch (error) {
+      console.error('토픽 삭제 실패:', error);
+      alert('토픽 삭제에 실패했습니다.');
+    }
   };
 
   const topicColumns = ["작품 제목", "작품 정보", "시작일", "종료일", "조회수"];
   const commentColumns = ["유저", "제목", "댓글", "작성일", "평점", "상태"];
 
-  // 만들기 버튼 표시 조건: 현재 토픽 탭이고 관리자 추천 필터일 때
-  const showCreateButton = activeMainTab === 'current' && activeFilterTab === 'recommended';
+  const showCreateButton = activeMainTab === 'current' && 
+    (activeFilterTab === 'recommended' || activeFilterTab === 'popular' || activeFilterTab === 'showing');
 
   return (
     <div className="topic-management">
@@ -202,8 +191,9 @@ const TopicManagement: React.FC = () => {
             activeTab={activeMainTab}
             onTabChange={(tabId) => {
               setActiveMainTab(tabId as 'current' | 'past');
-              setSelectedTopic(null); // 탭 변경 시 선택된 토픽 초기화
-              setExpandedCommentId(null); // 탭 변경 시 확장된 코멘트 초기화
+              setSelectedTopic(null);
+              setExpandedCommentId(null);
+              setCurrentPage(1);
             }}
             variant="underline"
             admin={true}
@@ -220,7 +210,10 @@ const TopicManagement: React.FC = () => {
               { id: 'recommended', label: '관리자추천' },
             ]}
             activeTab={activeFilterTab}
-            onTabChange={(tabId) => setActiveFilterTab(tabId as 'all' | 'popular' | 'showing' | 'recommended')}
+            onTabChange={(tabId) => {
+              setActiveFilterTab(tabId as 'all' | 'popular' | 'showing' | 'recommended');
+              setCurrentPage(1);
+            }}
             variant="button"
             admin={true}
           />
@@ -229,15 +222,13 @@ const TopicManagement: React.FC = () => {
         {/* 작품 목록 테이블 */}
         <div className="topic-management__works-section">
 
-          <div className="table topic-table" ref={(el) => {
-            // 너비 동기화를 위한 ref는 나중에 추가
-          }}>
+          <div className="table topic-table">
             <ul className="header">
               {topicColumns.map((column) => (
                 <li key={column}>{column}</li>
               ))}
             </ul>
-            {filteredTopics.map((topic) => (
+            {allTopics.map((topic) => (
               <ul
                 key={topic.id}
                 className={`data ${selectedTopic?.id === topic.id ? 'selected' : ''}`}
@@ -290,7 +281,13 @@ const TopicManagement: React.FC = () => {
             </div>
           </div>
 
-          <StandardPagination className="mt-4" />
+          <StandardPagination 
+            className="mt-4" 
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
         </div>
 
         {/* 코멘트 목록 테이블 */}
@@ -358,17 +355,27 @@ const TopicManagement: React.FC = () => {
               ))}
             </div>
 
-            <StandardPagination className="mt-4" />
+            <StandardPagination 
+            className="mt-4" 
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
           </div>
         )}
       </div>
 
       {/* 토픽 생성 모달 */}
-      <TopicManagementModalComponent
-        isOpen={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
-        mode="create"
-      />
+      {isCreateModalOpen && (
+        <TopicManagementModalComponent
+          isOpen={isCreateModalOpen}
+          onClose={handleCloseCreateModal}
+          mode="create"
+          sourceType={activeFilterTab === 'all' ? 'recommended' : activeFilterTab}
+          onSuccess={handleCreateSuccess}
+        />
+      )}
     </div>
   );
 };

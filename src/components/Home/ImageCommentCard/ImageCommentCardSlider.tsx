@@ -36,23 +36,32 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { contents } = useAppSelector((s) => s.content);
-  const comments = useAppSelector((s) => {
-    // 모든 토픽의 코멘트를 합쳐서 반환
+  const commentsByTopicId = useAppSelector((s) => s.comments.byTopicId);
+  
+  // comments 배열을 useMemo로 메모이제이션 (무한 루프 방지)
+  const comments = useMemo(() => {
     const allComments: any[] = [];
-    Object.values(s.comments.byTopicId).forEach((bucket) => {
+    Object.values(commentsByTopicId).forEach((bucket) => {
       allComments.push(...bucket.items);
     });
     return allComments;
-  });
+  }, [commentsByTopicId]);
+  
   const loading = useAppSelector((s) => {
-    // 모든 토픽의 코멘트 로딩 상태 (하나라도 로딩 중이면 true)
     return Object.values(s.comments.byTopicId).some((bucket) => bucket.loading);
   });
+  const hasError = useAppSelector((s) => {
+    return Object.values(s.comments.byTopicId).some((bucket) => bucket.error !== null);
+  });
+  
+  // 한 번만 실행되도록 useRef 사용
+  const hasTriedFetch = useRef(false);
   
   console.log('ImageCommentCardSlider - Redux state:', {
     commentsLength: comments.length,
     comments: comments,
     loading: loading,
+    hasError: hasError,
     contentsLength: contents.length,
   });
 
@@ -85,17 +94,19 @@ export const ImageCommentCardSlider: React.FC<ImageCommentCardSliderProps> = ({
     return result;
   }, [comments]);
 
-  // 초기 데이터 로드
+  // 초기 데이터 로드 (한 번만 실행)
   useEffect(() => {
-    console.log('ImageCommentCardSlider - useEffect - comments.length:', comments.length, 'loading:', loading);
-    if (comments.length === 0 && !loading) {
+    console.log('ImageCommentCardSlider - useEffect - comments.length:', comments.length, 'loading:', loading, 'hasError:', hasError, 'hasTriedFetch:', hasTriedFetch.current);
+    // 한 번만 시도하거나, 에러가 없고 로딩 중이 아닐 때만 API 호출
+    if (!hasTriedFetch.current && comments.length === 0 && !loading && !hasError) {
       console.log('ImageCommentCardSlider - fetching comments...');
+      hasTriedFetch.current = true;
       dispatch(fetchCommentsThunk());
     }
     if (contents.length === 0) {
       dispatch(fetchContentsThunk());
     }
-  }, [dispatch, comments.length, contents.length, loading]);
+  }, [dispatch, comments.length, contents.length, loading, hasError]);
   const swiperRef = useRef<any>(null);
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);

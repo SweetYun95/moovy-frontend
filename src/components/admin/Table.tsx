@@ -27,6 +27,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const [selectedData, setSelectedData] = React.useState<any>(null)
    const [totalItems, setTotalItems] = React.useState(0)
    const [appliedUserFilters, setAppliedUserFilters] = React.useState<Record<string, any>>({})
+   const [inquiryPage, setInquiryPage] = React.useState(1)
+   const [reportPage, setReportPage] = React.useState(1)
 
    // user 목록: 서버 페이징 연동
    React.useEffect(() => {
@@ -161,6 +163,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                                  onRowClick={handleRowClick}
                                  onStatusClick={handleStatusClick}
                                  onDataCountChange={setTotalItems}
+                                 currentPage={inquiryPage}
+                                 onPageChange={setInquiryPage}
                               />
                            )}
                            {content === 'report' && (
@@ -170,6 +174,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                                  onRowClick={handleRowClick}
                                  onStatusClick={handleStatusClick}
                                  onDataCountChange={setTotalItems}
+                                 currentPage={reportPage}
+                                 onPageChange={setReportPage}
                               />
                            )}
                         </div>
@@ -177,14 +183,30 @@ const Table: React.FC<TableProps> = ({ content }) => {
                         <StandardPagination
                            className="mt-4"
                            totalItems={content === 'user' ? adminUsersList.total : totalItems}
-                           itemsPerPage={content === 'user' ? adminUsersList.size : undefined}
-                           currentPage={content === 'user' ? adminUsersList.page : undefined}
+                           itemsPerPage={content === 'user' ? adminUsersList.size : 20}
+                           currentPage={
+                              content === 'user' 
+                                 ? adminUsersList.page 
+                                 : content === 'inquiry' 
+                                    ? inquiryPage 
+                                    : content === 'report' 
+                                       ? reportPage 
+                                       : undefined
+                           }
                            onPageChange={
                               content === 'user'
                                  ? (nextPage) => {
                                       dispatch(getAdminUsers({ page: nextPage, size: adminUsersList.size }))
                                    }
-                                 : undefined
+                                 : content === 'inquiry'
+                                    ? (nextPage) => {
+                                         setInquiryPage(nextPage)
+                                      }
+                                    : content === 'report'
+                                       ? (nextPage) => {
+                                            setReportPage(nextPage)
+                                         }
+                                       : undefined
                            }
                         />
                      </>

@@ -35,6 +35,9 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
   const popularMovies = useAppSelector(selectPopularItems);
   const popularLoading = useAppSelector(selectPopularLoading);
   const popularError = useAppSelector(selectPopularError);
+  
+  // 한 번만 실행되도록 useRef 사용
+  const hasTriedFetchPopular = useRef(false);
 
   // 인기 영화 데이터를 MovieCard 형태로 변환
   const transformedPopularMovies = useMemo(() => {
@@ -71,14 +74,19 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
     }
   }, [sections, onSectionsChange]);
 
+  // 한 번만 실행되도록 useRef 사용
+  const hasTriedFetchContents = useRef(false);
+  
   // 초기 데이터 로드: 인기 영화 우선, 없으면 contents
   useEffect(() => {
-    // 인기 영화가 없고, 로딩 중이 아니고, 에러가 없을 때만 가져오기 (무한 루프 방지)
-    if (popularMovies.length === 0 && !popularLoading && !popularError) {
+    // 한 번만 시도하거나, 에러가 없고 로딩 중이 아닐 때만 API 호출 (무한 루프 방지)
+    if (!hasTriedFetchPopular.current && popularMovies.length === 0 && !popularLoading && !popularError) {
+      hasTriedFetchPopular.current = true;
       dispatch(fetchTodayPopularMoviesThunk());
     }
-    // 인기 영화도 없고 contents도 없고 로딩 중이 아니면 contents 가져오기
-    if (popularMovies.length === 0 && contents.length === 0 && !contentsLoading && !popularLoading) {
+    // 인기 영화도 없고 contents도 없고 로딩 중이 아니면 contents 가져오기 (한 번만)
+    if (!hasTriedFetchContents.current && popularMovies.length === 0 && contents.length === 0 && !contentsLoading && !popularLoading) {
+      hasTriedFetchContents.current = true;
       dispatch(fetchContentsThunk());
     }
   }, [dispatch, popularMovies.length, popularLoading, popularError, contents.length, contentsLoading]);
