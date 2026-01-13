@@ -1,90 +1,56 @@
 // moovy-frontend/src/components/admin/AdminTable/InquiryTable.tsx
 
-import React from "react";
+import React from 'react'
 
-import Avatar from "../../../assets/Avatar.png";
+import Avatar from '../../../assets/Avatar.png'
+import type { AdminInquirySummary } from '../../../services/api/admin/adminInquiryApi'
 
 interface TableProps {
-  content: string;
-  columns: string[];
-  onRowClick?: (data: any) => void;
-  onStatusClick?: (e: React.MouseEvent, data: any) => void;
-  onDataCountChange?: (count: number) => void;
+   content: string
+   columns: string[]
+   rows: AdminInquirySummary[]
+   onRowClick?: (data: any) => void
+   onStatusClick?: (e: React.MouseEvent, data: any) => void
+}
+function ymdFromAny(value?: string) {
+   if (!value) return ''
+   return String(value).slice(0, 10)
 }
 
-const InquiryTable: React.FC<TableProps> = ({ content, columns, onRowClick, onStatusClick, onDataCountChange }) => {
-  const tableData = [
-    {
-      qna_id: 1,
-      user_id: "Kate Morrison",
-      category: "부적절한 언어 사용",
-      content: "부적절한 언어를 사용한 사용자에 대한 문의입니다.",
-      created_at: "2025-10-28",
-      state: "미완료",
-    },
-    {
-      qna_id: 2,
-      user_id: "Kate Morrison",
-      category: "광고글",
-      content: "광고글에 대한 문의입니다.",
-      created_at: "2025-10-28",
-      state: "답변완료",
-    },
-    {
-      qna_id: 3,
-      user_id: "Kate Morrison",
-      category: "도배글",
-      content: "도배글에 대한 신고입니다.",
-      created_at: "2025-10-28",
-      state: "신고",
-    },
-    {
-      qna_id: 4,
-      user_id: "Kate Morrison",
-      category: "부적절한 언어 사용",
-      content: "부적절한 언어 사용에 대한 문의입니다.",
-      created_at: "2025-10-28",
-      state: "답변완료",
-    },
-    {
-      qna_id: 5,
-      user_id: "Kate Morrison",
-      category: "광고글",
-      content: "광고글에 대한 문의입니다.",
-      created_at: "2025-10-28",
-      state: "미완료",
-    },
-  ];
+function toUiState(state: AdminInquirySummary['state']): '미완료' | '답변완료' {
+   return state === 'FULFILLED' ? '답변완료' : '미완료'
+}
 
-  React.useEffect(() => {
-    onDataCountChange?.(tableData.length);
-  }, [onDataCountChange]);
+const InquiryTable: React.FC<TableProps> = ({ content, columns, rows, onRowClick, onStatusClick }) => {
+   const safeRows = rows || []
 
-  return (
-    <>
-      {tableData.map((data) => (
-        <ul 
-          className="data" 
-          key={data.qna_id}
-          onClick={() => onRowClick?.(data)}
-          style={{ cursor: "pointer" }}
-        >
-          <li>
-            <img src={Avatar} /> {data.user_id}
-          </li>
-          <li>{data.category}</li>
-          <li>{data.created_at}</li>
-          <li 
-            className={`status status--${data.state === "답변완료" ? "completed" : data.state === "미완료" ? "pending" : "reported"}`}
-            onClick={(e) => onStatusClick?.(e, data)}
-            style={{ cursor: "pointer" }}
-          >
-            {data.state}
-          </li>
-        </ul>
-      ))}
-    </>
-  );
-};
+   return (
+      <>
+         {safeRows.map((data) => {
+            const userId = data.user_id
+            const nickname = data.User?.name || '-'
+            const title = data.q_title || ''
+            const created = ymdFromAny(data.created_at || data.createdAt)
+            const uiState = toUiState(data.state)
+            const answered = uiState === '답변완료' ? ymdFromAny((data as any).updated_at || (data as any).updatedAt) : '-'
 
-export default InquiryTable;
+            return (
+               <ul className="data" key={data.qna_id} onClick={() => onRowClick?.(data)} style={{ cursor: 'pointer' }}>
+                  <li>{userId}</li>
+                  <li>
+                     <img src={Avatar} alt="avatar" /> {nickname}
+                  </li>
+                  <li>{title}</li>
+                  <li>{created}</li>
+                  <li>{answered}</li>
+                  <li className={`status status--${uiState === '답변완료' ? 'completed' : 'pending'}`} onClick={(e) => onStatusClick?.(e, data)} style={{ cursor: 'pointer' }}>
+                     {uiState}
+                  </li>
+               </ul>
+            )
+         })}
+      </>
+   )
+}
+
+export default InquiryTable

@@ -1,93 +1,56 @@
 // moovy-frontend/src/components/admin/AdminTable/ReportTable.tsx
-//모달 연결 로직은 Table.tsx의 handleRowClick 함수에 추가하면됩니다.
-import React from "react";
+import React from 'react'
 
-import Avatar from "../../../assets/Avatar.png";
-
-interface TableProps {
-  content: string;
-  columns: string[];
-  onRowClick?: (data: any) => void;
-  onStatusClick?: (e: React.MouseEvent, data: any) => void;
-  onDataCountChange?: (count: number) => void;
+export type AdminReportRow = {
+   type?: 'comment' | 'reply'
+   report_id: number
+   reporter_user_id?: number
+   reporter_name: string
+   reported_user_id?: number
+   reported_name: string
+   post_type: '코멘트' | '댓글'
+   post_id: number
+   post_content: string
+   category: '스팸' | '스포일러' | '도배' | '부적절한 언행' | '기타'
+   created_at: string
+   state: '대기중' | '처리완료'
+   report_content: string
 }
 
-const ReportTable: React.FC<TableProps> = ({ content, columns, onRowClick, onStatusClick, onDataCountChange }) => {
-  const tableData = [
-    {
-      report_id: 1,
-      reporter_id: "Natali Craig",
-      reported_id: "Kate Morrison",
-      category: "부적절한 언어 사용",
-      content: "부적절한 언어를 사용한 사용자에 대한 신고입니다.",
-      created_at: "2025-10-08",
-      state: "확인하기",
-    },
-    {
-      report_id: 2,
-      reporter_id: "Natali Craig",
-      reported_id: "Kate Morrison",
-      category: "광고글",
-      content: "광고글에 대한 신고입니다.",
-      created_at: "2025-10-08",
-      state: "처리완료",
-      sanctionLevel: "경고",
-      notification: "처리 완료되었습니다.",
-    },
-    {
-      report_id: 3,
-      reporter_id: "Natali Craig",
-      reported_id: "Kate Morrison",
-      category: "도배글",
-      content: "도배글에 대한 신고입니다.",
-      created_at: "2025-10-08",
-      state: "확인하기",
-    },
-    {
-      report_id: 4,
-      reporter_id: "Natali Craig",
-      reported_id: "Kate Morrison",
-      category: "부적절한 언어 사용",
-      content: "부적절한 언어 사용에 대한 신고입니다.",
-      created_at: "2025-10-08",
-      state: "처리완료",
-      sanctionLevel: "경고",
-      notification: "처리 완료되었습니다.",
-    },
-  ];
+interface TableProps {
+   content: string
+   columns: string[]
+   rows: AdminReportRow[]
+   onRowClick?: (data: AdminReportRow) => void
+   onStatusClick?: (e: React.MouseEvent, data: AdminReportRow) => void
+   onPostClick?: (e: React.MouseEvent, data: AdminReportRow) => void
+}
 
-  React.useEffect(() => {
-    onDataCountChange?.(tableData.length);
-  }, [onDataCountChange]);
+const ReportTable: React.FC<TableProps> = ({ rows, onRowClick, onStatusClick, onPostClick }) => {
+   const safeRows = rows || []
 
-  return (
-    <>
-      {tableData.map((data) => (
-        <ul 
-          className="data" 
-          key={data.report_id}
-          onClick={() => onRowClick?.(data)}
-          style={{ cursor: "pointer" }}
-        >
-          <li>
-            <img src={Avatar} /> {data.reported_id}
-          </li>
-          <li>
-            <img src={Avatar} /> {data.reporter_id}
-          </li>
-          <li>{data.category}</li>
-          <li>{data.created_at}</li>
-          <li 
-            className={`status status--${data.state === "처리완료" ? "completed" : "pending"} ${data.state === "확인하기" ? "status--clickable" : ""}`}
-            onClick={(e) => onStatusClick?.(e, data)}
-            style={{ cursor: "pointer" }}
-          >
-            {data.state}
-          </li>
-        </ul>
-      ))}
-    </>
-  );
-};
+   return (
+      <>
+         {safeRows.map((data) => (
+            <ul className="data" key={data.report_id} onClick={() => onRowClick?.(data)} style={{ cursor: 'pointer' }}>
+               <li>
+                  {data.reporter_name}
+               </li>
+               <li>
+                  {data.reported_name}
+               </li>
+               <li onClick={(e) => onPostClick?.(e, data)} style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+                  {data.post_type}/{data.post_id}
+               </li>
+               <li>{data.category}</li>
+               <li>{data.created_at}</li>
+               <li className={`status status--${data.state === '처리완료' ? 'completed' : 'pending'}`} onClick={(e) => onStatusClick?.(e, data)} style={{ cursor: 'pointer' }}>
+                  {data.state}
+               </li>
+            </ul>
+         ))}
+      </>
+   )
+}
 
-export default ReportTable;
+export default ReportTable

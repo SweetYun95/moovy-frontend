@@ -15,6 +15,8 @@ import popular from '@/features/popular/popularSlice'
 
 // admin
 import adminUsers from '../features/admin/usersSlice'
+import adminInquiry from '../features/admin/adminInquirySlice'
+import adminReports from '../features/admin/adminReportsSlice'
 import adminDashboard from '../features/admin/dashboardSlice'
 import adminTopics from '../features/admin/topicsSlice'
 
@@ -34,6 +36,8 @@ const rootReducer = combineReducers({
 
    // admin
    adminUsers,
+   adminInquiry,
+   adminReports,
    adminDashboard,
    adminTopics,
 })
