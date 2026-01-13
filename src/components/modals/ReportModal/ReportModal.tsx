@@ -1,42 +1,30 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { Icon } from '@iconify/react'
+
 import Modal from '../Modal/Modal'
+import ConfirmModal from '../ConfirmModal/ConfirmModal'
 import { ActionButton } from '../../common/Button/Button'
-import { ReportSelector } from '../../common/Selector/SelectorComponents'
-import { Selector } from '../../common/Selector/SelectorStyle'
 import { Input } from '../../common/Input/InputStyle'
 import { Textarea } from '../../common/Textarea/TextareaStyle'
+import { ReportSelector } from '../../common/Selector/SelectorComponents'
+import { Selector } from '../../common/Selector/SelectorStyle'
+import { UserProfileCard } from '../../common/UserProfileCard/UserProfileCard'
+
 import { createReport, type ReportCategory } from '../../../services/api/commentApi'
 import { getAdminUserProfile } from '../../../services/api/userApi'
+
 import './ReportModal.scss'
-import { Icon } from '@iconify/react'
-import ConfirmModal from '../ConfirmModal/ConfirmModal'
-
-/**
- 사용법
-
-// 일반 사용자 모드
-<ReportModalComponent 
-  isOpen={isOpen} 
-  onClose={onClose} 
-  targetType="user"
-  targetId={123}
-  targetUser={{ name: '홍길동', reportCount: 5 }}
-/>
-
-// 관리자 모드
-<ReportModal 
-  isOpen={isOpen} 
-  onClose={onClose}
-  mode="admin"
-  reportData={{ category: 'spam', content: '신고 내용', targetUser: { name: '홍길동', reportCount: 5, avatar: 'url' } }}
-  onSubmit={(data) => console.log(data)}
-/>
- */
 
 export interface ReportModalProps {
    isOpen: boolean
    onClose: () => void
-   onSubmit: (data: { category: string; content?: string; sanctionAction?: '조치 안함' | '제재'; sanctionDays?: number; sanctionReason?: string }) => void
+   onSubmit: (data: {
+      category: string
+      content?: string
+      sanctionAction?: '조치 안함' | '제재'
+      sanctionDays?: number
+      sanctionReason?: string
+   }) => void
    title?: string
    mode?: 'user' | 'admin'
    reportData?: {
@@ -59,11 +47,23 @@ export interface ReportModalProps {
    readOnly?: boolean
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, title, mode = 'user', reportData, targetUser, onReportCountClick, readOnly = false }) => {
+const ReportModal: React.FC<ReportModalProps> = ({
+   isOpen,
+   onClose,
+   onSubmit,
+   title,
+   mode = 'user',
+   reportData,
+   targetUser,
+   onReportCountClick,
+   readOnly = false,
+}) => {
    const defaultTitle = mode === 'admin' ? '신고관리' : '신고하기'
 
    const [category, setCategory] = useState(reportData?.category || '')
    const [content, setContent] = useState(reportData?.content || '')
+
+   // admin-only
    const [sanctionAction, setSanctionAction] = useState<'' | '조치 안함' | '제재'>((reportData?.sanctionAction as any) || '')
    const [sanctionDays, setSanctionDays] = useState<number | ''>((reportData?.sanctionDays as any) ?? '')
    const [sanctionReason, setSanctionReason] = useState(reportData?.sanctionReason || '')
@@ -99,6 +99,16 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
       return '해당 신고 조치 안함. 정말 진행하시겠습니까?'
    }, [mode, sanctionAction, sanctionDays, sanctionReason, displayTargetUser?.name])
 
+   const handleClose = () => {
+      setCategory('')
+      setContent('')
+      setSanctionAction('')
+      setSanctionDays('')
+      setSanctionReason('')
+      setIsConfirmOpen(false)
+      onClose()
+   }
+
    const handleSubmit = () => {
       if (!category) return
 
@@ -111,7 +121,10 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
          return
       }
 
-      onSubmit({ category })
+      onSubmit({
+         category,
+         content: content?.trim() ? content : undefined,
+      })
       handleClose()
    }
 
@@ -127,16 +140,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
       })
       setIsConfirmOpen(false)
       handleClose()
-   }
-
-   const handleClose = () => {
-      setCategory('')
-      setContent('')
-      setSanctionAction('')
-      setSanctionDays('')
-      setSanctionReason('')
-      setIsConfirmOpen(false)
-      onClose()
    }
 
    return (
@@ -156,12 +159,12 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
             {displayTargetUser && (
                <div className="row">
                   <div className="col-12">
-                     <div className="report-modal__field">
-                        <label className="form-label">대상 유저</label>
-                        <div className="report-modal__readonly-value">
-                           {displayTargetUser.name} (신고 누적 {displayTargetUser.reportCount})
-                        </div>
-                     </div>
+                     <UserProfileCard
+                        name={displayTargetUser.name}
+                        reportCount={displayTargetUser.reportCount}
+                        avatar={(reportData as any)?.targetUser?.avatar}
+                        onReportCountClick={onReportCountClick}
+                     />
                   </div>
                </div>
             )}
@@ -170,7 +173,31 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
                <div className="col-12">
                   <div className="report-modal__field">
                      <label className="form-label">분류</label>
-                     {mode === 'admin' ? <div className="report-modal__readonly-value">{category || '분류 없음'}</div> : <ReportSelector value={category} onChange={setCategory} placeholder="분류" />}
+                     {mode === 'admin' ? (
+                        <div className="report-modal__readonly-value">{category || '분류 없음'}</div>
+                     ) : (
+                        <ReportSelector value={category} onChange={setCategory} placeholder="분류" />
+                     )}
+                  </div>
+               </div>
+            </div>
+
+            <div className="row">
+               <div className="col-12">
+                  <div className="report-modal__field">
+                     <label className="form-label">신고내용을 적어주세요.</label>
+                     {mode === 'admin' || readOnly ? (
+                        <div className="report-modal__readonly-value">{content || '신고 내용이 없습니다.'}</div>
+                     ) : (
+                        <Textarea
+                           placeholder="신고내용을 적어주세요."
+                           value={content}
+                           onChange={setContent}
+                           rows={6}
+                           maxLength={10000}
+                           showCounter
+                        />
+                     )}
                   </div>
                </div>
             </div>
@@ -180,7 +207,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
                   <div className="row">
                      <div className="col-12">
                         <div className="report-modal__field">
-                           <label className="form-label">제재강도</label>
+                           <label className="form-label">조치</label>
                            {readOnly ? (
                               <div className="report-modal__readonly-value">{sanctionAction || '조치 안함'}</div>
                            ) : (
@@ -225,7 +252,14 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
                            <div className="col-12">
                               <div className="report-modal__field">
                                  <label className="form-label">제재 사유</label>
-                                 <Textarea placeholder="제재 사유를 입력하세요." value={sanctionReason} onChange={setSanctionReason} rows={2} maxLength={200} showCounter />
+                                 <Textarea
+                                    placeholder="제재 사유를 입력하세요."
+                                    value={sanctionReason}
+                                    onChange={setSanctionReason}
+                                    rows={2}
+                                    maxLength={200}
+                                    showCounter
+                                 />
                               </div>
                            </div>
                         </div>
@@ -247,7 +281,14 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, ti
             </div>
          </div>
 
-         {mode === 'admin' && <ConfirmModal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)} message={confirmMessage} onConfirm={handleConfirmSubmit} />}
+         {mode === 'admin' && (
+            <ConfirmModal
+               isOpen={isConfirmOpen}
+               onClose={() => setIsConfirmOpen(false)}
+               message={confirmMessage}
+               onConfirm={handleConfirmSubmit}
+            />
+         )}
       </Modal>
    )
 }
@@ -291,10 +332,10 @@ export function ReportModalComponent({
             }
          }
       }
-      load()
+      void load()
    }, [isOpen, targetType, targetUserId, targetUser])
 
-   const handleSubmit = async (data: { category: string; content?: string; sanctionLevel?: string; notification?: string }) => {
+   const handleSubmit = async (data: { category: string; content?: string }) => {
       if (!targetType || !targetId) {
          console.error('신고 대상이 지정되지 않았습니다.')
          return
@@ -304,18 +345,27 @@ export function ReportModalComponent({
       try {
          await createReport({
             category: data.category as ReportCategory,
-            targetType: targetType,
-            targetId: targetId,
+            targetType,
+            targetId,
+            reason: data.content?.trim() || undefined,
          })
          alert('신고가 접수되었습니다.')
          onClose()
       } catch (error) {
          console.error('신고 제출 실패:', error)
-         // TODO: 에러 토스트 메시지 표시
       } finally {
          setIsLoading(false)
       }
    }
 
-   return <ReportModal isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit} targetUser={targetUser || fetchedUser} onReportCountClick={onReportCountClick} />
+   return (
+      <ReportModal
+         isOpen={isOpen}
+         onClose={onClose}
+         onSubmit={handleSubmit}
+         targetUser={targetUser || fetchedUser}
+         onReportCountClick={onReportCountClick}
+         readOnly={isLoading}
+      />
+   )
 }

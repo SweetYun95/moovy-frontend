@@ -1,0 +1,280 @@
+@import "../../styles/globals.scss";
+
+.calendar-section {
+  .calendar-wrapper {
+    background-color: $white;
+    border-radius: $border-radius-lg;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-3;
+    padding: $spacing-4 $spacing-4 $spacing-3;
+    margin-bottom: 0;
+
+    .calendar-nav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: $primary-color;
+      padding: $spacing-1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .calendar-month-year {
+      font-size: $heading-5-size;
+      font-weight: $font-weight-bold;
+      color: $primary-color;
+    }
+  }
+
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 0 $spacing-4;
+    margin-bottom: $spacing-2;
+  }
+
+  .calendar-weekday {
+    text-align: center;
+    font-size: $body-small-size;
+    font-weight: $font-weight-bold;
+    color: $black1;
+    padding: $spacing-1;
+    min-width: 0;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    width: 100%;
+    padding: 0 $spacing-4 $spacing-4;
+    flex: 1;
+  }
+
+  .calendar-day {
+    position: relative;
+    border-radius: $border-radius-sm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: $spacing-1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &.active {
+      border: 2px solid $secondary-color;
+      box-shadow: 0 0 0 2px rgba($secondary-color, 0.2);
+    }
+
+
+    .calendar-day-number {
+      font-size: $body-small-size;
+      color: $black1;
+      font-weight: $font-weight-normal;
+      align-self: flex-start;
+      z-index: 1;
+      position: relative;
+    }
+
+    .calendar-day-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calendar-day-poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $border-radius-sm;
+    }
+
+    .calendar-day-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background-color: $secondary-color;
+      color: $white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: $font-weight-bold;
+      z-index: 2;
+    }
+  }
+
+  // 오른쪽 포스터 영역
+  .content-posters-wrapper {
+    position: relative;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .content-posters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: $spacing-3;
+    height: 100%;
+    min-height: 100%;
+    position: relative;
+  }
+
+  .content-poster-empty-message {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .content-posters-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid $gray4;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s ease;
+    color: $primary-color;
+
+    &:hover:not(:disabled) {
+      background-color: $white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    &--prev {
+      left: $spacing-2;
+    }
+
+    &--next {
+      right: $spacing-2;
+    }
+  }
+  
+  // 캘린더와 포스터 컬럼 높이 맞추기
+  .col-12.col-md-6 {
+    display: flex;
+    flex-direction: column;
+    
+    &:first-child {
+      .calendar-wrapper {
+        min-height: 100%;
+      }
+    }
+  }
+
+  .content-poster-item {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  .content-poster-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: $border-radius;
+  }
+
+  .content-poster-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: $spacing-2;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    border-radius: 0 0 $border-radius $border-radius;
+    
+    .content-poster-title {
+      font-size: $body-small-size;
+      font-weight: $font-weight-bold;
+      color: $white;
+      margin-bottom: $spacing-1;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .content-poster-meta {
+      font-size: $body-small-size;
+      color: $gray4;
+      margin: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+  }
+
+  .content-poster-item:hover {
+    .content-poster-info {
+      .content-poster-meta {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .content-poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background-color: $gray5;
+    border-radius: $border-radius;
+  }
+}
+

@@ -396,15 +396,19 @@ li {
       border-top: 1px solid $gray5;
    }
 
-   ul li {
-      min-width: 0;
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      padding: $spacing-1 $spacing-2;
-      min-height: auto;
-      overflow: hidden;
-      white-space: nowrap;
+    ul li {
+         min-width: 0;
+         display: flex;
+         justify-content: start;
+         align-items: center;
+         padding: $spacing-1 $spacing-2;
+         min-height: auto;
+         overflow: hidden;
+         white-space: nowrap;
+
+         > * {
+             overflow: hidden;
+             white-space: nowrap;
 
       > * {
          overflow: hidden;

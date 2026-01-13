@@ -183,7 +183,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const columns = React.useMemo(() => {
       switch (content) {
          case 'user':
-            return ['', '유저', '닉네임', '이메일', '코멘트', '댓글', '경고']
+            return ['유저', '닉네임', '이메일', '코멘트', '댓글', '관리자 경고']
          case 'topic':
             return ['작품 제목', '작품 정보', '시작일', '종료일', '조회수']
          case 'inquiry':
@@ -242,38 +242,31 @@ const Table: React.FC<TableProps> = ({ content }) => {
                               ))}
                            </ul>
 
-                           {content === 'user' && <UserTable columns={columns} content={content} filters={appliedUserFilters} users={adminUsersList.items} onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))} />}
-                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} rows={adminInquiryList.items} onRowClick={handleRowClick} onStatusClick={handleStatusClick} />}
+                           {content === 'user' && (
+                              <UserTable
+                                 columns={columns}
+                                 content={content}
+                                 filters={appliedUserFilters}
+                                 users={adminUsersList.items}
+                                 onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))}
+                              />
+                           )}
+                           {content === 'inquiry' && (
+                              <InquiryTable
+                                 columns={columns}
+                                 content={content}
+                                 rows={adminInquiryList.items}
+                                 onRowClick={handleRowClick}
+                                 onStatusClick={handleStatusClick}
+                              />
+                           )}
                            {content === 'report' && (
                               <ReportTable
                                  columns={columns}
                                  content={content}
                                  rows={reportRows}
-                                 onRowClick={(row) => {
-                                    setSelectedData(row)
-                                    const type = row?.type
-                                    const reportId = row?.report_id
-                                    if (type && typeof reportId === 'number') {
-                                       setSelectedReportKey(`${type}:${reportId}`)
-                                       dispatch(getAdminReportDetail({ type, report_id: reportId }))
-                                    } else {
-                                       setSelectedReportKey(null)
-                                    }
-                                    setIsReportModalOpen(true)
-                                 }}
-                                 onStatusClick={(e, row) => {
-                                    e.stopPropagation()
-                                    setSelectedData(row)
-                                    const type = row?.type
-                                    const reportId = row?.report_id
-                                    if (type && typeof reportId === 'number') {
-                                       setSelectedReportKey(`${type}:${reportId}`)
-                                       dispatch(getAdminReportDetail({ type, report_id: reportId }))
-                                    } else {
-                                       setSelectedReportKey(null)
-                                    }
-                                    setIsReportModalOpen(true)
-                                 }}
+                                 onRowClick={handleRowClick}
+                                 onStatusClick={handleStatusClick}
                                  onPostClick={(e, row) => {
                                     e.stopPropagation()
                                     setSelectedReportedPost({ type: row.post_type, id: row.post_id, content: row.post_content })
