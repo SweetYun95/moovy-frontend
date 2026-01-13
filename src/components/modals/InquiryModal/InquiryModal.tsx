@@ -63,11 +63,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose, onSubmit, 
                <div className="col-12">
                   <div className="inquiry-modal__field">
                      <label className="form-label">문의 제목</label>
-                     {mode === 'admin' ? (
-                        <div className="inquiry-modal__readonly-value">{inquiryData?.title}</div>
-                     ) : (
-                        <Input type="text" placeholder="문의 제목을 입력하세요." value={inquiryTitle} onChange={setInquiryTitle} theme="light" />
-                     )}
+                     {mode === 'admin' ? <div className="inquiry-modal__readonly-value">{inquiryData?.title}</div> : <Input type="text" placeholder="문의 제목을 입력하세요." value={inquiryTitle} onChange={setInquiryTitle} theme="light" />}
                   </div>
                </div>
             </div>
@@ -76,11 +72,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose, onSubmit, 
                <div className="col-12">
                   <div className="inquiry-modal__field">
                      <label className="form-label">문의 내용</label>
-                     {mode === 'admin' ? (
-                        <div className="inquiry-modal__readonly-value">{inquiryData?.content}</div>
-                     ) : (
-                        <Textarea placeholder="문의사항을 적어주세요." value={content} onChange={setContent} rows={8} maxLength={10000} showCounter />
-                     )}
+                     {mode === 'admin' ? <div className="inquiry-modal__readonly-value">{inquiryData?.content}</div> : <Textarea placeholder="문의사항을 적어주세요." value={content} onChange={setContent} rows={8} maxLength={10000} showCounter />}
                   </div>
                </div>
             </div>
@@ -102,11 +94,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose, onSubmit, 
                      <div className="col-12">
                         <div className="inquiry-modal__field">
                            <label className="form-label">답변 제목</label>
-                           {readOnly ? (
-                              <div className="inquiry-modal__readonly-value">{replyTitle || '답변 제목이 없습니다.'}</div>
-                           ) : (
-                              <Input type="text" placeholder="답변 제목을 입력하세요." value={replyTitle} onChange={setReplyTitle} theme="light" />
-                           )}
+                           {readOnly ? <div className="inquiry-modal__readonly-value">{replyTitle || '답변 제목이 없습니다.'}</div> : <Input type="text" placeholder="답변 제목을 입력하세요." value={replyTitle} onChange={setReplyTitle} theme="light" />}
                         </div>
                      </div>
                   </div>
@@ -115,11 +103,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose, onSubmit, 
                      <div className="col-12">
                         <div className="inquiry-modal__field">
                            <label className="form-label">답변 내용</label>
-                           {readOnly ? (
-                              <div className="inquiry-modal__readonly-value">{reply || '답변 내용이 없습니다.'}</div>
-                           ) : (
-                              <Textarea placeholder="답변내용을 적어주세요." value={reply} onChange={setReply} rows={8} maxLength={10000} showCounter />
-                           )}
+                           {readOnly ? <div className="inquiry-modal__readonly-value">{reply || '답변 내용이 없습니다.'}</div> : <Textarea placeholder="답변내용을 적어주세요." value={reply} onChange={setReply} rows={8} maxLength={10000} showCounter />}
                         </div>
                      </div>
                   </div>

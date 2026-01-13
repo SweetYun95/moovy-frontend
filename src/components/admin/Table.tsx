@@ -242,24 +242,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
                               ))}
                            </ul>
 
-                           {content === 'user' && (
-                              <UserTable
-                                 columns={columns}
-                                 content={content}
-                                 filters={appliedUserFilters}
-                                 users={adminUsersList.items}
-                                 onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))}
-                              />
-                           )}
-                           {content === 'inquiry' && (
-                              <InquiryTable
-                                 columns={columns}
-                                 content={content}
-                                 rows={adminInquiryList.items}
-                                 onRowClick={handleRowClick}
-                                 onStatusClick={handleStatusClick}
-                              />
-                           )}
+                           {content === 'user' && <UserTable columns={columns} content={content} filters={appliedUserFilters} users={adminUsersList.items} onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))} />}
+                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} rows={adminInquiryList.items} onRowClick={handleRowClick} onStatusClick={handleStatusClick} />}
                            {content === 'report' && (
                               <ReportTable
                                  columns={columns}

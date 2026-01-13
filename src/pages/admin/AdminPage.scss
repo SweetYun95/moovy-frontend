@@ -396,407 +396,408 @@ li {
       border-top: 1px solid $gray5;
    }
 
-    ul li {
-         min-width: 0;
-         display: flex;
-         justify-content: start;
-         align-items: center;
-         padding: $spacing-1 $spacing-2;
-         min-height: auto;
-         overflow: hidden;
-         white-space: nowrap;
-
-         > * {
-             overflow: hidden;
-             white-space: nowrap;
+   ul li {
+      min-width: 0;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      padding: $spacing-1 $spacing-2;
+      min-height: auto;
+      overflow: hidden;
+      white-space: nowrap;
 
       > * {
          overflow: hidden;
-         text-overflow: ellipsis;
          white-space: nowrap;
-         min-width: 0;
-      }
-
-      &:first-child {
-         overflow: visible;
-         min-width: 0;
 
          > * {
-            overflow: visible;
-            text-overflow: clip;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
             min-width: 0;
          }
 
+         &:first-child {
+            overflow: visible;
+            min-width: 0;
+
+            > * {
+               overflow: visible;
+               text-overflow: clip;
+               white-space: nowrap;
+               min-width: 0;
+            }
+
+            img {
+               max-width: 24px;
+               min-width: 24px;
+               width: 24px;
+               height: 24px;
+               object-fit: cover;
+            }
+         }
+
+         input[type='checkbox'] {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            flex-shrink: 0;
+            cursor: pointer;
+            margin: 0;
+         }
+
          img {
-            max-width: 24px;
-            min-width: 24px;
-            width: 24px;
-            height: 24px;
-            object-fit: cover;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            flex-shrink: 0;
+         }
+
+         &.status {
+            cursor: pointer;
+
+            &--completed {
+               color: $success-color;
+            }
+
+            &--pending {
+               color: $info-color;
+            }
+
+            &--reported {
+               color: $warning-color;
+            }
+
+            &--clickable {
+               text-decoration: underline;
+            }
          }
       }
 
-      input[type='checkbox'] {
-         overflow: visible;
-         text-overflow: clip;
-         white-space: normal;
-         flex-shrink: 0;
-         cursor: pointer;
-         margin: 0;
+      // inquiry-table 상태 색상
+      &.inquiry-table ul li.status {
+         &--completed {
+            color: $success-color;
+         }
+
+         &--pending {
+            color: $danger-color;
+         }
+
+         &--reported {
+            color: $warning-color;
+         }
       }
 
-      img {
-         overflow: visible;
-         text-overflow: clip;
-         white-space: normal;
-         flex-shrink: 0;
-      }
-
-      &.status {
-         cursor: pointer;
-
+      // report-table 상태 색상
+      &.report-table ul li.status {
          &--completed {
             color: $success-color;
          }
 
          &--pending {
             color: $info-color;
-         }
-
-         &--reported {
-            color: $warning-color;
-         }
-
-         &--clickable {
             text-decoration: underline;
          }
       }
    }
 
-   // inquiry-table 상태 색상
-   &.inquiry-table ul li.status {
-      &--completed {
-         color: $success-color;
-      }
-
-      &--pending {
-         color: $danger-color;
-      }
-
-      &--reported {
-         color: $warning-color;
-      }
-   }
-
-   // report-table 상태 색상
-   &.report-table ul li.status {
-      &--completed {
-         color: $success-color;
-      }
-
-      &--pending {
-         color: $info-color;
-         text-decoration: underline;
-      }
-   }
-}
-
-@media (max-width: 991px) {
-   .layout {
-      .main {
-         max-width: 100%;
-      }
-   }
-
-   .admin-content {
-      padding-top: $spacing-4;
-      gap: $spacing-3;
-      * {
-         max-width: 100%;
-      }
-
-      .table {
-         ul {
-            gap: $spacing-1;
-         }
-
-         ul li {
-            padding: $spacing-1;
-            font-size: $body-small-size;
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-
-            > * {
-               overflow: hidden;
-               text-overflow: ellipsis;
-               white-space: nowrap;
-               min-width: 0;
-            }
-
-            img {
-               overflow: visible;
-               text-overflow: clip;
-               white-space: normal;
-               flex-shrink: 0;
-            }
-         }
-      }
-   }
-}
-
-@media (max-width: 1024px) {
-   .layout {
-      .sidebar {
-         position: fixed;
-         left: 0;
-         top: 0;
-         height: 100vh;
-         max-width: 280px;
-         transform: translateX(-100%);
-         box-shadow: $box-shadow-md;
-         z-index: $z-index-modal;
-
-         &.visible {
-            transform: translateX(0);
-         }
-      }
-
-      .history-panel {
-         position: fixed;
-         right: 0;
-         top: 0;
-         height: 100vh;
-         max-width: 280px;
-         transform: translateX(100%);
-         box-shadow: $box-shadow-md;
-         z-index: $z-index-modal;
-
-         &.visible {
-            transform: translateX(0);
-         }
-      }
-
-      .main {
-         width: 100%;
-         margin: 0;
-      }
-   }
-
-   .layout-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: $z-index-modal-backdrop;
-      cursor: pointer;
-      transition:
-         opacity 0.3s ease,
-         visibility 0.3s ease;
-   }
-
-   .sidebar:not(.visible) {
-      @media (max-width: 1024px) {
-         display: none;
-      }
-   }
-
-   .history-panel {
-      @media (max-width: 1024px) {
-         display: none !important;
-      }
-   }
-
-   .sidebar .sidebar-back-button {
-      @media (max-width: 1024px) {
-         display: block;
-      }
-   }
-
-   .header {
-      padding: $spacing-2;
-      flex-wrap: wrap;
-      gap: $spacing-1;
-
-      p {
-         font-size: $body-normal-size;
-         padding: $spacing-1;
-      }
-   }
-
-   .header-left,
-   .header-right {
-      gap: $spacing-1;
-   }
-
-   .header-right .icons {
-      gap: $spacing-1;
-
-      img {
-         width: 20px;
-         height: 20px;
-      }
-   }
-
-   .admin-content {
-      padding: $spacing-3 $spacing-2;
-      gap: $spacing-2;
-      overflow-x: visible;
-
-      .table {
-         width: 100%;
-         height: auto;
-         min-height: auto;
-         overflow-x: visible; // 가로 스크롤 없음
-
-         ul {
-            gap: $spacing-1;
-         }
-
-         ul.header {
-            position: relative;
-            background-color: $white;
-            z-index: 1;
-            font-size: $body-small-size;
-         }
-
-         ul.data {
-            font-size: $body-small-size;
-         }
-
-         ul li {
-            padding: $spacing-1;
-            min-width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-
-            > * {
-               overflow: hidden;
-               text-overflow: ellipsis;
-               white-space: nowrap;
-               min-width: 0;
-            }
-
-            img {
-               overflow: visible;
-               text-overflow: clip;
-               white-space: normal;
-               flex-shrink: 0;
-            }
-         }
-      }
-   }
-
-   .sidebar {
-      padding: $spacing-3 $spacing-2;
-   }
-
-   .history-panel {
-      padding: $spacing-3 $spacing-2;
-   }
-}
-
-@media (max-width: 575px) {
-   .layout {
-      .sidebar {
-         max-width: 260px;
-      }
-
-      .history-panel {
-         max-width: 260px;
-      }
-   }
-
-   .header {
-      padding: $spacing-1 $spacing-2;
-
-      p {
-         font-size: $body-small-size;
-         padding: $spacing-1;
-      }
-   }
-
-   .header-right .icons img {
-      width: 18px;
-      height: 18px;
-   }
-
-   .admin-content {
-      padding: $spacing-2 $spacing-1;
-      gap: $spacing-2;
-      overflow-x: visible;
-
-      .table {
-         overflow-x: visible; // 가로 스크롤 없음
-
-         ul {
-            gap: $spacing-1;
-            font-size: $body-small-size;
-         }
-
-         ul.header {
-            font-size: $body-small-size;
-         }
-
-         ul.data {
-            font-size: $body-small-size;
-         }
-
-         ul li {
-            padding: $spacing-1;
-            min-width: 0;
-            overflow: hidden;
-            font-size: $body-small-size;
-            white-space: nowrap; // 1줄로 고정
-
-            > * {
-               overflow: hidden;
-               text-overflow: ellipsis;
-               white-space: nowrap;
-               min-width: 0;
-            }
-
-            img {
-               overflow: visible;
-               text-overflow: clip;
-               white-space: normal;
-               flex-shrink: 0;
-            }
-         }
-      }
-
-      .button {
-         margin-top: $spacing-3;
-
-         button {
+   @media (max-width: 991px) {
+      .layout {
+         .main {
             max-width: 100%;
-            width: 100%;
+         }
+      }
+
+      .admin-content {
+         padding-top: $spacing-4;
+         gap: $spacing-3;
+         * {
+            max-width: 100%;
+         }
+
+         .table {
+            ul {
+               gap: $spacing-1;
+            }
+
+            ul li {
+               padding: $spacing-1;
+               font-size: $body-small-size;
+               flex: 1;
+               min-width: 0;
+               overflow: hidden;
+
+               > * {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  min-width: 0;
+               }
+
+               img {
+                  overflow: visible;
+                  text-overflow: clip;
+                  white-space: normal;
+                  flex-shrink: 0;
+               }
+            }
          }
       }
    }
 
-   .sidebar {
-      padding: $spacing-2 $spacing-1;
+   @media (max-width: 1024px) {
+      .layout {
+         .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            max-width: 280px;
+            transform: translateX(-100%);
+            box-shadow: $box-shadow-md;
+            z-index: $z-index-modal;
 
-      .sidebar--tap {
-         margin-top: $spacing-3;
+            &.visible {
+               transform: translateX(0);
+            }
+         }
+
+         .history-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            max-width: 280px;
+            transform: translateX(100%);
+            box-shadow: $box-shadow-md;
+            z-index: $z-index-modal;
+
+            &.visible {
+               transform: translateX(0);
+            }
+         }
+
+         .main {
+            width: 100%;
+            margin: 0;
+         }
+      }
+
+      .layout-overlay {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background-color: rgba(0, 0, 0, 0.5);
+         z-index: $z-index-modal-backdrop;
+         cursor: pointer;
+         transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+      }
+
+      .sidebar:not(.visible) {
+         @media (max-width: 1024px) {
+            display: none;
+         }
+      }
+
+      .history-panel {
+         @media (max-width: 1024px) {
+            display: none !important;
+         }
+      }
+
+      .sidebar .sidebar-back-button {
+         @media (max-width: 1024px) {
+            display: block;
+         }
+      }
+
+      .header {
+         padding: $spacing-2;
+         flex-wrap: wrap;
+         gap: $spacing-1;
+
+         p {
+            font-size: $body-normal-size;
+            padding: $spacing-1;
+         }
+      }
+
+      .header-left,
+      .header-right {
+         gap: $spacing-1;
+      }
+
+      .header-right .icons {
+         gap: $spacing-1;
+
+         img {
+            width: 20px;
+            height: 20px;
+         }
+      }
+
+      .admin-content {
+         padding: $spacing-3 $spacing-2;
+         gap: $spacing-2;
+         overflow-x: visible;
+
+         .table {
+            width: 100%;
+            height: auto;
+            min-height: auto;
+            overflow-x: visible; // 가로 스크롤 없음
+
+            ul {
+               gap: $spacing-1;
+            }
+
+            ul.header {
+               position: relative;
+               background-color: $white;
+               z-index: 1;
+               font-size: $body-small-size;
+            }
+
+            ul.data {
+               font-size: $body-small-size;
+            }
+
+            ul li {
+               padding: $spacing-1;
+               min-width: 0;
+               overflow: hidden;
+               white-space: nowrap;
+
+               > * {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  min-width: 0;
+               }
+
+               img {
+                  overflow: visible;
+                  text-overflow: clip;
+                  white-space: normal;
+                  flex-shrink: 0;
+               }
+            }
+         }
+      }
+
+      .sidebar {
+         padding: $spacing-3 $spacing-2;
+      }
+
+      .history-panel {
+         padding: $spacing-3 $spacing-2;
+      }
+   }
+
+   @media (max-width: 575px) {
+      .layout {
+         .sidebar {
+            max-width: 260px;
+         }
+
+         .history-panel {
+            max-width: 260px;
+         }
+      }
+
+      .header {
+         padding: $spacing-1 $spacing-2;
+
+         p {
+            font-size: $body-small-size;
+            padding: $spacing-1;
+         }
+      }
+
+      .header-right .icons img {
+         width: 18px;
+         height: 18px;
+      }
+
+      .admin-content {
+         padding: $spacing-2 $spacing-1;
+         gap: $spacing-2;
+         overflow-x: visible;
+
+         .table {
+            overflow-x: visible; // 가로 스크롤 없음
+
+            ul {
+               gap: $spacing-1;
+               font-size: $body-small-size;
+            }
+
+            ul.header {
+               font-size: $body-small-size;
+            }
+
+            ul.data {
+               font-size: $body-small-size;
+            }
+
+            ul li {
+               padding: $spacing-1;
+               min-width: 0;
+               overflow: hidden;
+               font-size: $body-small-size;
+               white-space: nowrap; // 1줄로 고정
+
+               > * {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  min-width: 0;
+               }
+
+               img {
+                  overflow: visible;
+                  text-overflow: clip;
+                  white-space: normal;
+                  flex-shrink: 0;
+               }
+            }
+         }
+
+         .button {
+            margin-top: $spacing-3;
+
+            button {
+               max-width: 100%;
+               width: 100%;
+            }
+         }
+      }
+
+      .sidebar {
+         padding: $spacing-2 $spacing-1;
+
+         .sidebar--tap {
+            margin-top: $spacing-3;
+
+            ul li {
+               padding: $spacing-1;
+               font-size: $body-small-size;
+            }
+         }
+      }
+
+      .history-panel {
+         padding: $spacing-2 $spacing-1;
 
          ul li {
             padding: $spacing-1;
             font-size: $body-small-size;
          }
-      }
-   }
-
-   .history-panel {
-      padding: $spacing-2 $spacing-1;
-
-      ul li {
-         padding: $spacing-1;
-         font-size: $body-small-size;
       }
    }
 }

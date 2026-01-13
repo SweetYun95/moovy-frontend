@@ -18,13 +18,7 @@ import './ReportModal.scss'
 export interface ReportModalProps {
    isOpen: boolean
    onClose: () => void
-   onSubmit: (data: {
-      category: string
-      content?: string
-      sanctionAction?: '조치 안함' | '제재'
-      sanctionDays?: number
-      sanctionReason?: string
-   }) => void
+   onSubmit: (data: { category: string; content?: string; sanctionAction?: '조치 안함' | '제재'; sanctionDays?: number; sanctionReason?: string }) => void
    title?: string
    mode?: 'user' | 'admin'
    reportData?: {
@@ -47,17 +41,7 @@ export interface ReportModalProps {
    readOnly?: boolean
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({
-   isOpen,
-   onClose,
-   onSubmit,
-   title,
-   mode = 'user',
-   reportData,
-   targetUser,
-   onReportCountClick,
-   readOnly = false,
-}) => {
+const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSubmit, title, mode = 'user', reportData, targetUser, onReportCountClick, readOnly = false }) => {
    const defaultTitle = mode === 'admin' ? '신고관리' : '신고하기'
 
    const [category, setCategory] = useState(reportData?.category || '')
@@ -159,12 +143,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             {displayTargetUser && (
                <div className="row">
                   <div className="col-12">
-                     <UserProfileCard
-                        name={displayTargetUser.name}
-                        reportCount={displayTargetUser.reportCount}
-                        avatar={(reportData as any)?.targetUser?.avatar}
-                        onReportCountClick={onReportCountClick}
-                     />
+                     <UserProfileCard name={displayTargetUser.name} reportCount={displayTargetUser.reportCount} avatar={(reportData as any)?.targetUser?.avatar} onReportCountClick={onReportCountClick} />
                   </div>
                </div>
             )}
@@ -173,11 +152,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                <div className="col-12">
                   <div className="report-modal__field">
                      <label className="form-label">분류</label>
-                     {mode === 'admin' ? (
-                        <div className="report-modal__readonly-value">{category || '분류 없음'}</div>
-                     ) : (
-                        <ReportSelector value={category} onChange={setCategory} placeholder="분류" />
-                     )}
+                     {mode === 'admin' ? <div className="report-modal__readonly-value">{category || '분류 없음'}</div> : <ReportSelector value={category} onChange={setCategory} placeholder="분류" />}
                   </div>
                </div>
             </div>
@@ -186,18 +161,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                <div className="col-12">
                   <div className="report-modal__field">
                      <label className="form-label">신고내용을 적어주세요.</label>
-                     {mode === 'admin' || readOnly ? (
-                        <div className="report-modal__readonly-value">{content || '신고 내용이 없습니다.'}</div>
-                     ) : (
-                        <Textarea
-                           placeholder="신고내용을 적어주세요."
-                           value={content}
-                           onChange={setContent}
-                           rows={6}
-                           maxLength={10000}
-                           showCounter
-                        />
-                     )}
+                     {mode === 'admin' || readOnly ? <div className="report-modal__readonly-value">{content || '신고 내용이 없습니다.'}</div> : <Textarea placeholder="신고내용을 적어주세요." value={content} onChange={setContent} rows={6} maxLength={10000} showCounter />}
                   </div>
                </div>
             </div>
@@ -252,14 +216,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
                            <div className="col-12">
                               <div className="report-modal__field">
                                  <label className="form-label">제재 사유</label>
-                                 <Textarea
-                                    placeholder="제재 사유를 입력하세요."
-                                    value={sanctionReason}
-                                    onChange={setSanctionReason}
-                                    rows={2}
-                                    maxLength={200}
-                                    showCounter
-                                 />
+                                 <Textarea placeholder="제재 사유를 입력하세요." value={sanctionReason} onChange={setSanctionReason} rows={2} maxLength={200} showCounter />
                               </div>
                            </div>
                         </div>
@@ -281,14 +238,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             </div>
          </div>
 
-         {mode === 'admin' && (
-            <ConfirmModal
-               isOpen={isConfirmOpen}
-               onClose={() => setIsConfirmOpen(false)}
-               message={confirmMessage}
-               onConfirm={handleConfirmSubmit}
-            />
-         )}
+         {mode === 'admin' && <ConfirmModal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)} message={confirmMessage} onConfirm={handleConfirmSubmit} />}
       </Modal>
    )
 }
@@ -358,14 +308,5 @@ export function ReportModalComponent({
       }
    }
 
-   return (
-      <ReportModal
-         isOpen={isOpen}
-         onClose={onClose}
-         onSubmit={handleSubmit}
-         targetUser={targetUser || fetchedUser}
-         onReportCountClick={onReportCountClick}
-         readOnly={isLoading}
-      />
-   )
+   return <ReportModal isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit} targetUser={targetUser || fetchedUser} onReportCountClick={onReportCountClick} readOnly={isLoading} />
 }
