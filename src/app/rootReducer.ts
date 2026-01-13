@@ -19,6 +19,7 @@ import adminInquiry from '../features/admin/adminInquirySlice'
 import adminReports from '../features/admin/adminReportsSlice'
 import adminDashboard from '../features/admin/dashboardSlice'
 import adminTopics from '../features/admin/topicsSlice'
+import tmdb from '../features/admin/tmdbSlice' // ✅ 추가
 
 const rootReducer = combineReducers({
    auth,
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
    adminReports,
    adminDashboard,
    adminTopics,
+   tmdb, // ✅ 추가
 })
 
 export type RootReducer = ReturnType<typeof rootReducer>
