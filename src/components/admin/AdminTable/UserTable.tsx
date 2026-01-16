@@ -114,9 +114,6 @@ const UserTable: React.FC<TableProps> = ({ content, columns, filters, users, onR
          {filteredTableData.map((data) => (
             <ul className="data" key={data.user_id} style={{ cursor: 'pointer' }} onClick={() => openUserModal(data)}>
                <li>
-                  <input type="checkbox" onClick={(e) => e.stopPropagation()} />
-               </li>
-               <li>
                   <img src={toProfileImageUrl(data.profile_img) ?? Avatar} alt="user avatar" /> {data.user_id}
                </li>
                <li>{data.name}</li>

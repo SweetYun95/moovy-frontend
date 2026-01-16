@@ -33,12 +33,12 @@ export interface MessageResponse {
 // ─────────────────────────────
 
 export const signUpLocal = async (prop: { email: string; password: string; name: string }): Promise<ApiResponse<SignUpResponse>> => {
-   const result = await moovy.post('/api/auth/register', prop)
+   const result = await moovy.post('/auth/signup', prop)
    return result
 }
 
 export const loginLocal = async (prop: { email: string; password: string }): Promise<ApiResponse<loginResponse>> => {
-   const result = await moovy.post('/api/auth/login', prop)
+   const result = await moovy.post('/auth/login', prop)
    return result.data
 }
 
