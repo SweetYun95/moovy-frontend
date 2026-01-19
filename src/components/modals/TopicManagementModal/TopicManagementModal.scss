@@ -1,0 +1,194 @@
+@import '../../../styles/variables';
+
+.topic-management-modal {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  
+  @media (max-height: 730px) {
+    max-height: calc(100vh - 100px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
+  .row {
+    margin-bottom: $spacing-3;
+    margin-left: 0;  // 그리드 좌우 여백으로 인한 넘침 방지
+    margin-right: 0;
+  }
+
+  &__field {
+    margin-bottom: $spacing-3;
+    min-width: 0; // 내부 요소가 부모 너비를 넘지 않도록
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    // 이미지 업로드 크기 조정
+    .moovy-image-upload {
+      .image-upload-header {
+        all: unset;
+        .upload-label {
+          padding: 0;
+          background-color: transparent;
+          border: none;
+          
+          &:hover {
+            background-color: transparent;
+            border-color: transparent;
+          }
+        }
+      }
+
+      .image-preview-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: $spacing-1;
+        max-width: 100%;
+
+        .image-preview-item,
+        .image-placeholder {
+          aspect-ratio: 3/4;
+        }
+
+        .image-placeholder {
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-2;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-2;
+    
+    @media (max-height: 730px) {
+      margin-bottom: $spacing-3;
+      padding-bottom: 0;
+    }
+  }
+
+  &__search-section {
+    margin-bottom: $spacing-4;
+    padding-bottom: $spacing-4;
+    border-bottom: 1px solid $gray5;
+  }
+
+  &__search-wrapper {
+    position: relative;
+  }
+
+  &__search-loading {
+    position: absolute;
+    right: $spacing-2;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $gray3;
+    font-size: $body-small-size;
+  }
+
+  &__search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: $white;
+    border: 1px solid $gray5;
+    border-radius: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: $spacing-1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &__search-result-item {
+    display: flex;
+    align-items: center;
+    padding: $spacing-2;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $gray5;
+    }
+
+    & + & {
+      border-top: 1px solid $gray4;
+    }
+  }
+
+  &__search-poster {
+    width: 46px;
+    height: 69px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: $spacing-2;
+    flex-shrink: 0;
+  }
+
+  &__search-result-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__search-result-title {
+    font-size: $body-normal-size;
+    font-weight: $font-weight-bold;
+    color: $black1;
+    margin-bottom: $spacing-1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__search-result-date {
+    font-size: $body-small-size;
+    color: $gray3;
+  }
+
+  &__period-wrapper {
+    display: flex;
+    gap: $spacing-2;
+    align-items: center;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  &__snapshot-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid $gray5;
+    border-radius: 4px;
+    padding: $spacing-1;
+  }
+
+  &__snapshot-item {
+    display: flex;
+    align-items: center;
+    padding: $spacing-2;
+    border-radius: 4px;
+    margin-bottom: $spacing-1;
+    background-color: $gray5;
+    border: 1px solid $gray4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.snapshot-item--readonly {
+      cursor: default;
+      background-color: $gray5;
+    }
+  }
+}

@@ -1,0 +1,188 @@
+// Moovy 컴포넌트 라이브러리 - 버튼 컴포넌트 스타일
+// ================================================
+
+@import '../../../styles/_variables';
+@import '../../../styles/_mixins';
+
+// 기본 버튼 스타일
+.moovy-btn {
+  @include button-base;
+  @include form-width;
+  height: $spacing-6; // 56px
+  width: 100%;
+  padding: $spacing-2 $spacing-3; // 16px 24px
+  font-size: $body-large-size;
+  line-height: $body-large-line-height;
+  
+  // 버튼 변형
+  &--primary {
+    background-color: $primary-color;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      border: 1px solid $primary-color;
+      color: $primary-color;
+    }
+  }
+  
+  &--secondary {
+    background-color: $secondary-color;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      border: 1px solid $secondary-color;
+      color: $secondary-color;
+    }
+  }
+  
+  &--success {
+    background-color: $success-color;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      color: $success-color;
+    }
+  }
+  
+  &--danger {
+    background-color: $danger-color;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      color: $danger-color;
+    }
+  }
+  
+  &--warning {
+    background-color: $warning-color;
+    color: $black1;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      color: $warning-color;
+    }
+  }
+  
+  &--info {
+    background-color: $info-color;
+    color: $white;
+    border: 1px solid $info-color;
+    
+    &:hover:not(:disabled) {
+      background-color: $white;
+      border: 1px solid $info-color;
+      color: $info-color;
+    }
+  }
+  
+  &--modal-close {
+    background-color: transparent;
+    color: $white;
+    border: 1px solid rgba($white, 0.3);
+    
+    &:hover:not(:disabled) {
+      background-color: rgba($white, 0.1);
+      border-color: $white;
+    }
+  }
+  
+  &--local-login {
+    background-color: $primary-color;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+  
+  &--kakao {
+    background-color: $kakao-yellow;
+    color: $gray1;
+    
+    &:hover:not(:disabled) {
+      background-color: darken($kakao-yellow, 10%);
+    }
+  }
+  
+  &--google {
+    background-color: $google-white;
+    color: $gray1;
+    border: 1px solid rgba($google-white, 0.3);
+    
+    &:hover:not(:disabled) {
+      background-color: rgba($google-white, 0.9);
+    }
+  }
+  
+  &--menubar {
+    background-color: transparent;
+    color: $white;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba($white, 0.1);
+    }
+  }
+  
+  &--comment {
+    background-color: rgba($white, 0.1);
+    color: $white;
+    border: 1px solid rgba($white, 0.3);
+    
+    &:hover:not(:disabled) {
+      background-color: rgba($white, 0.2);
+    }
+  }
+  
+  // 버튼 크기
+  &--sm {
+    padding: 0;
+    width: 80px;
+    height: $spacing-5; // 40px
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+
+  }
+  
+  &--md {
+    max-width: 130px;
+    height: $spacing-6;  // 56px
+    font-size: $body-normal-size;
+    line-height: $body-normal-line-height;
+  }
+  
+  &--lg {
+    max-width: 400px;
+    height: $spacing-6; // 56px
+    padding: $spacing-3 $spacing-4; // 24px 32px
+    font-size: $body-large-size;
+    line-height: $body-large-line-height;
+  }
+}
+
+// 아이콘 스타일
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: $spacing-1;
+}
+
+// 추가 버튼 스타일
+.btn-status {
+  font-size: $body-small-size;
+}
+
+.btn-delete-wide {
+  max-width: 219px;
+  width: 100%;
+}
+
+.btn-comment-wide {
+  max-width: 302px;
+  width: 100%;
+}
+
+

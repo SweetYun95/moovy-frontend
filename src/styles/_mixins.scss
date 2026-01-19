@@ -1,0 +1,117 @@
+// Moovy 컴포넌트 라이브러리 - 믹스인
+// ======================================
+
+@import "_variables";
+
+// 공통 입력 필드 스타일
+@mixin input-base {
+  border: 1px solid $white;
+  background-color: rgba($white, 0.1);
+  border-radius: $border-radius;
+  color: $white;
+  font-family: $font-family-base;
+  transition: $transition-base;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    outline: 0;
+  }
+
+  &::placeholder {
+    color: $gray3;
+  }
+
+  &:disabled {
+    background-color: rgba($white, 0.05);
+    color: $gray4;
+    cursor: not-allowed;
+  }
+}
+
+// 공통 버튼 스타일
+@mixin button-base {
+  border: 0;
+  border-radius: $border-radius;
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: $transition-base;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// 공통 모달 컨테이너 스타일
+@mixin modal-container-base {
+  background-color: $black3;
+  border-radius: $border-radius-lg;
+  max-height: 97vh;
+  overflow: visible;
+  position: relative;
+  animation: modalFadeIn 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  height: fit-content;
+  padding: $spacing-3;
+}
+
+// 공통 카드 스타일
+@mixin card-base {
+  background-color: $black2;
+  border: 1px solid $gray1;
+  border-radius: $border-radius-lg;
+  padding: $spacing-3;
+  box-shadow: none;
+}
+
+// 공통 텍스트 스타일
+@mixin text-base($size: $body-normal-size, $weight: $font-weight-normal) {
+  font-size: $size;
+  font-weight: $weight;
+  font-family: $font-family-base;
+  color: $white;
+  margin: 0;
+}
+
+// 공통 플렉스 센터
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 공통 플렉스 스페이스 베트윈
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// 공통 폼 너비
+@mixin form-width {
+  width: 100%;
+  max-width: 100%;
+}
+
+// 반응형 숨김/표시
+@mixin responsive-hide($breakpoint: 768px) {
+  @media (max-width: $breakpoint) {
+    display: none;
+  }
+}
+
+@mixin responsive-show($breakpoint: 768px) {
+  display: none;
+
+  @media (max-width: $breakpoint) {
+    display: block;
+  }
+}

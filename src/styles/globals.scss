@@ -1,40 +1,77 @@
-// moovy-frontend/src/styles/globals.scss
-// 전역 기본값
+// Import shared styles
+@import "variables";
+@import "mixins";
+@import "base";
+
+// Swiper CSS
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+
+// 전역 기본값 (다크 테마를 기본으로)
 :root {
-  --color-bg: #ffffff;
-  --color-fg: #111111;
-  --color-primary: #1976d2; // MUI 기본 블루와 맞춤
+  --color-bg: #{$black1};
+  --color-fg: #{$gray3};
+  --color-primary: #{$primary-color};
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-}
-
-body {
-  margin: 0;
-  background: var(--color-bg);
-  color: var(--color-fg);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-  line-height: 1.5;
 }
 
 // 유틸
 .container-narrow {
   max-width: 960px;
   margin-inline: auto;
-  padding: 0 1rem;
+  padding: 0 $spacing-2;
 }
 
-// 다크 테마(선택): body에 .theme-dark 붙이면 적용
-.theme-dark {
-  --color-bg: #0b0f14;
-  --color-fg: #e6e6e6;
+// 라이트 테마(선택): body에 .theme-light 붙이면 적용
+.theme-light {
+  --color-bg: #{$white};
+  --color-fg: #{$black1};
   background: var(--color-bg);
   color: var(--color-fg);
+}
+
+// AuthPage 배경 스타일
+// html과 body 모두 배경 제거 (특수성 향상으로 _base.scss의 body 스타일 덮어쓰기)
+html body.auth-page-background,
+html body.auth-page-background #root {
+  height: 100vh;
+  background-color: transparent; // 기본 검은색 배경 완전히 제거
+}
+
+// body에만 배경 이미지 적용
+html body.auth-page-background {
+  background-image:
+    linear-gradient(
+      rgba($color: $black1, $alpha: 0.6),
+      rgba($color: $black1, $alpha: 0.6)
+    ),
+    url("../assets/auth-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+// 자동 테마 지원은 비활성화 (명시적 테마만 사용)
+
+// 부트스트랩 모달 기본 스타일 제거
+.modal-header,
+.modal-content,
+.modal-body,
+.modal-footer {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.modal-header {
+  padding-bottom: 0 !important;
 }

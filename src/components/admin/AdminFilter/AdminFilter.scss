@@ -1,0 +1,253 @@
+// Moovy 컴포넌트 라이브러리 - 관리자 필터 컴포넌트
+// ==========================================
+
+@import '../../../styles/variables';
+
+// 관리자 필터 확장/축소 애니메이션
+@keyframes contentExpand {
+  from {
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    padding-top: $spacer;
+    padding-bottom: $spacer;
+  }
+}
+
+@keyframes contentCollapse {
+  from {
+    opacity: 1;
+    padding-top: $spacer;
+    padding-bottom: $spacer;
+  }
+  to {
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.admin-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: $gray1;
+  position: relative;
+  z-index: 0;
+
+  .filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 50px;
+    border-radius: $border-radius-lg;
+    padding: $spacing-1; // 8px
+    margin-bottom: $spacer;
+    background-color: $gray5;
+
+
+
+    .filter-icon-button {
+      all: unset;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: $spacing-1;
+    }
+
+    .filter-title {
+      margin: 0;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      font-weight: 600;
+      color: $gray1;
+      flex: 1;
+      text-align: center;
+    }
+
+    .search-button {
+      background-color: $primary-color;
+      color: $white;
+      border: none;
+      outline: none;
+      border-radius: $border-radius;
+      padding: $spacing-1 $spacing-2; // 8px 16px
+      font-weight: 600;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      cursor: pointer;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-1; // 8px
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+        border: none;
+        outline: none;
+      }
+
+      &:focus {
+        outline: none;
+        border: none;
+      }
+
+      i {
+        font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .unified-search-wrapper {
+      position: relative;
+      display: inline-block;
+      min-width: 200px;
+
+      .unified-search-input {
+        height: 36px;
+        border: 1px solid $gray4;
+        background-color: $white;
+        color: $gray1;
+        border-radius: $border-radius-lg;
+        padding: $spacing-1 $spacing-4 $spacing-1 $spacing-2; // 8px 32px 8px 16px
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        width: 100%;
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+          outline: none;
+        }
+
+        &::placeholder {
+          color: $gray3;
+        }
+      }
+
+      .unified-search-icon {
+        position: absolute;
+        right: $spacing-1; // 8px
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        outline: none;
+        color: $gray3;
+        font-size: $body-small-size;
+        line-height: $body-small-line-height;
+        font-family: $font-family-base;
+        cursor: pointer;
+        padding: $spacing-1; // 8px
+        transition: $transition-base;
+        z-index: 2;
+
+        &:hover {
+          color: $primary-color;
+          border: none;
+          outline: none;
+        }
+
+        &:focus {
+          outline: none;
+          border: none;
+          color: $primary-color;
+        }
+
+        i {
+          font-size: $icon-sm;
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .filter-content {
+    background-color: $gray5;
+    border-radius: $border-radius-lg;
+    padding: $spacer;
+    animation: contentExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 0;
+    margin-bottom: $spacing-2;
+  }
+
+  // 필드 레이블 스타일
+  .field-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: $spacing-1; // 8px
+    color: $gray1;
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+  }
+
+  // 범위 필드 스타일
+  .number-range-field,
+  .date-range-field,
+  .rating-range-field {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: $spacing-1; // 8px
+
+    .range-separator {
+      color: $gray1;
+      font-weight: 500;
+      min-width: $spacing-2; 
+      text-align: center;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+    }
+
+    .form-control,
+    .date-picker-wrapper,
+    .rating-select {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  // 관리자 필터에서 사용되는 컴포넌트들의 기본 레이아웃 설정
+  .form-control,
+  .date-picker-wrapper,
+  .moovy-selector-wrapper,
+  .moovy-date-selector,
+  .rating-picker-wrapper,
+  .moovy-input,
+  .moovy-selector-trigger {
+    width: 100%;
+    max-width: 100%;
+
+    // 모든 아이콘 크기를 icon-sm으로 통일
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    i,
+    [class*="icon"] {
+      font-size: 16px;
+    }
+  }
+}
+

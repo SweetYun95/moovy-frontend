@@ -1,0 +1,192 @@
+@import "../../styles/globals.scss";
+
+// 마이페이지는 theme-light가 body에 적용되므로 별도 배경색 설정 불필요
+// 테마 시스템이 자동으로 배경색과 텍스트 색상을 관리함
+
+//내 프로필
+.profile_section {
+  padding: $spacing-3;
+  display: flex;
+}
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .profile--edit {
+    width: 100%;
+    max-width: 270px;
+    margin-right: 0;
+    margin-top: $spacing-3;
+  }
+}
+.profile--pic {
+  width: 100%;
+  max-width: 270px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 100%;
+  object-fit: cover;
+  
+  @media (max-width: 767px) {
+    max-width: 200px;
+  }
+  
+  @media (max-width: 575px) {
+    max-width: 150px;
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: $spacing-5;
+  
+  @media (max-width: 991px) {
+    padding: $spacing-4;
+  }
+  
+  @media (max-width: 767px) {
+    padding: $spacing-3;
+  }
+  
+  @media (max-width: 575px) {
+    padding: $spacing-2;
+  }
+  
+  .info--rank {
+    justify-content: space-between;
+    margin: 0;
+  }
+  .info--name {
+    margin: $spacing-2 0 0 0;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.info--name h5 {
+  margin: 0;
+}
+
+.inner_Tabs {
+  justify-content: flex-start;
+  
+  @media (max-width: 767px) {
+    justify-content: center;
+  }
+}
+
+.inner_Tabs__item {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  gap: $spacing-2;
+    border-radius: 16px;
+  padding: $spacing-2;
+  cursor: pointer;
+  background-color: $gray5;
+}
+
+.icon.setting:hover {
+  cursor: pointer;
+}
+
+
+
+// 캘린더
+
+// 코멘트 내역
+
+// 취향 분석
+.taste {
+  color: $gray1;
+}
+
+.rating-graph,
+.taste-graph,
+.taste-analysis {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-4;
+  background-color: $gray5;
+  border-radius: 16px;
+  margin: 0;
+  height: 100%;
+  
+  h6 {
+    font-size: $heading-6-size;
+    line-height: $heading-6-line-height;
+    font-weight: $font-weight-bold;
+    margin: 0;
+  }
+}
+
+.taste-analysis {
+  align-items: center;
+  text-align: center;
+  
+  &__tag {
+    position: relative;
+    display: inline-block;
+    padding: $spacing-1 $spacing-2;
+    background-color: $primary-color;
+    color: $white;
+    border-radius: $border-radius;
+    font-size: $body-small-size;
+    font-weight: $font-weight-bold;
+    width: fit-content;
+    margin-top: $spacing-2;
+    
+    // 말풍선 꼬리
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 60%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid $primary-color;
+    }
+  }
+
+  &__text {
+    font-size: $body-medium-size;
+    color: $black1;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  &__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__buddha {
+    font-size: 80px;
+    line-height: 1;
+  }
+}
+
+.taste .under {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+
+  .taste-graph {
+    flex: 0 0 80%;
+  }
+
+  .taste-analysis {
+    flex: 0 0 40%;
+  }
+}

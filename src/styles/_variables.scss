@@ -1,0 +1,111 @@
+// Brand Colors
+$primary-color: #7b61ff;
+$secondary-color: #ff3c67;
+$success-color: #00c896;
+$danger-color: #ff4c4c;
+$warning-color: #ffd60a;
+$info-color: #00aeef;
+
+// Neutral Palette (Dark Theme)
+$black1: #121212; // background
+$black2: #1e1e1e;
+$black3: #2c2c2c;
+$gray1: #3a3a3a;
+$gray2: #707070;
+$gray3: #a1a1a1;
+$gray4: #d9d9d9;
+$gray5: #f5f5f5;
+$white: #ffffff;
+
+// Legacy aliases (for existing references)
+$light-color: $gray5;
+$dark-color: $gray1;
+
+// Social Colors
+$kakao-yellow: #ffd60a;
+$google-white: #ffffff;
+
+// Typography
+$font-family-base: "Pretendard", sans-serif;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Heading Typography (Pretendard)
+$heading-1-size: 56px;
+$heading-1-line-height: 61.6px; // 1.1 x font size
+$heading-2-size: 48px;
+$heading-2-line-height: 52.8px; // 1.1 x font size
+$heading-3-size: 40px;
+$heading-3-line-height: 44px; // 1.1 x font size
+$heading-4-size: 32px;
+$heading-4-line-height: 35.2px; // 1.1 x font size
+$heading-5-size: 24px;
+$heading-5-line-height: 26.4px; // 1.1 x font size
+$heading-6-size: 20px;
+$heading-6-line-height: 22px; // 1.1 x font size
+
+// Body Typography (Pretendard)
+$body-large-size: 20px;
+$body-large-line-height: 28px; // 1.4 x font size
+$body-medium-size: 18px;
+$body-medium-line-height: 25.2px; // 1.4 x font size
+$body-normal-size: 16px;
+$body-normal-line-height: 22.4px; // 1.4 x font size
+$body-small-size: 14px;
+$body-small-line-height: 19.6px; // 1.4 x font size
+
+// font-size-base
+$font-size-base: $body-normal-size;
+
+// Spacing System (Design System Guidelines)
+// ==========================================
+
+// Base spacing unit
+$spacer: 1rem; //16px
+
+// Spacing Levels (8px, 16px, 24px, 32px, 40px, 56px, 72px, 80px, 96px, 120px)
+$spacing-1: 0.5rem; // 8px
+$spacing-2: 1rem; // 16px
+$spacing-3: 1.5rem; // 24px
+$spacing-4: 2rem; // 32px
+$spacing-5: 2.5rem; // 40px
+$spacing-6: 3.5rem; // 56px
+$spacing-7: 4.5rem; // 72px
+$spacing-8: 5rem; // 80px
+$spacing-9: 6rem; // 96px
+$spacing-10: 7.5rem; // 120px
+
+// Border
+// Base radius used by most components
+$border-radius: 0.5rem; //8px
+
+// Size variants
+$border-radius-sm: 0.25rem; // 4px
+$border-radius-lg: 1rem; //16px
+
+// Shadows
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$box-shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+
+// Transitions
+$transition-base: all 0.15s ease-in-out;
+$transition-fast: all 0.1s ease-in-out;
+
+// Iconography
+$icon-live-area: 20px;
+$icon-save-area: 2px;
+$icon-full-size: 24px;
+
+// Icon sizes
+$icon-sm: 18px;
+$icon-md: 24px;
+$icon-lg: 40px;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;

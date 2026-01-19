@@ -1,0 +1,216 @@
+// Moovy 컴포넌트 라이브러리 - 셀렉터 컴포넌트
+// ==========================================
+
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+// 셀렉터 래퍼
+.moovy-selector-wrapper {
+  @include input-base;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  .moovy-selector-trigger {
+    height: $spacing-6; // 56px
+    border-radius: $border-radius;
+    padding: $spacing-2 $spacing-3;
+    font-size: $body-normal-size;
+    line-height: $body-normal-line-height;
+    font-family: $font-family-base;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: $transition-base;
+
+    &:hover:not(.disabled) {
+      border-color: $primary-color;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+      outline: 0;
+    }
+
+    &.open {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    }
+
+    &.disabled {
+      background-color: rgba($color: #ffffff, $alpha: 0.05);
+      color: $gray4;
+      cursor: not-allowed;
+    }
+
+    .placeholder {
+      color: $gray3;
+    }
+
+    .selected {
+      color: $white;
+    }
+
+    i {
+      color: $gray3;
+      transition: transform 0.2s ease;
+      position: absolute;
+      right: 0.75rem;
+      font-size: $icon-md;
+      
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .moovy-selector-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: $black2;
+    border: 1px solid $gray1;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 0.25rem;
+
+    .moovy-selector-option {
+      padding: $spacing-2 $spacing-2; // 16px 16px
+      color: $white;
+      font-size: $body-normal-size;
+      line-height: $body-normal-line-height;
+      font-family: $font-family-base;
+      cursor: pointer;
+      transition: $transition-base;
+      border-bottom: 1px solid $gray1;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover:not(.disabled) {
+        background-color: $black3;
+        color: $primary-color;
+      }
+
+      &.selected {
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
+      }
+
+      &.disabled {
+        color: $gray4;
+        cursor: not-allowed;
+        background-color: rgba($color: #ffffff, $alpha: 0.05);
+      }
+    }
+  }
+}
+
+// 상태 변형
+.moovy-selector-wrapper {
+  .moovy-selector-trigger {
+    &.moovy-selector-success { border-color: $success-color; }
+    &.moovy-selector-warning { border-color: $warning-color; }
+    &.moovy-selector-error { border-color: $danger-color; }
+  }
+}
+
+// 라이트 테마
+.moovy-selector-wrapper.light-theme {
+  .moovy-selector-trigger {
+    height: 36px;
+    border: 1px solid $gray4;
+    background-color: $white;
+    color: $gray1;
+    border-radius: $border-radius-lg;
+    padding: $spacing-1 $spacing-2; // 8px 16px
+    font-size: $body-small-size;
+    line-height: $body-small-line-height;
+    font-family: $font-family-base;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover:not(.disabled) {
+      border-color: $primary-color;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+      outline: none;
+    }
+
+    &.open {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+    }
+
+    &.disabled {
+      background-color: $gray5;
+      color: $gray3;
+      cursor: not-allowed;
+    }
+
+    .placeholder {
+      color: $gray3;
+    }
+
+    .selected {
+      color: $black1;
+    }
+
+    i {
+      color: $gray2;
+      font-size: $icon-sm;
+      margin-left: auto;
+    }
+  }
+
+  .moovy-selector-dropdown {
+    background-color: $white;
+    border: 1px solid $gray4;
+    border-radius: $border-radius-sm;
+    box-shadow: $box-shadow-md;
+
+    .moovy-selector-option {
+      color: $gray1;
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      font-family: $font-family-base;
+      border-bottom: 1px solid $gray5;
+      padding: $spacing-1 $spacing-2; // 8px 16px
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover:not(.disabled) {
+        background-color: $gray5;
+        color: $primary-color;
+      }
+
+      &.selected {
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
+      }
+
+      &.disabled {
+        color: $gray3;
+        cursor: not-allowed;
+        background-color: $gray5;
+      }
+    }
+  }
+}

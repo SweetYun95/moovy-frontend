@@ -1,0 +1,120 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.reply-list {
+  margin-top: $spacing-4;
+
+  &__no-comments {
+    text-align: center;
+    color: $gray3;
+    padding: $spacing-4;
+    font-size: $body-normal-size;
+  }
+
+  &__item {
+    padding-bottom: $spacing-3;
+    margin-bottom: $spacing-3;
+    border-bottom: 1px solid $gray1;
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    @media (max-width: 767px) {
+      padding-bottom: $spacing-2;
+      margin-bottom: $spacing-2;
+    }
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+    margin-bottom: $spacing-2;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    @media (max-width: 767px) {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: $black2;
+    border: 1px solid $gray1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gray2;
+    flex-shrink: 0;
+
+    @media (max-width: 767px) {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__username {
+    font-size: $body-normal-size;
+    font-weight: $font-weight-bold;
+    color: $white;
+  }
+
+  &__text {
+    font-size: $body-normal-size;
+    color: $white;
+    line-height: $body-normal-line-height;
+    margin-bottom: $spacing-2;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__likes {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $body-small-size;
+    color: $gray3;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-3;
+  }
+
+  &__action-link {
+    all: unset;
+    font-size: $body-small-size;
+    cursor: pointer;
+    text-decoration: underline;
+    
+    &--delete,
+    &--report {
+      color: $danger-color;
+    }
+
+    &--edit {
+      color: $primary-color;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+

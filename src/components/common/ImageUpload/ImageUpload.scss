@@ -1,0 +1,99 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.moovy-image-upload {
+  .image-upload-header {
+    margin-bottom: $spacing-2; // 16px
+    
+    .upload-label {
+      display: inline-flex;
+      align-items: center;
+      font-weight: $font-weight-bold;
+      color: $white;
+      cursor: default; // 클릭 유도 제거
+      padding: 0; // 평문 라벨
+      border: none;
+      background: transparent;
+      
+      i {
+        color: $primary-color;
+        margin-right: $spacing-1;
+      }
+    }
+    
+    .image-input {
+      display: none;
+    }
+  }
+  
+  .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: $spacing-2; // 16px
+    
+    .image-preview-item {
+      position: relative;
+      aspect-ratio: 5/8; // 5:8 비율 (가로 60, 세로 96)
+      border-radius: $border-radius;
+      overflow: hidden;
+      border: 1px solid $gray1;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .remove-image-btn {
+        position: absolute;
+        top: 0.25rem; // 4px
+        right: 0.25rem; // 4px
+        width: $icon-md; // 24px
+        height: $icon-md; // 24px
+        border-radius: 50%;
+        background-color: rgba($danger-color, 0.8);
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem; // 12px
+        transition: $transition-base;
+        
+        &:hover {
+          background-color: $danger-color;
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    .image-placeholder {
+      aspect-ratio: 5/8; // 5:8 비율 (가로 60, 세로 96)
+      border: 2px dashed $gray1;
+      border-radius: $border-radius;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: $gray3;
+      cursor: pointer;
+      transition: $transition-base;
+      
+      &:hover {
+        border-color: $primary-color;
+        color: $primary-color;
+        background-color: rgba($primary-color, 0.05);
+      }
+      
+      i {
+        font-size: $heading-6-size; // 20px (similar to 1.5rem for default 16px base)
+        margin-bottom: $spacing-1; // 8px
+      }
+      
+      span {
+        font-size: $body-small-size; // 14px
+      }
+    }
+  }
+}

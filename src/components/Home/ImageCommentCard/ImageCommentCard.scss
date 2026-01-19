@@ -1,0 +1,357 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.image-comment-card-slider {
+  position: relative;
+  padding: $spacing-3 0;
+
+  &__wrapper {
+    position: relative;
+  }
+
+  // 모바일 섹션 내부 슬라이더 컨테이너 (내부 네비게이션의 기준 컨테이너)
+  &__inner-wrapper {
+    position: relative;
+  }
+
+  &__swiper {
+    position: relative;
+  }
+
+  &__nav-button {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba($color: $white, $alpha: 0.5);
+    width: $spacing-3;
+    height: $spacing-3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $white;
+    
+    &:hover {
+      transform: translateY(-50%) scale(1.15);
+    }
+    
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    &--prev {
+      left: $spacing-3;
+    }
+    
+    &--next {
+      right: $spacing-3;
+    }
+  }
+
+  &__swiper {
+    .swiper-slide {
+      height: auto;
+    }
+  }
+}
+
+.image-comment-card-section {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-3;
+  }
+
+  &__title {
+    font-size: $heading-6-size;
+    font-weight: $font-weight-bold;
+    margin-bottom: 0;
+    color: $white;
+  }
+
+  &__arrow-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: $white;
+    padding: $spacing-1;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: rgba($color: $white, $alpha: 0.1);
+      transform: translateX(4px);
+    }
+    
+    &:active {
+      transform: translateX(2px);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    
+    // 모바일 (<768px): 1개만 표시
+    @media (max-width: 767px) {
+      & > .comment-card:nth-child(n+2) {
+        display: none;
+      }
+    }
+    
+    // 태블릿 (≥768px, <992px): 2열 그리드, 최대 4개 표시 (2열 2행)
+    @media (min-width: 768px) and (max-width: 991px) {
+      grid-template-columns: repeat(2, 1fr);
+      & > .comment-card:nth-child(n+5) {
+        display: none;
+      }
+    }
+    
+    // PC (≥992px): 3열 그리드, 최대 3개 표시 (1행 3열)
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+      & > .comment-card:nth-child(n+4) {
+        display: none;
+      }
+    }
+  }
+}
+
+.comment-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(153, 153, 153, 0.5) 100%);
+  border: 1px solid $white;
+  border-radius: $border-radius-lg; // 16px
+  padding: $spacing-2 $spacing-3; // 16px 24px
+  transition: $transition-base;
+  width: 100%;
+  height: 100%;
+  min-height: 277px;
+  display: grid;
+  grid-template-rows: auto 1fr auto; // header, content, footer
+  grid-template-columns: 1fr;
+  gap: $spacing-3;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $box-shadow-sm;
+  }
+  
+  // 반응형 패딩
+  @media (max-width: 767px) {
+    padding: $spacing-1 $spacing-2; // 8px 16px 
+    min-height: 240px;
+  }
+  
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2; // 16px
+  }
+  
+  &__profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; // 원형으로 변경
+    object-fit: cover;
+  }
+  
+  &__profile-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; // 원형으로 변경
+    background-color: $gray3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gray2;
+  }
+  
+  &__username {
+    font-size: $body-normal-size; // 16px
+    font-weight: $font-weight-bold;
+    color: $white;
+    
+    // 반응형 폰트 크기
+    @media (max-width: 767px) {
+      font-size: 15px;
+    }
+  }
+  
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1; // 8px
+  }
+  
+  &__rating-text {
+    font-size: $body-small-size; // 14px
+    font-weight: $font-weight-normal;
+    color: $white;
+  }
+  
+  &__main-content {
+    display: flex;
+    gap: $spacing-2; // 16px
+    overflow: hidden;
+    min-height: 0; // grid item이 축소될 수 있도록
+    
+    // 반응형 레이아웃
+    @media (max-width: 767px) {
+      gap: $spacing-1; // 8px
+    }
+  }
+  
+  &__movie-image {
+    flex-shrink: 0;
+    height: 120px;
+    width: 75px; // 120px * 5/8 = 75px
+    
+    // 반응형 이미지 크기
+    @media (max-width: 767px) {
+      height: 100px;
+      width: 62.5px; // 100px * 5/8
+    }
+  }
+  
+  &__movie-poster {
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius; // 8px
+    object-fit: cover;
+  }
+  
+  &__movie-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius; // 8px
+    background-color: $gray3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gray2;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    min-height: 0; // grid item이 축소될 수 있도록
+  }
+  
+  &__movie-title {
+    font-size: $body-small-size; // 14px
+    font-weight: $font-weight-bold;
+    color: $white;
+    margin-right: $spacing-2; // 16px
+  }
+  
+  &__text {
+    font-size: $body-normal-size; // 16px
+    font-weight: $font-weight-normal;
+    color: $white;
+    margin: 0;
+    line-height: $body-normal-line-height;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    
+    // 반응형 폰트 크기 및 줄 수
+    @media (max-width: 767px) {
+      font-size: $body-small-size;
+      line-height: $body-small-line-height;
+      -webkit-line-clamp: 4; // 모바일에서는 4줄까지
+    }
+  }
+  
+  &__footer {
+    display: grid;
+    grid-template-rows: auto auto; // actions, icon-actions 세로로 배치
+    gap: $spacing-1; // 16px
+    align-items: start;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: $spacing-2; // 16px
+  }
+  
+  &__action-button {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2; // 16px
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: $transition-base;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    span {
+      font-size: $body-small-size; // 14px
+      font-weight: $font-weight-normal;
+    }
+    
+    &--like {
+      color: $white;
+      cursor: default;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    
+    &--reply {
+      color: $white;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  &__icon-actions {
+    display: flex;
+    gap: $spacing-2; // 16px
+  }
+  
+  &__icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    all: unset;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: $transition-base;
+    color: $white;
+      
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+

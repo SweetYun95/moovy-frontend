@@ -1,0 +1,100 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.content-card {
+  overflow: hidden;
+  transition: $transition-base;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $box-shadow-md;
+  }
+  
+  &__image-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: $border-radius; // 8px
+    aspect-ratio: 5/8; // 5:8 비율 (영화 포스터 표준 비율)
+    overflow: hidden;
+    background-color: $gray5;
+    box-shadow: $box-shadow-sm;
+  }
+  
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: $transition-base;
+    
+    .content-card:hover & {
+      transform: scale(1.05);
+    }
+  }
+  
+  &__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $gray5;
+    color: $gray3;
+  }
+  
+  &__content {
+    padding: $spacing-1 $spacing-2; // 8px 16px
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  &__title {
+    font-size: $heading-6-size; // 20px
+    font-weight: $font-weight-bold;
+    color: $white;
+    line-height: $body-medium-line-height;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__year-country {
+    font-size: $body-small-size; // 14px
+    font-weight: $font-weight-normal;
+    color: $gray4;
+    line-height: $body-small-line-height;
+  }
+  
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1; // 8px
+    margin-top: auto;
+  }
+  
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1 / 2; // 4px
+  }
+  
+  &__star-icon {
+    width: $icon-sm; // 18px
+    height: $icon-sm; // 18px
+    color: $warning-color;
+    flex-shrink: 0;
+  }
+  
+  &__rating-text {
+    font-size: $body-small-size; // 14px
+    font-weight: $font-weight-bold;
+    color: $gray4;
+    line-height: $body-small-line-height;
+  }
+}
+

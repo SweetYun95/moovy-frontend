@@ -1,0 +1,25 @@
+@import '../../../styles/variables';
+
+.comment-edit-modal {
+  &__spoiler {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__spoiler-label {
+    font-size: $body-normal-size;
+    font-weight: $font-weight-bold;
+    color: $white;
+  }
+
+  &__field {
+    margin-bottom: $spacing-3;
+    
+    .moovy-textarea {
+      width: 100%;
+      max-width: 1110px;
+    }
+  }
+}
+
