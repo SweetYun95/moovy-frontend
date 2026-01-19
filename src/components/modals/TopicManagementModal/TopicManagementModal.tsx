@@ -17,7 +17,6 @@ import './TopicManagementModal.scss'
  * ✅ 이 모달은 이제 "UI 전용"으로만 동작하고,
  *    실제 API 호출은 부모(TopicManagement)에서 처리한다.
  */
-
 export interface TopicData {
    // 기존 폼 유지(컨텐츠 정보 입력 UI)
    images: string[]
@@ -29,7 +28,6 @@ export interface TopicData {
    genre: string
    category?: string
    country?: string
-
    // ✅ 어드민 토픽 생성에 필요한 값 추가
    contentId?: number
    topicStartAt: { year: string; month: string; day: string }
@@ -39,16 +37,12 @@ export interface TopicData {
 export interface TopicManagementModalProps {
    isOpen: boolean
    onClose: () => void
-
    /** create/edit 모두 여기로 제출(부모가 API 호출) */
    onSubmit: (data: TopicData) => void
-
    /** 수정 모드 초기값 */
    initialData?: Partial<TopicData>
-
    /** popular 클릭 등으로 content_id를 미리 주입하고 싶을 때 */
    presetContentId?: number
-
    /** create | edit (표시/검증용) */
    mode?: 'create' | 'edit'
 }
@@ -63,11 +57,9 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
    const [genre, setGenre] = useState(initialData?.genre || '')
    const [category, setCategory] = useState<string>(initialData?.category || '')
    const [country, setCountry] = useState<string>(initialData?.country || '')
-
    // ✅ 어드민 토픽 기간(필수)
    const [topicStartAt, setTopicStartAt] = useState(initialData?.topicStartAt || { year: '', month: '', day: '' })
    const [topicEndAt, setTopicEndAt] = useState(initialData?.topicEndAt || { year: '', month: '', day: '' })
-
    // ✅ content_id (preset 우선)
    const [contentId, setContentId] = useState<number | undefined>(initialData?.contentId ?? presetContentId)
 
@@ -82,6 +74,7 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
          alert('content_id가 필요합니다. (인기작에서 선택하거나 content_id를 입력하세요)')
          return
       }
+
       if (!topicStartAt.year || !topicStartAt.month || !topicStartAt.day || !topicEndAt.year || !topicEndAt.month || !topicEndAt.day) {
          alert('토픽 시작일/종료일을 입력하세요.')
          return
@@ -107,6 +100,7 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
          topicStartAt,
          topicEndAt,
       })
+
       onClose()
    }
 
@@ -118,7 +112,6 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
                   <div className="topic-management-modal__field topic-management-modal__field--image">
                      <ImageUpload images={images} onChange={setImages} maxImages={5} />
                   </div>
-
                   {/* ✅ 어드민 Topic에 필요한 content_id */}
                   <div className="topic-management-modal__field">
                      <label className="form-label">content_id (필수)</label>
@@ -131,40 +124,33 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
                      />
                      {typeof presetContentId === 'number' && <small style={{ opacity: 0.7 }}>인기작에서 선택된 content_id로 고정됨</small>}
                   </div>
-
                   {/* ✅ 어드민 Topic 기간 */}
                   <div className="topic-management-modal__field">
                      <label className="form-label">토픽 시작일 (필수)</label>
                      <DateSelector value={topicStartAt} onChange={setTopicStartAt} />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">토픽 종료일 (필수)</label>
                      <DateSelector value={topicEndAt} onChange={setTopicEndAt} />
                   </div>
-
                   {/* 아래는 기존 컨텐츠 입력 폼 유지(당장 백엔드 Topic CRUD에는 직접 안 씀) */}
                   <div className="topic-management-modal__field">
                      <label className="form-label">제목(옵션)</label>
                      <Input placeholder="제목을 추가하세요." value={title} onChange={setTitle} />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">개봉일(옵션)</label>
                      <DateSelector value={releaseDate} onChange={setReleaseDate} />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">러닝타임(옵션)</label>
                      <Input type="number" placeholder="숫자를 입력하세요." value={runtime} onChange={setRuntime} />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">장르(옵션)</label>
                      <TopicGenreSelector value={genre} onChange={setGenre} placeholder="장르" />
                   </div>
                </div>
-
                <div className="col-12 col-lg-6 mb-3">
                   <div className="topic-management-modal__field">
                      <label className="form-label">타입(옵션)</label>
@@ -180,7 +166,6 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
                         placeholder="타입"
                      />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">국가(옵션)</label>
                      <Selector
@@ -199,19 +184,16 @@ const TopicManagementModal: React.FC<TopicManagementModalProps> = ({ isOpen, onC
                         placeholder="국가"
                      />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">시청연령(옵션)</label>
                      <AgeRatingSelector value={ageRating} onChange={setAgeRating} placeholder="시청연령" />
                   </div>
-
                   <div className="topic-management-modal__field">
                      <label className="form-label">간단줄거리(옵션)</label>
                      <Textarea placeholder="내용을 적어주세요." value={synopsis} onChange={setSynopsis} rows={6} maxLength={10000} showCounter />
                   </div>
                </div>
             </div>
-
             <div className="topic-management-modal__actions">
                <ActionButton action="confirm" onClick={handleSubmit}>
                   확인
