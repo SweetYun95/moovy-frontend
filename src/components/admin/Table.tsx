@@ -39,27 +39,8 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const [selectedReportKey, setSelectedReportKey] = React.useState<string | null>(null)
    const [totalItems, setTotalItems] = React.useState(0)
    const [appliedUserFilters, setAppliedUserFilters] = React.useState<Record<string, any>>({})
-   const [appliedInquiryFilters, setAppliedInquiryFilters] = React.useState<Record<string, any>>({})
-   const [appliedReportFilters, setAppliedReportFilters] = React.useState<Record<string, any>>({})
-
-   const reportRows = React.useMemo<AdminReportRow[]>(() => {
-      const toYmd = (v?: string) => (v ? String(v).slice(0, 10) : '')
-      return (adminReportsList.items || []).map((r: any) => ({
-         type: r.type,
-         report_id: r.report_id,
-         reporter_user_id: r.reporter?.user_id,
-         reporter_name: r.reporter?.name ?? '-',
-         reported_user_id: r.reported?.user_id,
-         reported_name: r.reported?.name ?? '-',
-         post_type: r.post?.type,
-         post_id: r.post?.id,
-         post_content: r.post?.content ?? '',
-         category: r.category,
-         created_at: toYmd(r.created_at),
-         state: r.status,
-         report_content: r.report_content,
-      }))
-   }, [adminReportsList.items])
+   const [inquiryPage, setInquiryPage] = React.useState(1)
+   const [reportPage, setReportPage] = React.useState(1)
 
    // user 목록: 서버 페이징 연동
    React.useEffect(() => {
@@ -242,8 +223,26 @@ const Table: React.FC<TableProps> = ({ content }) => {
                               ))}
                            </ul>
 
-                           {content === 'user' && <UserTable columns={columns} content={content} filters={appliedUserFilters} users={adminUsersList.items} onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))} />}
-                           {content === 'inquiry' && <InquiryTable columns={columns} content={content} rows={adminInquiryList.items} onRowClick={handleRowClick} onStatusClick={handleStatusClick} />}
+                           {content === 'user' && (
+                              <UserTable
+                                 columns={columns}
+                                 content={content}
+                                 filters={appliedUserFilters}
+                                 users={adminUsersList.items}
+                                 onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))}
+                              />
+                           )}
+                           {content === 'inquiry' && (
+                              <InquiryTable
+                                 columns={columns}
+                                 content={content}
+                                 onRowClick={handleRowClick}
+                                 onStatusClick={handleStatusClick}
+                                 onDataCountChange={setTotalItems}
+                                 currentPage={inquiryPage}
+                                 onPageChange={setInquiryPage}
+                              />
+                           )}
                            {content === 'report' && (
                               <ReportTable
                                  columns={columns}
@@ -251,46 +250,40 @@ const Table: React.FC<TableProps> = ({ content }) => {
                                  rows={reportRows}
                                  onRowClick={handleRowClick}
                                  onStatusClick={handleStatusClick}
-                                 onPostClick={(e, row) => {
-                                    e.stopPropagation()
-                                    setSelectedReportedPost({ type: row.post_type, id: row.post_id, content: row.post_content })
-                                    setIsReportedPostModalOpen(true)
-                                 }}
+                                 onDataCountChange={setTotalItems}
+                                 currentPage={reportPage}
+                                 onPageChange={setReportPage}
                               />
                            )}
                         </div>
 
                         <StandardPagination
                            className="mt-4"
-                           totalItems={content === 'user' ? adminUsersList.total : content === 'inquiry' ? adminInquiryList.total : content === 'report' ? adminReportsList.total : totalItems}
-                           itemsPerPage={content === 'user' ? adminUsersList.size : content === 'inquiry' ? adminInquiryList.size : content === 'report' ? adminReportsList.size : undefined}
-                           currentPage={content === 'user' ? adminUsersList.page : content === 'inquiry' ? adminInquiryList.page : content === 'report' ? adminReportsList.page : undefined}
+                           totalItems={content === 'user' ? adminUsersList.total : totalItems}
+                           itemsPerPage={content === 'user' ? adminUsersList.size : 20}
+                           currentPage={
+                              content === 'user' 
+                                 ? adminUsersList.page 
+                                 : content === 'inquiry' 
+                                    ? inquiryPage 
+                                    : content === 'report' 
+                                       ? reportPage 
+                                       : undefined
+                           }
                            onPageChange={
                               content === 'user'
                                  ? (nextPage) => {
                                       dispatch(getAdminUsers({ page: nextPage, size: adminUsersList.size }))
                                    }
                                  : content === 'inquiry'
-                                   ? (nextPage) => {
-                                        dispatch(
-                                           getAdminInquiries({
-                                              ...appliedInquiryFilters,
-                                              page: nextPage,
-                                              size: adminInquiryList.size || 10,
-                                           }),
-                                        )
-                                     }
-                                   : content === 'report'
-                                     ? (nextPage) => {
-                                          dispatch(
-                                             getAdminReports({
-                                                ...appliedReportFilters,
-                                                page: nextPage,
-                                                size: adminReportsList.size || 10,
-                                             }),
-                                          )
-                                       }
-                                     : undefined
+                                    ? (nextPage) => {
+                                         setInquiryPage(nextPage)
+                                      }
+                                    : content === 'report'
+                                       ? (nextPage) => {
+                                            setReportPage(nextPage)
+                                         }
+                                       : undefined
                            }
                         />
                      </>

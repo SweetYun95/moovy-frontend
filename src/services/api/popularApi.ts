@@ -28,6 +28,8 @@ export type PopularMovieListResponse = {
 };
 
 export const getTodayPopularMovies = async (): Promise<PopularMovieItem[]> => {
+  // 백엔드에 실제로 있는 엔드포인트: /api/popular/movies/today
+  // 토픽과 컨텐츠는 같은 데이터이므로 popular API 사용
   const res = await moovy.get<PopularMovieListResponse>(
     "/popular/movies/today",
   );
@@ -48,6 +50,17 @@ export const getPopularMoviesByDate = async (params: {
   );
   if (!res.data.success) {
     throw new Error("인기 영화(특정 날짜) 조회 실패");
+  }
+  return res.data.data;
+};
+
+/** 현재 상영작 조회 (moovy-pipeline에서 수집한 데이터) */
+export const getNowPlayingMovies = async (): Promise<PopularMovieItem[]> => {
+  const res = await moovy.get<PopularMovieListResponse>(
+    "/popular/movies/now-playing",
+  );
+  if (!res.data.success) {
+    throw new Error("현재 상영작 조회 실패");
   }
   return res.data.data;
 };

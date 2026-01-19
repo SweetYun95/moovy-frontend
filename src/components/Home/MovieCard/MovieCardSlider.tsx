@@ -8,6 +8,7 @@ import 'swiper/css';
 // 내부 유틸/전역/서비스
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchContentsThunk } from '@/features/content/contentSlice';
+import { fetchTodayPopularMoviesThunk, selectPopularItems, selectPopularLoading, selectPopularError } from '@/features/popular/popularSlice';
 import { buildMovieSections } from '@/utils/homeSections';
 
 // 컴포넌트
@@ -30,13 +31,41 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
   onSectionsChange,
 }) => {
   const dispatch = useAppDispatch();
-  const { contents, loading } = useAppSelector((s) => s.content);
+  const { contents, loading: contentsLoading } = useAppSelector((s) => s.content);
+  const popularMovies = useAppSelector(selectPopularItems);
+  const popularLoading = useAppSelector(selectPopularLoading);
+  const popularError = useAppSelector(selectPopularError);
+  
+  // 한 번만 실행되도록 useRef 사용
+  const hasTriedFetchPopular = useRef(false);
 
-  // 섹션 데이터 생성
+  // 인기 영화 데이터를 MovieCard 형태로 변환
+  const transformedPopularMovies = useMemo(() => {
+    return popularMovies.map((item) => {
+      // poster_path가 상대 경로인 경우 TMDB 이미지 URL로 변환
+      let imageUrl = item.content.poster_path || '';
+      if (imageUrl && !imageUrl.startsWith('http')) {
+        // TMDB 이미지 기본 URL (w500 크기)
+        imageUrl = `https://image.tmdb.org/t/p/w500${imageUrl}`;
+      }
+      
+      return {
+        id: item.content.content_id,
+        title: item.content.title,
+        synopsis: item.content.plot || '',
+        imageUrl,
+        overallRating: 0, // 인기 영화 API에는 rating이 없을 수 있음
+      };
+    });
+  }, [popularMovies]);
+
+  // 섹션 데이터 생성: 인기 영화가 있으면 우선 사용, 없으면 contents 사용
   const sections = useMemo(() => {
-    if (contents.length === 0) return [];
-    return buildMovieSections(contents);
-  }, [contents]);
+    const moviesToUse = transformedPopularMovies.length > 0 ? transformedPopularMovies : contents;
+    if (moviesToUse.length === 0) return [];
+    // buildMovieSections는 제네릭 함수이므로 타입 단언 사용
+    return buildMovieSections(moviesToUse as any[]);
+  }, [transformedPopularMovies, contents]);
 
   // 섹션 변경 시 콜백 호출 (HeroBanner에 전달)
   useEffect(() => {
@@ -45,12 +74,22 @@ export const MovieCardSlider: React.FC<MovieCardSliderProps> = ({
     }
   }, [sections, onSectionsChange]);
 
-  // 초기 데이터 로드
+  // 한 번만 실행되도록 useRef 사용
+  const hasTriedFetchContents = useRef(false);
+  
+  // 초기 데이터 로드: 인기 영화 우선, 없으면 contents
   useEffect(() => {
-    if (contents.length === 0) {
+    // 한 번만 시도하거나, 에러가 없고 로딩 중이 아닐 때만 API 호출 (무한 루프 방지)
+    if (!hasTriedFetchPopular.current && popularMovies.length === 0 && !popularLoading && !popularError) {
+      hasTriedFetchPopular.current = true;
+      dispatch(fetchTodayPopularMoviesThunk());
+    }
+    // 인기 영화도 없고 contents도 없고 로딩 중이 아니면 contents 가져오기 (한 번만)
+    if (!hasTriedFetchContents.current && popularMovies.length === 0 && contents.length === 0 && !contentsLoading && !popularLoading) {
+      hasTriedFetchContents.current = true;
       dispatch(fetchContentsThunk());
     }
-  }, [dispatch, contents.length]);
+  }, [dispatch, popularMovies.length, popularLoading, popularError, contents.length, contentsLoading]);
   const swiperRef = useRef<any>(null);
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
