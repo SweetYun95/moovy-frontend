@@ -1,12 +1,15 @@
 // moovy-frontend/src/components/admin/TopicManagement/TopicManagement.tsx
+
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import { Icon } from '@iconify/react'
+
 import { Tabs } from '../../common/Tabs/Tabs'
 import { StandardPagination } from '../../common/Pagination'
 import { CommentManagementFilter } from '../AdminFilter'
 import { Button } from '../../common/Button/ButtonStyle'
 import { ActionButton } from '../../common/Button/Button'
 import { TopicManagementModalComponent, type TopicData } from '../../modals/TopicManagementModal/TopicManagementModal'
+
 import Avatar from '../../../assets/Avatar.png'
 import './TopicManagement.scss'
 import { getAdminTopics, deleteAdminTopic } from '../../../services/api/topicApi'
@@ -22,6 +25,7 @@ function formatDateDot(input?: string | null) {
    const mm = String(d.getMonth() + 1).padStart(2, '0')
    const dd = String(d.getDate()).padStart(2, '0')
    return `${yyyy}.${mm}.${dd}`
+
 }
 
 function toISODate(d: { year: string; month: string; day: string }) {
@@ -51,6 +55,7 @@ function safeTitle(topic: any) {
 
 function safeInfo(topic: any) {
    const vc = topic.video
+
    if (!vc) return '-'
    const parts: string[] = []
    if (vc.release_date) parts.push(formatDateDot(vc.release_date))
@@ -140,6 +145,7 @@ const TopicManagement: React.FC = () => {
 
    const showCreateButton = activeMainTab === 'current' && activeFilterTab === 'recommended'
 
+
    // ─────────────────────────────────────────────
    // 핸들러
    // ─────────────────────────────────────────────
@@ -153,6 +159,7 @@ const TopicManagement: React.FC = () => {
    }
 
    const handleCreate = () => {
+
       setIsCreateModalOpen(true)
    }
 
@@ -184,6 +191,7 @@ const TopicManagement: React.FC = () => {
 
    // ─────────────────────────────────────────────
    // 모달 submit 바인딩
+
    // ─────────────────────────────────────────────
    const submitCreate = async (data: TopicData) => {
       if (!data.contentId) return

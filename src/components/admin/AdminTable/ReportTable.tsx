@@ -1,4 +1,5 @@
 // moovy-frontend/src/components/admin/AdminTable/ReportTable.tsx
+
 import React from "react";
 import { fetchAdminReports, type AdminReportItem } from "../../../services/api/admin/adminReportApi";
 import Avatar from "../../../assets/Avatar.png";
@@ -99,4 +100,5 @@ const ReportTable: React.FC<TableProps> = ({ content, columns, onRowClick, onSta
   );
 };
 
-export default ReportTable;
+
+export default ReportTable

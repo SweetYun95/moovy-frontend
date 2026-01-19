@@ -10,24 +10,36 @@ import content from '@/features/content/contentSlice'
 import rating from '@/features/rating/ratingSlice'
 import topics from '@/features/topic/topicSlice'
 import favorite from '@/features/favorite/favoriteSlice'
-import popular from '@/features/popular/popularSlice' // ★ 추가
+import like from '@/features/like/likeSlice' // ✅ 추가
+import popular from '@/features/popular/popularSlice'
 
 // admin
 import adminUsers from '../features/admin/usersSlice'
+import adminInquiry from '../features/admin/adminInquirySlice'
+import adminReports from '../features/admin/adminReportsSlice'
+import adminDashboard from '../features/admin/dashboardSlice'
+import adminTopics from '../features/admin/topicsSlice'
 
 const rootReducer = combineReducers({
    auth,
    ui,
+
+   // user interactions
    comments,
    replies,
-   content,
    rating,
-   topics,
    favorite,
-   popular, // ★ 추가
+   like, // ✅ 추가
+   topics,
+   content,
+   popular,
 
    // admin
    adminUsers,
+   adminInquiry,
+   adminReports,
+   adminDashboard,
+   adminTopics,
 })
 
 export type RootReducer = ReturnType<typeof rootReducer>

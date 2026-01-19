@@ -2,34 +2,41 @@
 
 // 라우트 상수(필요시 여기서만 수정)
 export const PATHS = {
-  root: "/",
-  home: "/",
-  login: "/login",
-  register: "/register",
-  findId: "/find-id",
-  findPassword: "/find-password",
-  userHome: "/user",
-  adminHome: "/admin",
-  mypage: "/my",
-  mypagePath: "/mypage",
-  favorites: "/my/favorites", // ✅ 보관함(찜) 경로 추가
+   root: '/',
+   home: '/',
+   login: '/login',
+   register: '/register',
+   findId: '/find-id',
+   findPassword: '/find-password',
+   userHome: '/user',
+   adminHome: '/admin',
+   mypage: '/my',
+   mypagePath: '/mypage',
+   favorites: '/my/favorites',
 
-  movies: "/movies",
-  movieDetail: (id: string | number) => `/movies/${id}`,
+   movies: '/movies',
+   movieDetail: (id: string | number) => `/movies/${id}`,
 
-  contents: "/contents",
-  contentDetail: (id: string | number) => `/contents/${id}`,
+   contents: '/contents',
+   contentDetail: (id: string | number) => `/contents/${id}`,
 
-  comments: "/comments",
-  test: "/test",
+   comments: '/comments',
+   test: '/test',
 
-  reviews: "/reviews",
-  reviewWrite: "/reviews/new",
-  reviewDetail: (id: string | number) => `/reviews/${id}`,
+   reviews: '/reviews',
+   reviewWrite: '/reviews/new',
+   reviewDetail: (id: string | number) => `/reviews/${id}`,
 
-  profile: "/profile",
-  admin: "/admin",
-} as const;
+  profile: '/profile',
+   
+  // admin 관련
+   admin: '/admin',
+   adminDashboard: '/admin/dashboard',
+   adminUsers: '/admin/users',
+   adminTopics: '/admin/topics',
+   adminInquiries: '/admin/inquiries',
+   adminReports: '/admin/reports',
+} as const
 
 // 상수 키 타입 (오타 방지용)
 export type PathKey = keyof typeof PATHS;

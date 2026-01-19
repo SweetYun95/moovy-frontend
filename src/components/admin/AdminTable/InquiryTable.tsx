@@ -98,4 +98,5 @@ const InquiryTable: React.FC<TableProps> = ({ content, columns, onRowClick, onSt
   );
 };
 
-export default InquiryTable;
+
+export default InquiryTable
