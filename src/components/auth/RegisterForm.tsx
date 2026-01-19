@@ -1,6 +1,6 @@
 // moovy-frontend/src/components/auth/RegisterForm.tsx
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { localSignUpThunk } from '@/features/auth/authSlice'
 
@@ -13,8 +13,18 @@ const RegisterForm = () => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [checkPassword, setCheckPassword] = useState('')
+   const [matched, setMatched] = useState(true)
 
    const dispatch = useDispatch()
+
+   useEffect(() => {
+      if (checkPassword.length === 0) {
+         setMatched(true)
+         return
+      }
+
+      setMatched(password === checkPassword)
+   }, [password, checkPassword])
 
    const onClick = () => {
       // 이메일 중복확인 로직
@@ -58,7 +68,7 @@ const RegisterForm = () => {
                <div className="mb-3 form-item gap">
                   <label htmlFor="password">비밀번호</label>
                   <PasswordInput value={password} onChange={setPassword} />
-                  <PasswordCheckInput value={checkPassword} onChange={setCheckPassword} />
+                  <PasswordCheckInput value={checkPassword} onChange={setCheckPassword} matched={matched} />
                </div>
 
                <div className="row mt-5 form-item">
