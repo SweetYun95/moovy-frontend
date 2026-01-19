@@ -24,11 +24,15 @@ import OAuthSuccessPage from '@/pages/auth/OAuthSuccessPage'
 
 // 어드민 페이지
 import AdminPage from '@/pages/admin/AdminPage.tsx'
+import { useSelector } from 'react-redux'
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null
 
 export default function AppRouter() {
+   const { user, isLoggedIn, loading, error } = useSelector((s) => s.auth || {})
+   console.log('user데이터: ', user)
+
    return (
       <Routes>
          {/* 테스트 페이지 */}

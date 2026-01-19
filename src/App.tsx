@@ -13,7 +13,7 @@ export default function App() {
    //    dispatch(hydrateAuthThunk())
    // }, [dispatch])
 
-   // 하이드레이션 완료 전 대기 (필요하면 스피너로 교체)
+   // // 하이드레이션 완료 전 대기 (필요하면 스피너로 교체)
    // if (/*!hydrated ||*/ loading) return null
 
    return <AppRouter />

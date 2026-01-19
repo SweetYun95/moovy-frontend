@@ -33,22 +33,22 @@ export interface MessageResponse {
 // ─────────────────────────────
 
 export const signUpLocal = async (prop: { email: string; password: string; name: string }): Promise<ApiResponse<SignUpResponse>> => {
-   const result = await moovy.post('/auth/signup', prop)
+   const result = await moovy.post('/api/auth/signup', prop)
    return result
 }
 
 export const loginLocal = async (prop: { email: string; password: string }): Promise<ApiResponse<loginResponse>> => {
-   const result = await moovy.post('/auth/login', prop)
+   const result = await moovy.post('/api/auth/login', prop)
    return result.data
 }
 
 export const logout = async (): Promise<ApiResponse<{}>> => {
-   const result = await moovy.post('/auth/logout')
+   const result = await moovy.post('/api/auth/logout')
    return result.data
 }
 
 export const checkAuth = async (): Promise<ApiResponse<loginResponse>> => {
-   const result = await moovy.get('/auth/me')
+   const result = await moovy.get('/api/auth/me')
    return result.data
 }
 
@@ -61,7 +61,7 @@ export const checkAuth = async (): Promise<ApiResponse<loginResponse>> => {
  * POST /api/auth/check-email
  */
 export const checkEmail = async (prop: { email: string }): Promise<ApiResponse<CheckEmailResponse>> => {
-   const result = await moovy.post('/auth/check-email', prop)
+   const result = await moovy.post('/api/auth/check-email', prop)
    return result.data
 }
 
@@ -70,7 +70,7 @@ export const checkEmail = async (prop: { email: string }): Promise<ApiResponse<C
  * POST /api/auth/password/reset-request
  */
 export const requestPasswordReset = async (prop: { email: string }): Promise<ApiResponse<MessageResponse>> => {
-   const result = await moovy.post('/auth/password/reset-request', prop)
+   const result = await moovy.post('/api/auth/password/reset-request', prop)
    return result.data
 }
 
@@ -79,6 +79,6 @@ export const requestPasswordReset = async (prop: { email: string }): Promise<Api
  * POST /api/auth/password/reset
  */
 export const confirmPasswordReset = async (prop: { token: string; password: string }): Promise<ApiResponse<MessageResponse>> => {
-   const result = await moovy.post('/auth/password/reset', prop)
+   const result = await moovy.post('/api/auth/password/reset', prop)
    return result.data
 }
