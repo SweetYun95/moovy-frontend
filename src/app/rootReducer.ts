@@ -10,7 +10,7 @@ import content from '@/features/content/contentSlice'
 import rating from '@/features/rating/ratingSlice'
 import topics from '@/features/topic/topicSlice'
 import favorite from '@/features/favorite/favoriteSlice'
-import like from '@/features/like/likeSlice' // ✅ 추가
+import like from '@/features/like/likeSlice'
 import popular from '@/features/popular/popularSlice'
 
 // admin
@@ -19,6 +19,8 @@ import adminInquiry from '../features/admin/adminInquirySlice'
 import adminReports from '../features/admin/adminReportsSlice'
 import adminDashboard from '../features/admin/dashboardSlice'
 import adminTopics from '../features/admin/topicsSlice'
+import tmdb from '../features/admin/tmdbSlice'
+import adminHistory from '@/features/admin/adminHistorySlice'
 
 const rootReducer = combineReducers({
    auth,
@@ -29,7 +31,7 @@ const rootReducer = combineReducers({
    replies,
    rating,
    favorite,
-   like, // ✅ 추가
+   like,
    topics,
    content,
    popular,
@@ -40,6 +42,8 @@ const rootReducer = combineReducers({
    adminReports,
    adminDashboard,
    adminTopics,
+   tmdb,
+   adminHistory,
 })
 
 export type RootReducer = ReturnType<typeof rootReducer>
