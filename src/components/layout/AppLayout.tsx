@@ -2,7 +2,7 @@
 
 // 외부 라이브러리
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '@/app/hooks'
 import { Outlet, useLocation } from 'react-router-dom'
 
 // 내부 유틸/전역/서비스
@@ -22,7 +22,7 @@ export default function AppLayout() {
    const isRegisterPage = location.pathname === PATHS.register
    const isMyPage = location.pathname === PATHS.mypage || location.pathname === PATHS.mypagePath
 
-   const { user, isLoggedIn } = useSelector((s) => s.auth)
+   const { user, isLoggedIn } = useAppSelector((s) => s.auth)
    console.log('appLayout: ', user, isLoggedIn)
 
    // AuthPage일 때 body에 클래스 추가

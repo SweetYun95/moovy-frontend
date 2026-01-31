@@ -3,20 +3,19 @@ import { createAsyncThunk, createSlice, isPending, isRejected } from '@reduxjs/t
 import axios from 'axios'
 import { loginLocal, logout, signUpLocal, checkAuth, requestPasswordReset, confirmPasswordReset } from '@/services/api/authApi'
 
-const initialState: AuthState = {
-   user: null,
-   loading: false,
-   error: null,
-   isLoggedIn: false,
-
-   // ✅ 비밀번호 재설정 플로우 상태(로그인 상태와 무관)
-   resetLoading: false,
-   resetRequestDone: false, // 메일 발송 요청 처리 완료 여부
-   resetDone: false, // 비번 재설정 완료 여부
-   resetError: null,
+export interface AuthUser {
+   user_id: string
+   email: string
+   name: string
+   google?: boolean
+   kakao?: boolean
+   googleId?: string
+   kakaoId?: string
+   state?: string
+   profileImage?: string
 }
 
-type AuthState = {
+export type AuthState = {
    user: AuthUser | null
    loading: boolean
    error: string | null
@@ -29,16 +28,17 @@ type AuthState = {
    resetError: string | null
 }
 
-interface AuthUser {
-   user_id: string
-   email: string
-   name: string
-   google?: boolean
-   kakao?: boolean
-   googleId?: string
-   kakaoId?: string
-   state?: string
-   profileImage?: string
+const initialState: AuthState = {
+   user: null,
+   loading: false,
+   error: null,
+   isLoggedIn: false,
+
+   // ✅ 비밀번호 재설정 플로우 상태(로그인 상태와 무관)
+   resetLoading: false,
+   resetRequestDone: false, // 메일 발송 요청 처리 완료 여부
+   resetDone: false, // 비번 재설정 완료 여부
+   resetError: null,
 }
 
 // ─────────────────────────────

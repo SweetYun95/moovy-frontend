@@ -1,3 +1,4 @@
+// moovy-frontend/src/components/layout/Header/Header.tsx
 // 외부 라이브러리
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -5,6 +6,7 @@ import { Icon } from '@iconify/react'
 
 // 내부 유틸/전역/서비스
 import { PATHS } from '@/routes/paths'
+import type { AuthUser } from '@/features/auth/authSlice'
 
 // 컴포넌트
 import { Button } from '../../common/Button/ButtonStyle'
@@ -36,7 +38,7 @@ export interface HeaderProps {
    showLoginButton?: boolean // 로그인 버튼 표시 여부
    showSignupButton?: boolean // 회원가입 버튼 표시 여부
    isLoggedIn?: boolean
-   user?: {}
+   user?: AuthUser | null
 }
 
 export const Header: React.FC<HeaderProps> = ({ onSearchChange, onSearch, onLoginClick, onSignupClick, searchPlaceholder = '영화명을 입력해주세요', className = '', showSearch = true, showLoginButton = true, showSignupButton = true, user, isLoggedIn }) => {
@@ -148,11 +150,13 @@ export const Header: React.FC<HeaderProps> = ({ onSearchChange, onSearch, onLogi
                               </div>
                            </div>
                         )}
+
                         {showLoginButton && !user && (
                            <Button variant="primary" size="sm" onClick={handleLoginClick}>
                               로그인
                            </Button>
                         )}
+
                         {showSignupButton && (
                            <Button variant="primary" size="sm" onClick={handleSignupClick}>
                               회원가입
