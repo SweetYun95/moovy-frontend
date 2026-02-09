@@ -1,11 +1,7 @@
 // moovy-frontend/src/routes/AppRouter.tsx
 import { Routes, Route } from 'react-router-dom'
-import MainPage from '@/pages/Home/MainPage'
-import ContentDetailPage from '@/pages/movies/ContentDetailPage'
-import ContentsListPage from '@/pages/movies/ContentsListPage'
-import CommentsListPage from '@/pages/reviews/CommentsListPage'
-import AuthPage from '@/pages/auth/AuthPage'
 import { PATHS } from './paths'
+import { useAppSelector } from '@/app/hooks'
 
 // Layout
 import AppLayout from '@/components/layout/AppLayout'
@@ -16,6 +12,11 @@ import UserOnly from './guards/UserOnly.tsx'
 import AdminOnly from './guards/AdminOnly.tsx'
 
 // 유저 페이지
+import MainPage from '@/pages/Home/MainPage'
+import ContentDetailPage from '@/pages/movies/ContentDetailPage'
+import ContentsListPage from '@/pages/movies/ContentsListPage'
+import CommentsListPage from '@/pages/reviews/CommentsListPage'
+import AuthPage from '@/pages/auth/AuthPage'
 import MyPage from '@/pages/profile/MyPage.tsx'
 import UserPage from '@/pages/user/UserPage.tsx'
 import TestAuthPage from '@/pages/auth/TestAuthPage'
@@ -24,13 +25,12 @@ import OAuthSuccessPage from '@/pages/auth/OAuthSuccessPage'
 
 // 어드민 페이지
 import AdminPage from '@/pages/admin/AdminPage.tsx'
-import { useSelector } from 'react-redux'
 
 // 임시 플레이스홀더 (화면 출력 없음)
 const Placeholder = () => null
 
 export default function AppRouter() {
-   const { user, isLoggedIn, loading, error } = useSelector((s) => s.auth || {})
+   const { user, isLoggedIn, loading, error } = useAppSelector((s) => s.auth)
    console.log('user데이터: ', user)
 
    return (
