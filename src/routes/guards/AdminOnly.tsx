@@ -6,18 +6,18 @@ import { isGuardBypassed } from './guardUtils'
 import { PATHS } from '../paths'
 
 export default function AdminOnly() {
-   const { isAuthenticated, user, loading, hydrated } = useAppSelector((s) => s.auth)
+   const { isLoggedIn, user, loading } = useAppSelector((s) => s.auth)
    const role = user?.role ?? 'GUEST'
    const location = useLocation()
 
    // 개발/테스트 우회
    if (isGuardBypassed()) return <Outlet />
 
-   // 초기 세션 동기화/로딩 중엔 대기
-   if (!hydrated || loading) return <Spinner />
+   // 로딩 중엔 대기
+   if (loading) return <Spinner />
 
    // 비로그인 → 로그인으로
-   if (!isAuthenticated) {
+   if (!isLoggedIn) {
       return <Navigate to={PATHS.login} replace state={{ from: location }} />
    }
 
