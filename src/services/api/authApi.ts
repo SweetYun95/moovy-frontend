@@ -1,89 +1,81 @@
-// moovy-frontend/src/components/auth/LoginForm.tsx
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/app/hooks'
+// moovy-frontend/src/services/api/authApi.ts
+import moovy from './http'
+import type { ApiResponse } from './http'
 
-import { localLoginThunk } from '@/features/auth/authSlice'
-
-import { EmailInput, PasswordInput } from '@/components/common/Input'
-import { LoginButton } from '@/components/common/Button/Button'
-import { IdSaveCheckbox } from '@/components/common/Checkbox'
-
-const LoginForm = () => {
-   const [email, setEmail] = useState('')
-   const [password, setPassword] = useState('')
-
-   const navigate = useNavigate()
-   const dispatch = useAppDispatch()
-
-   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-
-      if (!email) {
-         alert('이메일을 입력하세요.')
-         return
-      }
-
-      if (!password) {
-         alert('비밀번호를 입력하세요.')
-         return
-      }
-
-      try {
-         await dispatch(localLoginThunk({ email, password })).unwrap()
-         alert('환영합니다!')
-         navigate('/')
-      } catch (err) {
-         alert('로그인에 실패했습니다.')
-      }
+export interface SignUpResponse {
+   newUser: {
+      user_id: string
+      email: string
+      name: string
    }
-
-   return (
-      <div id="loginform">
-         <form onSubmit={handleSubmit}>
-            <div className="form-group">
-               <h3>로그인</h3>
-
-               <div className="mb-3 mt-5 form-item">
-                  <label htmlFor="email">이메일</label>
-                  <EmailInput
-                     value={email}
-                     onChange={setEmail}
-                     showRightButton={false}
-                  />
-               </div>
-
-               <div className="mb-3 form-item">
-                  <label htmlFor="password">비밀번호</label>
-                  <PasswordInput
-                     value={password}
-                     onChange={setPassword}
-                  />
-               </div>
-
-               <IdSaveCheckbox />
-
-               <div className="row mt-5 form-item">
-                  <LoginButton loginType="local" type="submit" />
-               </div>
-
-               <div className="row mt-6 form-item">
-                  <LoginButton loginType="google" />
-               </div>
-
-               <div className="row mt-3 form-item">
-                  <LoginButton loginType="kakao" />
-               </div>
-            </div>
-         </form>
-
-         <div className="row mt-6 auth-link">
-            <a href="/register">회원가입</a>
-            <a href="">아이디 찾기</a>
-            <a href="">비밀번호 찾기</a>
-         </div>
-      </div>
-   )
 }
 
-export default LoginForm
+export interface LoginResponse {
+   user: {
+      user_id: string
+      email: string
+      name: string
+      role?: string
+   }
+}
+
+export interface CheckEmailResponse {
+   success: boolean
+   isDuplicate: boolean
+}
+
+// 응답 메시지용
+export interface MessageResponse {
+   message: string
+}
+
+// ─────────────────────────────
+// 기존 Auth
+// ─────────────────────────────
+
+export const signUpLocal = async (prop: { email: string; password: string; name: string }): Promise<ApiResponse<SignUpResponse>> => {
+   const result = await moovy.post<ApiResponse<SignUpResponse>>('/api/auth/signup', prop)
+   return result.data
+}
+
+export const loginLocal = async (prop: { email: string; password: string }): Promise<ApiResponse<LoginResponse>> => {
+   const result = await moovy.post<ApiResponse<LoginResponse>>('/api/auth/login', prop)
+   return result.data
+}
+
+export const logout = async (): Promise<ApiResponse<{}>> => {
+   const result = await moovy.post<ApiResponse<{}>>('/api/auth/logout')
+   return result.data
+}
+
+export const checkAuth = async (): Promise<ApiResponse<LoginResponse>> => {
+   const result = await moovy.get<ApiResponse<LoginResponse>>('/api/auth/me')
+   return result.data
+}
+
+// ─────────────────────────────
+// 이메일 중복 확인
+// ─────────────────────────────
+
+export const checkEmail = async (prop: { email: string }): Promise<ApiResponse<CheckEmailResponse>> => {
+   const result = await moovy.post<ApiResponse<CheckEmailResponse>>('/api/auth/check-email', prop)
+   return result.data
+}
+
+// ─────────────────────────────
+// 비밀번호 재설정 요청
+// ─────────────────────────────
+
+export const requestPasswordReset = async (prop: { email: string }): Promise<ApiResponse<MessageResponse>> => {
+   const result = await moovy.post<ApiResponse<MessageResponse>>('/api/auth/password/reset-request', prop)
+   return result.data
+}
+
+// ─────────────────────────────
+// 비밀번호 재설정 확정
+// ─────────────────────────────
+
+export const confirmPasswordReset = async (prop: { token: string; password: string }): Promise<ApiResponse<MessageResponse>> => {
+   const result = await moovy.post<ApiResponse<MessageResponse>>('/api/auth/password/reset', prop)
+   return result.data
+}
