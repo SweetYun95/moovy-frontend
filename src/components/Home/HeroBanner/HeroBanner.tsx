@@ -1,3 +1,4 @@
+// moovy-frontend/src/components/Home/HeroBanner/HeroBanner.tsx
 // 외부 라이브러리
 import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
