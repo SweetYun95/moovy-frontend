@@ -1,4 +1,5 @@
 // moovy-frontend/src/components/Home/QuickMenu/QuickMenu.tsx
+
 // 외부 라이브러리
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -17,10 +18,10 @@ export interface QuickMenuProps {
 
 export const QuickMenu: React.FC<QuickMenuProps> = ({ className = '' }) => {
    const navigate = useNavigate()
-   const { isAuthenticated } = useAppSelector((state) => state.auth)
+   const { isLoggedIn } = useAppSelector((state) => state.auth)
 
    const handleMenuClick = () => {
-      if (!isAuthenticated) {
+      if (!isLoggedIn) {
          navigate(PATHS.login)
       }
       // TODO: 로그인된 경우 각 메뉴별 페이지로 이동
