@@ -1,5 +1,6 @@
-import React from 'react';
-import './Toggle.scss';
+// moovy-frontend/src/components/common/Toggle/Toggle.tsx
+import React from 'react'
+import './Toggle.scss'
 
 /**
  * Toggle Props:
@@ -12,45 +13,29 @@ import './Toggle.scss';
  */
 
 export interface ToggleProps {
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  className?: string;
-  id?: string;
-  name?: string;
+   checked?: boolean
+   onChange?: (checked: boolean) => void
+   disabled?: boolean
+   className?: string
+   id?: string
+   name?: string
 }
 
-export const Toggle: React.FC<ToggleProps> = ({
-  checked = false,
-  onChange,
-  disabled = false,
-  className = '',
-  id,
-  name,
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!disabled) {
-      onChange?.(e.target.checked);
-    }
-  };
+export const Toggle: React.FC<ToggleProps> = ({ checked = false, onChange, disabled = false, className = '', id, name }) => {
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!disabled) {
+         onChange?.(e.target.checked)
+      }
+   }
 
-  return (
-    <div className={`toggle-wrapper ${className}`}>
-      <label className={`toggle ${disabled ? 'toggle--disabled' : ''}`}>
-        <input
-          type="checkbox"
-          className="toggle__input"
-          checked={checked}
-          onChange={handleChange}
-          disabled={disabled}
-          id={id}
-          name={name}
-        />
-        <span className="toggle__slider"></span>
-      </label>
-    </div>
-  );
-};
+   return (
+      <div className={`toggle-wrapper ${className}`}>
+         <label className={`toggle ${disabled ? 'toggle--disabled' : ''}`}>
+            <input type="checkbox" className="toggle__input" checked={checked} onChange={handleChange} disabled={disabled} id={id} name={name} />
+            <span className="toggle__slider"></span>
+         </label>
+      </div>
+   )
+}
 
-export default Toggle;
-
+export default Toggle

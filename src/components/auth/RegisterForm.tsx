@@ -1,10 +1,11 @@
 // moovy-frontend/src/components/auth/RegisterForm.tsx
-
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '@/app/hooks'
+
 import { localSignUpThunk } from '@/features/auth/authSlice'
 
-import { EmailInput, Input, NameInput, NicknameInput, PasswordInput } from '@/components/common/Input'
+import { EmailInput, NameInput, PasswordInput } from '@/components/common/Input'
+
 import { LoginButton } from '@/components/common/Button/Button'
 import { PasswordCheckInput } from '../common/Input/InputComponents'
 
@@ -15,7 +16,7 @@ const RegisterForm = () => {
    const [checkPassword, setCheckPassword] = useState('')
    const [matched, setMatched] = useState(true)
 
-   const dispatch = useDispatch()
+   const dispatch = useAppDispatch()
 
    useEffect(() => {
       if (checkPassword.length === 0) {
@@ -27,17 +28,18 @@ const RegisterForm = () => {
    }, [password, checkPassword])
 
    const onClick = () => {
-      // 이메일 중복확인 로직
       if (!email || email.length <= 1) {
          alert('올바른 이메일을 입력해 주세요.')
          return
       }
+
       console.log(email)
    }
 
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
-      if (password != checkPassword) {
+
+      if (password !== checkPassword) {
          alert('비밀번호가 일치하지 않습니다.')
          return
       }
@@ -61,13 +63,16 @@ const RegisterForm = () => {
                   <label htmlFor="name">이름</label>
                   <NameInput value={name} onChange={setName} />
                </div>
+
                <div className="mb-3 form-item">
                   <label htmlFor="email">이메일</label>
                   <EmailInput value={email} onChange={setEmail} onClick={onClick} />
                </div>
+
                <div className="mb-3 form-item gap">
                   <label htmlFor="password">비밀번호</label>
                   <PasswordInput value={password} onChange={setPassword} />
+
                   <PasswordCheckInput value={checkPassword} onChange={setCheckPassword} matched={matched} />
                </div>
 
@@ -78,7 +83,6 @@ const RegisterForm = () => {
          </form>
 
          <div className="row mt-6 auth-link">
-            {/* 기능 추가 후 처리 */}
             <a href="">아이디 찾기</a>
             <a href="">비밀번호 찾기</a>
          </div>

@@ -48,18 +48,18 @@ export interface CommentDetailModalProps {
 // Reply → ReplyItem 변환 유틸(로그인 유저 ID로 내 댓글 여부 표시)
 const convertReplyToReplyItem = (
   reply: Reply,
-  myUserId?: number,
+  myUserId?: string,
 ): ReplyItem => {
-  const author = reply.User || reply.user;
+  const author = reply.User || reply.user
   return {
     id: reply.reply_id,
-    username: author?.name || "유저닉네임",
+    username: author?.name || '유저닉네임',
     content: reply.content,
     likes: 0, // TODO: API 응답에 likes 필드 추가 시 업데이트
     profileImageUrl: undefined, // TODO: API 응답에 프로필 이미지 추가 시 업데이트
-    isMyComment: myUserId ? reply.user_id === myUserId : false,
-  };
-};
+    isMyComment: myUserId ? String(reply.user_id) === myUserId : false,
+  }
+}
 
 export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
   isOpen,
@@ -71,7 +71,7 @@ export const CommentDetailModal: React.FC<CommentDetailModalProps> = ({
   const commentId = commentData.id;
 
   // 로그인 유저
-  const myUserId = useAppSelector((s) => s.auth.user?.id);
+  const myUserId = useAppSelector((s) => s.auth.user?.user_id);
 
   // replySlice에서 대댓글 데이터/로딩 가져오기
   const repliesFromStore = useAppSelector((state) =>

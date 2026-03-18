@@ -1,18 +1,19 @@
 // moovy-frontend/src/components/admin/Table.tsx
 import React from 'react'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 
 import { StandardPagination } from '../common/Pagination'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getAdminUsers } from '../../features/admin/usersSlice'
+import { getAdminUsers, postSanction } from '../../features/admin/usersSlice'
 import { answerAdminInquiry, getAdminInquiryDetail, getAdminInquiries } from '../../features/admin/adminInquirySlice'
 import { completeAdminReport, getAdminReportDetail, getAdminReports } from '../../features/admin/adminReportsSlice'
-import { postSanction } from '../../features/admin/usersSlice'
+
 import DashboardTable from './AdminTable/DashboardTable'
 import UserTable from './AdminTable/UserTable'
 import TopicManagement from './TopicManagement/TopicManagement'
 import InquiryTable from './AdminTable/InquiryTable'
 import ReportTable, { type AdminReportRow } from './AdminTable/ReportTable'
 import { ReportManagementFilter, UserManagementFilter, QnAManagementFilter } from './AdminFilter'
+
 import InquiryModal from '../modals/InquiryModal/InquiryModal'
 import ReportModal from '../modals/ReportModal/ReportModal'
 import ReportedPostModal, { type ReportedPostModalData } from '../modals/ReportedPostModal/ReportedPostModal'
@@ -23,6 +24,7 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ content }) => {
    const dispatch = useAppDispatch()
+
    const adminUsersList = useAppSelector((s) => s.adminUsers.list)
    const adminInquiryList = useAppSelector((s) => s.adminInquiry.list)
    const adminInquiryDetailById = useAppSelector((s) => s.adminInquiry.detailById)
@@ -30,15 +32,23 @@ const Table: React.FC<TableProps> = ({ content }) => {
    const adminReportDetailByKey = useAppSelector((s) => s.adminReports.detailByKey)
 
    const tableRef = React.useRef<HTMLDivElement>(null)
+
    const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false)
    const [isReportModalOpen, setIsReportModalOpen] = React.useState(false)
    const [isReportedPostModalOpen, setIsReportedPostModalOpen] = React.useState(false)
+
    const [selectedData, setSelectedData] = React.useState<any>(null)
    const [selectedReportedPost, setSelectedReportedPost] = React.useState<ReportedPostModalData | undefined>(undefined)
+
    const [selectedInquiryId, setSelectedInquiryId] = React.useState<number | null>(null)
    const [selectedReportKey, setSelectedReportKey] = React.useState<string | null>(null)
+
    const [totalItems, setTotalItems] = React.useState(0)
+
    const [appliedUserFilters, setAppliedUserFilters] = React.useState<Record<string, any>>({})
+   const [appliedInquiryFilters, setAppliedInquiryFilters] = React.useState<Record<string, any>>({})
+   const [appliedReportFilters, setAppliedReportFilters] = React.useState<Record<string, any>>({})
+
    const [inquiryPage, setInquiryPage] = React.useState(1)
    const [reportPage, setReportPage] = React.useState(1)
 
@@ -55,11 +65,12 @@ const Table: React.FC<TableProps> = ({ content }) => {
             size,
          }),
       )
-   }, [content, dispatch])
+   }, [content, dispatch, adminUsersList.page, adminUsersList.size])
 
    // inquiry 목록: 서버 페이징/필터 연동
    React.useEffect(() => {
       if (content !== 'inquiry') return
+
       dispatch(
          getAdminInquiries({
             ...appliedInquiryFilters,
@@ -67,11 +78,12 @@ const Table: React.FC<TableProps> = ({ content }) => {
             size: adminInquiryList.size || 10,
          }),
       )
-   }, [content, dispatch])
+   }, [content, dispatch, appliedInquiryFilters, adminInquiryList.size])
 
    // report 목록: 서버 페이징/필터 연동
    React.useEffect(() => {
       if (content !== 'report') return
+
       dispatch(
          getAdminReports({
             ...appliedReportFilters,
@@ -79,44 +91,58 @@ const Table: React.FC<TableProps> = ({ content }) => {
             size: adminReportsList.size || 10,
          }),
       )
-   }, [content, dispatch])
+   }, [content, dispatch, appliedReportFilters, adminReportsList.size])
 
    const openModalByStatus = (data: any) => {
       setSelectedData(data)
+
       if (content === 'inquiry') {
          const qnaId = data?.qna_id
          setSelectedInquiryId(typeof qnaId === 'number' ? qnaId : null)
-         if (typeof qnaId === 'number') dispatch(getAdminInquiryDetail(qnaId))
+
+         if (typeof qnaId === 'number') {
+            dispatch(getAdminInquiryDetail(qnaId))
+         }
+
          setIsInquiryModalOpen(true)
       } else if (content === 'report') {
          const type = data?.type as 'comment' | 'reply' | undefined
          const reportId = data?.report_id as number | undefined
+
          if (type && typeof reportId === 'number') {
             setSelectedReportKey(`${type}:${reportId}`)
             dispatch(getAdminReportDetail({ type, report_id: reportId }))
          } else {
             setSelectedReportKey(null)
          }
+
          setIsReportModalOpen(true)
       }
    }
 
    const handleRowClick = (data: any) => {
       setSelectedData(data)
+
       if (content === 'inquiry') {
          const qnaId = data?.qna_id
          setSelectedInquiryId(typeof qnaId === 'number' ? qnaId : null)
-         if (typeof qnaId === 'number') dispatch(getAdminInquiryDetail(qnaId))
+
+         if (typeof qnaId === 'number') {
+            dispatch(getAdminInquiryDetail(qnaId))
+         }
+
          setIsInquiryModalOpen(true)
       } else if (content === 'report') {
          const type = data?.type as 'comment' | 'reply' | undefined
          const reportId = data?.report_id as number | undefined
+
          if (type && typeof reportId === 'number') {
             setSelectedReportKey(`${type}:${reportId}`)
             dispatch(getAdminReportDetail({ type, report_id: reportId }))
          } else {
             setSelectedReportKey(null)
          }
+
          setIsReportModalOpen(true)
       }
    }
@@ -136,6 +162,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
          if (!headerUl || dataUls.length === 0) return
 
          const headerLis = headerUl.querySelectorAll('li')
+
          headerLis.forEach((headerLi, index) => {
             const width = (headerLi as HTMLElement).offsetWidth
 
@@ -155,6 +182,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
 
       const timeoutId = setTimeout(syncColumnWidths, 0)
       window.addEventListener('resize', syncColumnWidths)
+
       return () => {
          clearTimeout(timeoutId)
          window.removeEventListener('resize', syncColumnWidths)
@@ -181,115 +209,101 @@ const Table: React.FC<TableProps> = ({ content }) => {
          {content === 'dashboard' ? (
             <DashboardTable />
          ) : (
-            <>
-               <div className="admin-content">
-                  {content === 'user' && <UserManagementFilter onSearch={setAppliedUserFilters} />}
-                  {content === 'inquiry' && (
-                     <QnAManagementFilter
-                        onSearch={(filters) => {
-                           setAppliedInquiryFilters(filters)
-                           dispatch(
-                              getAdminInquiries({
-                                 ...filters,
-                                 page: 1,
-                                 size: adminInquiryList.size || 10,
-                              }),
-                           )
-                        }}
-                     />
-                  )}
-                  {content === 'report' && (
-                     <ReportManagementFilter
-                        onSearch={(filters) => {
-                           setAppliedReportFilters(filters)
-                           dispatch(
-                              getAdminReports({
-                                 ...filters,
-                                 page: 1,
-                                 size: adminReportsList.size || 10,
-                              }),
-                           )
-                        }}
-                     />
-                  )}
-                  {content === 'topic' ? (
-                     <TopicManagement />
-                  ) : (
-                     <>
-                        <div className={`table ${content}-table`} ref={tableRef}>
-                           <ul className="header">
-                              {columns.map((column) => (
-                                 <li key={column}>{column}</li>
-                              ))}
-                           </ul>
+            <div className="admin-content">
+               {content === 'user' && <UserManagementFilter onSearch={setAppliedUserFilters} />}
 
-                           {content === 'user' && (
-                              <UserTable
-                                 columns={columns}
-                                 content={content}
-                                 filters={appliedUserFilters}
-                                 users={adminUsersList.items}
-                                 onRefresh={() => dispatch(getAdminUsers({ page: adminUsersList.page, size: adminUsersList.size }))}
-                              />
-                           )}
-                           {content === 'inquiry' && (
-                              <InquiryTable
-                                 columns={columns}
-                                 content={content}
-                                 onRowClick={handleRowClick}
-                                 onStatusClick={handleStatusClick}
-                                 onDataCountChange={setTotalItems}
-                                 currentPage={inquiryPage}
-                                 onPageChange={setInquiryPage}
-                              />
-                           )}
-                           {content === 'report' && (
-                              <ReportTable
-                                 columns={columns}
-                                 content={content}
-                                 rows={reportRows}
-                                 onRowClick={handleRowClick}
-                                 onStatusClick={handleStatusClick}
-                                 onDataCountChange={setTotalItems}
-                                 currentPage={reportPage}
-                                 onPageChange={setReportPage}
-                              />
-                           )}
-                        </div>
+               {content === 'inquiry' && (
+                  <QnAManagementFilter
+                     onSearch={(filters) => {
+                        setAppliedInquiryFilters(filters)
+                        dispatch(
+                           getAdminInquiries({
+                              ...filters,
+                              page: 1,
+                              size: adminInquiryList.size || 10,
+                           }),
+                        )
+                     }}
+                  />
+               )}
 
-                        <StandardPagination
-                           className="mt-4"
-                           totalItems={content === 'user' ? adminUsersList.total : totalItems}
-                           itemsPerPage={content === 'user' ? adminUsersList.size : 20}
-                           currentPage={
-                              content === 'user' 
-                                 ? adminUsersList.page 
-                                 : content === 'inquiry' 
-                                    ? inquiryPage 
-                                    : content === 'report' 
-                                       ? reportPage 
-                                       : undefined
-                           }
-                           onPageChange={
-                              content === 'user'
-                                 ? (nextPage) => {
-                                      dispatch(getAdminUsers({ page: nextPage, size: adminUsersList.size }))
-                                   }
-                                 : content === 'inquiry'
-                                    ? (nextPage) => {
-                                         setInquiryPage(nextPage)
-                                      }
-                                    : content === 'report'
-                                       ? (nextPage) => {
-                                            setReportPage(nextPage)
-                                         }
-                                       : undefined
-                           }
-                        />
-                     </>
-                  )}
-               </div>
-            </>
+               {content === 'report' && (
+                  <ReportManagementFilter
+                     onSearch={(filters) => {
+                        setAppliedReportFilters(filters)
+                        dispatch(
+                           getAdminReports({
+                              ...filters,
+                              page: 1,
+                              size: adminReportsList.size || 10,
+                           }),
+                        )
+                     }}
+                  />
+               )}
+
+               {content === 'topic' ? (
+                  <TopicManagement />
+               ) : (
+                  <>
+                     <div className={`table ${content}-table`} ref={tableRef}>
+                        <ul className="header">
+                           {columns.map((column) => (
+                              <li key={column}>{column}</li>
+                           ))}
+                        </ul>
+
+                        {content === 'user' && (
+                           <UserTable
+                              columns={columns}
+                              content={content}
+                              filters={appliedUserFilters}
+                              users={adminUsersList.items}
+                              onRefresh={() =>
+                                 dispatch(
+                                    getAdminUsers({
+                                       page: adminUsersList.page,
+                                       size: adminUsersList.size,
+                                    }),
+                                 )
+                              }
+                           />
+                        )}
+
+                        {content === 'inquiry' && <InquiryTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} currentPage={inquiryPage} onPageChange={setInquiryPage} />}
+
+                        {content === 'report' && <ReportTable columns={columns} content={content} onRowClick={handleRowClick} onStatusClick={handleStatusClick} onDataCountChange={setTotalItems} currentPage={reportPage} onPageChange={setReportPage} />}
+                     </div>
+
+                     <StandardPagination
+                        className="mt-4"
+                        totalItems={content === 'user' ? adminUsersList.total : totalItems}
+                        itemsPerPage={content === 'user' ? adminUsersList.size : 20}
+                        currentPage={content === 'user' ? adminUsersList.page : content === 'inquiry' ? inquiryPage : content === 'report' ? reportPage : undefined}
+                        onPageChange={
+                           content === 'user'
+                              ? (nextPage) => {
+                                   dispatch(
+                                      getAdminUsers({
+                                         page: nextPage,
+                                         size: adminUsersList.size,
+                                      }),
+                                   )
+                                }
+                              : content === 'inquiry'
+                                ? (nextPage) => {
+                                     setInquiryPage(nextPage)
+                                  }
+                                : content === 'report'
+                                  ? (nextPage) => {
+                                       setReportPage(nextPage)
+                                    }
+                                  : undefined
+                        }
+                     />
+                  </>
+               )}
+            </div>
          )}
 
          {content === 'inquiry' && (
@@ -305,6 +319,7 @@ const Table: React.FC<TableProps> = ({ content }) => {
                   const detail = qnaId ? adminInquiryDetailById[qnaId]?.item : null
                   const qna = detail?.qna
                   const fallback = selectedData
+
                   return qna || fallback
                      ? {
                           title: (qna?.q_title ?? fallback?.q_title ?? '').toString(),
@@ -327,9 +342,22 @@ const Table: React.FC<TableProps> = ({ content }) => {
                   if (!data.title?.trim() || !data.content?.trim()) return
                   if (!data.replyTitle?.trim() || !data.reply?.trim()) return
 
-                  await dispatch(answerAdminInquiry({ qna_id: qnaId, a_title: data.replyTitle, a_content: data.reply }))
+                  await dispatch(
+                     answerAdminInquiry({
+                        qna_id: qnaId,
+                        a_title: data.replyTitle,
+                        a_content: data.reply,
+                     }),
+                  )
+
                   dispatch(getAdminInquiryDetail(qnaId))
-                  dispatch(getAdminInquiries({ ...appliedInquiryFilters, page: adminInquiryList.page, size: adminInquiryList.size || 10 }))
+                  dispatch(
+                     getAdminInquiries({
+                        ...appliedInquiryFilters,
+                        page: adminInquiryList.page,
+                        size: adminInquiryList.size || 10,
+                     }),
+                  )
                }}
             />
          )}
@@ -345,10 +373,12 @@ const Table: React.FC<TableProps> = ({ content }) => {
                reportData={(() => {
                   const fallback = selectedData
                   const detail = selectedReportKey ? adminReportDetailByKey[selectedReportKey]?.item : null
+
                   const category = detail?.category ?? fallback?.category ?? ''
                   const reportContent = detail?.report_content ?? fallback?.report_content ?? fallback?.content ?? '신고 내용이 없습니다.'
                   const reportedName = detail?.reported?.name ?? fallback?.reported_name ?? ''
                   const action = detail?.action
+
                   return fallback || detail
                      ? {
                           category,
@@ -373,21 +403,48 @@ const Table: React.FC<TableProps> = ({ content }) => {
                   void (async () => {
                      try {
                         if (data?.sanctionAction === '제재') {
-                           if (typeof reportedUserId !== 'number') throw new Error('신고 대상 유저 정보를 찾을 수 없습니다.')
+                           if (typeof reportedUserId !== 'number') {
+                              throw new Error('신고 대상 유저 정보를 찾을 수 없습니다.')
+                           }
+
                            const days = data?.sanctionDays
-                           if (typeof days !== 'number' || Number.isNaN(days) || days < 1 || days > 30) throw new Error('제재 기간이 올바르지 않습니다.')
+                           if (typeof days !== 'number' || Number.isNaN(days) || days < 1 || days > 30) {
+                              throw new Error('제재 기간이 올바르지 않습니다.')
+                           }
 
                            const now = new Date()
-                           const startAt = now.toISOString() // z.iso.datetime()
+                           const startAt = now.toISOString()
                            const end = new Date(now)
                            end.setUTCDate(end.getUTCDate() + days)
-                           const endAt = end.toISOString() // z.iso.datetime()
+                           const endAt = end.toISOString()
 
                            const reason = data?.sanctionReason?.trim() || '신고 처리에 따른 제재'
-                           await dispatch(postSanction({ user_id: reportedUserId, start_at: startAt, end_at: endAt, reason })).unwrap()
+
+                           await dispatch(
+                              postSanction({
+                                 user_id: reportedUserId,
+                                 start_at: startAt,
+                                 end_at: endAt,
+                                 reason,
+                              }),
+                           ).unwrap()
                         }
-                        await dispatch(completeAdminReport({ type, report_id: reportId, action: data?.sanctionAction === '제재' ? 'SANCTION' : 'NONE' })).unwrap()
-                        dispatch(getAdminReports({ ...appliedReportFilters, page: adminReportsList.page || 1, size: adminReportsList.size || 10 }))
+
+                        await dispatch(
+                           completeAdminReport({
+                              type,
+                              report_id: reportId,
+                              action: data?.sanctionAction === '제재' ? 'SANCTION' : 'NONE',
+                           }),
+                        ).unwrap()
+
+                        dispatch(
+                           getAdminReports({
+                              ...appliedReportFilters,
+                              page: adminReportsList.page || 1,
+                              size: adminReportsList.size || 10,
+                           }),
+                        )
                      } catch (e) {
                         console.error(e)
                      }

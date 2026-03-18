@@ -13,6 +13,7 @@ export interface AuthUser {
    kakaoId?: string
    state?: string
    profileImage?: string
+   role?: string
 }
 
 export type AuthState = {
