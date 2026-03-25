@@ -24,7 +24,6 @@ export interface CheckEmailResponse {
    isDuplicate: boolean
 }
 
-// 응답 메시지용
 export interface MessageResponse {
    message: string
 }

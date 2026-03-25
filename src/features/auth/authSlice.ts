@@ -22,7 +22,6 @@ export type AuthState = {
    error: string | null
    isLoggedIn: boolean
 
-   // ✅ reset state
    resetLoading: boolean
    resetRequestDone: boolean
    resetDone: boolean
@@ -35,11 +34,18 @@ const initialState: AuthState = {
    error: null,
    isLoggedIn: false,
 
-   // ✅ 비밀번호 재설정 플로우 상태(로그인 상태와 무관)
    resetLoading: false,
-   resetRequestDone: false, // 메일 발송 요청 처리 완료 여부
-   resetDone: false, // 비번 재설정 완료 여부
+   resetRequestDone: false,
+   resetDone: false,
    resetError: null,
+}
+
+// 공통 에러 메시지 파서
+const getErrorMessage = (payload: any): string => {
+   if (!payload) return '요청에 실패했습니다.'
+   if (typeof payload === 'string') return payload
+
+   return payload?.errors?.fieldErrors?.name?.[0] || payload?.errors?.fieldErrors?.email?.[0] || payload?.errors?.fieldErrors?.password?.[0] || payload?.message || '요청에 실패했습니다.'
 }
 
 // ─────────────────────────────
@@ -47,11 +53,7 @@ const initialState: AuthState = {
 // ─────────────────────────────
 export const localSignUpThunk = createAsyncThunk('Auth/localsignup', async (payload: { email: string; password: string; name: string }, { rejectWithValue }) => {
    try {
-      console.log('함수 시작')
-      console.log('전달받은 값:', payload)
       const response = await signUpLocal(payload)
-      console.log('응답 확인 완료: ', response)
-
       return response.data
    } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -106,7 +108,7 @@ export const checkAuthThunk = createAsyncThunk('Auth/checkAuth', async (_, { rej
 })
 
 // ─────────────────────────────
-// ✅ 비밀번호 재설정 요청(메일 발송)
+// 비밀번호 재설정 요청
 // ─────────────────────────────
 export const requestPasswordResetThunk = createAsyncThunk('Auth/requestPasswordReset', async (payload: { email: string }, { rejectWithValue }) => {
    try {
@@ -121,7 +123,7 @@ export const requestPasswordResetThunk = createAsyncThunk('Auth/requestPasswordR
 })
 
 // ─────────────────────────────
-// ✅ 비밀번호 재설정 확정(토큰 + 새 비밀번호)
+// 비밀번호 재설정 확정
 // ─────────────────────────────
 export const confirmPasswordResetThunk = createAsyncThunk('Auth/confirmPasswordReset', async (payload: { token: string; password: string }, { rejectWithValue }) => {
    try {
@@ -139,7 +141,6 @@ const slice = createSlice({
    name: 'auth',
    initialState,
    reducers: {
-      // ✅ reset UI에서 상태 초기화가 필요할 수 있어서 하나 넣어둠(선택)
       clearResetState: (state) => {
          state.resetLoading = false
          state.resetRequestDone = false
@@ -169,7 +170,6 @@ const slice = createSlice({
             state.isLoggedIn = !!action.payload?.user
          })
 
-      // ✅ reset - request
       builder.addCase(requestPasswordResetThunk.pending, (state) => {
          state.resetLoading = true
          state.resetError = null
@@ -181,10 +181,9 @@ const slice = createSlice({
       })
       builder.addCase(requestPasswordResetThunk.rejected, (state, action) => {
          state.resetLoading = false
-         state.resetError = (action.payload as any)?.message ?? (action.payload as string) ?? '요청에 실패했습니다.'
+         state.resetError = getErrorMessage(action.payload)
       })
 
-      // ✅ reset - confirm
       builder.addCase(confirmPasswordResetThunk.pending, (state) => {
          state.resetLoading = true
          state.resetError = null
@@ -196,26 +195,19 @@ const slice = createSlice({
       })
       builder.addCase(confirmPasswordResetThunk.rejected, (state, action) => {
          state.resetLoading = false
-         state.resetError = (action.payload as any)?.message ?? (action.payload as string) ?? '비밀번호 재설정에 실패했습니다.'
+         state.resetError = getErrorMessage(action.payload)
       })
 
-      // ─────────────────────────────
-      // 기존 pending / rejected (Auth 공통)
-      // 주의: reset은 위에서 따로 처리했으니 공통 matcher가 덮어쓰지 않도록 reset thunk는 matcher에서 제외할 수 있는데,
-      // 현재 matcher는 state.loading만 건드리니( resetLoading은 건드리지 않음 ) 충돌 없음.
-      // ─────────────────────────────
       builder
          .addMatcher(isPending, (state, action) => {
-            // reset 관련 thunk는 auth loading에 영향을 주지 않도록 제외(선택)
             if (String(action.type).includes('Auth/requestPasswordReset') || String(action.type).includes('Auth/confirmPasswordReset')) return
             state.loading = true
             state.error = null
          })
          .addMatcher(isRejected, (state, action) => {
-            // reset 관련 thunk는 auth error에 영향을 주지 않도록 제외(선택)
             if (String(action.type).includes('Auth/requestPasswordReset') || String(action.type).includes('Auth/confirmPasswordReset')) return
             state.loading = false
-            state.error = action.payload as string
+            state.error = getErrorMessage(action.payload)
          })
    },
 })
