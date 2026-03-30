@@ -3,7 +3,7 @@ import adminHttp from './adminHttp'
 
 /**
  * Admin Topics API
- * baseURL = {VITE_APP_API_URL}/admin (adminHttp)
+ * baseURL = {VITE_APP_API_URL}/api/admin (adminHttp)
  *
  * 백엔드 엔드포인트
  * - GET    /topics
@@ -34,21 +34,19 @@ export type AdminTopic = {
    topic_id: number
    content_id: number
    is_admin_recommended?: boolean
-   start_at: string // ISO
-   end_at: string // ISO
+   start_at: string
+   end_at: string
    created_at?: string
    updated_at?: string
    deleted_at?: string | null
-
-   /** ✅ 백엔드의 video / VideoContent */
    VideoContent?: AdminTopicContent
 }
 
 /** 토픽 생성/수정 payload */
 export type CreateTopicPayload = {
    content_id: number
-   start_at: string // ISO
-   end_at: string // ISO
+   start_at: string
+   end_at: string
    is_admin_recommended?: boolean
 }
 
@@ -67,15 +65,10 @@ export type ListResponse<T> = {
 export type ListTopicsParams = {
    page?: number
    size?: number
-
-   // 백엔드 topicSchema의 파라미터 main/filter/sort/order
-   // 기존 프론트 코드 호환 위해 남겨둠(필요 시 아래 buildListParams에서 매핑 가능)
    q?: string
    state?: 'current' | 'past' | 'showing'
    sort?: 'start_at' | 'end_at' | 'created_at' | 'views'
    order?: 'ASC' | 'DESC'
-
-   // ✅ 백엔드 실제 스키마 지원
    main?: 'current' | 'past' | 'all'
    filter?: 'all' | 'popular' | 'showing' | 'recommended'
 }
@@ -89,8 +82,6 @@ export type AdminTopicComment = {
    created_at: string
    updated_at?: string
    deleted_at?: string | null
-
-   /** ✅ 백엔드의 user / User */
    User?: {
       user_id: number
       name?: string
@@ -116,12 +107,7 @@ type ApiEnvelope = {
    data?: any
 }
 
-/** ─────────────────────────────────────────────
- * helpers: unwrap + normalize
- * ───────────────────────────────────────────── */
 function unwrapData<T = any>(res: any): T {
-   // axios { data: ... }의 data가 이미 들어온 상태로 들어온다고 가정 (여기선 res 자체가 response.data)
-   // 백엔드: { success, data: {...} } 형태가 기본
    if (res && typeof res === 'object' && 'data' in res) return res.data as T
    return res as T
 }
@@ -134,15 +120,8 @@ function calcTotalPages(total: number, size: number) {
 
 function normalizeVideoContent(raw: any): AdminTopicContent | undefined {
    if (!raw) return undefined
-
-   // 백엔드 listTopics: video: {...}
-   // 혹은 include를 그대로 주면 VideoContent: {...}
    const v = raw.VideoContent ?? raw.video ?? raw
-
    if (!v) return undefined
-
-   // content_id, title은 최소한 보장되길 기대
-   // 없으면 undefined 반환해서 TopicManagement에서 fallback(safeTitle)로 처리
    if (!v.content_id && !v.tmdb_id && !v.title) return undefined
 
    return {
@@ -191,7 +170,6 @@ function normalizeTopicList(raw: any): ListResponse<AdminTopic> {
 }
 
 function normalizeTopicComment(raw: any): AdminTopicComment {
-   // 백엔드 listTopicComments: user: {...} 로 내려옴
    const u = raw?.User ?? raw?.user ?? null
 
    return {
@@ -229,7 +207,6 @@ function normalizeCommentList(raw: any): ListResponse<AdminTopicComment> {
 }
 
 function normalizePopularItems(raw: any): AdminPopularItem[] {
-   // 백엔드 getPopularSnapshot: data.items = [{rank, content:{...}}]
    const items = Array.isArray(raw?.items) ? raw.items : []
 
    return items
@@ -250,9 +227,7 @@ function normalizePopularItems(raw: any): AdminPopularItem[] {
       .filter(Boolean) as AdminPopularItem[]
 }
 
-/** 백엔드 query 스키마(main/filter/sort/order)에 맞춰 params 보정 */
 function buildListParams(params: ListTopicsParams) {
-   // 기존 프론트는 state를 쓸 수도 있어서 main/filter로 자연스러운 매핑만 제공
    const next: any = { ...params }
 
    if (params.state) {
@@ -262,34 +237,23 @@ function buildListParams(params: ListTopicsParams) {
       delete next.state
    }
 
-   // q는 아직 백엔드 listTopicsQuerySchema에 없음(추후 확장용)
-   // 일단 그대로 보내면 validator에서 제거/에러 날 수 있으니 제거하는 게 안전
    if ('q' in next) delete next.q
 
    return next
 }
 
-/** ─────────────────────────────────────────────
- * API calls (ALL normalized)
- * ───────────────────────────────────────────── */
-
-// GET /admin/topics
 export async function fetchAdminTopics(params: ListTopicsParams = {}) {
    const { data } = await adminHttp.get<ApiEnvelope>('/topics', { params: buildListParams(params) })
    const inner = unwrapData<any>(data)
    return normalizeTopicList(inner)
 }
 
-// POST /admin/topics
 export async function createAdminTopic(payload: CreateTopicPayload) {
-   // 백엔드: { success, data: { topic_id } }
    const { data } = await adminHttp.post<ApiEnvelope>('/topics', payload)
    const inner = unwrapData<any>(data)
 
    const topic_id = Number(inner?.topic_id)
 
-   // slice가 prepend할 수 있게 "최소 Topic 형태"로 반환
-   // (정확한 VideoContent는 list 재조회에서 채워짐)
    return {
       topic_id,
       content_id: payload.content_id,
@@ -299,15 +263,12 @@ export async function createAdminTopic(payload: CreateTopicPayload) {
    } as AdminTopic
 }
 
-// PATCH /admin/topics/:topic_id
 export async function updateAdminTopic(topic_id: number, payload: UpdateTopicPayload) {
-   // 백엔드: { success, data: { topic_id } }
    const { data } = await adminHttp.patch<ApiEnvelope>(`/topics/${topic_id}`, payload)
    const inner = unwrapData<any>(data)
 
    const id = Number(inner?.topic_id ?? topic_id)
 
-   // 반환도 최소 형태로(정확한 조인은 list 재조회에서 채움)
    return {
       topic_id: id,
       content_id: Number(payload.content_id ?? (payload as any).content_id ?? NaN),
@@ -317,21 +278,17 @@ export async function updateAdminTopic(topic_id: number, payload: UpdateTopicPay
    } as AdminTopic
 }
 
-// DELETE /admin/topics/:topic_id
 export async function deleteAdminTopic(topic_id: number) {
-   // 백엔드: { success, data: { topic_id } }
    const { data } = await adminHttp.delete<ApiEnvelope>(`/topics/${topic_id}`)
    return unwrapData<any>(data)
 }
 
-// GET /admin/topics/:topic_id/comments
 export async function fetchAdminTopicComments(topic_id: number, params?: { page?: number; size?: number; q?: string; order?: 'ASC' | 'DESC' }) {
    const { data } = await adminHttp.get<ApiEnvelope>(`/topics/${topic_id}/comments`, { params })
    const inner = unwrapData<any>(data)
    return normalizeCommentList(inner)
 }
 
-// GET /admin/topics/popular
 export async function fetchAdminPopularTopics(params?: { source?: string; date?: string; limit?: number }) {
    const { data } = await adminHttp.get<ApiEnvelope>('/topics/popular', { params })
    const inner = unwrapData<any>(data)

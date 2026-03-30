@@ -1,5 +1,6 @@
 // moovy-frontend/src/services/api/topicApi.ts
 import moovy from './http'
+import adminHttp from './admin/adminHttp'
 
 /**
  * ✅ 프론트 도메인 Topic 타입(기존 유지)
@@ -52,7 +53,6 @@ type PublicTopicRow = {
       poster_path: string | null
       backdrop_path: string | null
       views: number
-      // 상세에서는 더 많은 필드가 올 수 있음
       plot?: string | null
       genre?: string | null
       time?: number | null
@@ -102,7 +102,7 @@ function mapPublicTopicToTopic(row: PublicTopicRow): Topic {
    const v = row.VideoContent ?? null
 
    const title = v?.title ?? ''
-   const synopsis = (v?.plot ?? '') || '' // 백엔드 상세/목록 상황에 따라 plot이 없을 수 있음
+   const synopsis = (v?.plot ?? '') || ''
    const genre = (v?.genre ?? '') || ''
 
    const { releaseDate, year } = mapRelease(v?.release_date ?? null)
@@ -112,7 +112,6 @@ function mapPublicTopicToTopic(row: PublicTopicRow): Topic {
    const images = [v?.poster_path, v?.backdrop_path].filter(Boolean) as string[]
    const imageUrl = images[0]
 
-   // created_at / updated_at → createdAt / updatedAt
    const createdAt = row.created_at ?? ''
    const updatedAt = row.updated_at ?? ''
 
@@ -133,7 +132,7 @@ function mapPublicTopicToTopic(row: PublicTopicRow): Topic {
 }
 
 /** --------------------------------
- * ✅ 퍼블릭 토픽 API (신규로 "실사용" 활성화)
+ * ✅ 퍼블릭 토픽 API
  * --------------------------------*/
 
 /** 토픽 목록 조회 (퍼블릭) */
@@ -149,11 +148,8 @@ export async function getTopics(params?: { main?: 'current' | 'past' | 'all'; pa
 
 /** 토픽 조회 (퍼블릭 단건) */
 export async function getTopic(id: number) {
-   // 백엔드: GET /api/topics/:topic_id
    const res = await moovy.get(`/topics/${id}`)
 
-   // 단건은 컨트롤러에서 topic.toJSON()에 comment_count/is_active 등을 붙여서 내려줄 수 있음
-   // 여기선 필요한 필드만 사용해서 매핑
    const row = res.data as PublicTopicRow & {
       comment_count?: number
       is_active?: boolean
@@ -163,10 +159,10 @@ export async function getTopic(id: number) {
 }
 
 /** --------------------------------
- * 관리자 토픽 목록 조회 (기존 유지)
+ * 관리자 토픽 목록 조회
  * --------------------------------*/
 export async function getAdminTopics(params?: { main?: 'current' | 'past'; filter?: 'all' | 'popular' | 'showing' | 'recommended'; page?: number; size?: number; sort?: string; order?: 'ASC' | 'DESC' }) {
-   const res = await moovy.get('/admin/topics', { params })
+   const res = await adminHttp.get('/topics', { params })
    return res.data as {
       success: boolean
       data: {
@@ -196,8 +192,7 @@ export async function getAdminTopics(params?: { main?: 'current' | 'past'; filte
 }
 
 /** --------------------------------
- * 아래 레거시 CRUD는 "현재 퍼블릭 토픽 설계"랑 안 맞아서 일단 유지(호환),
- * 사용처가 없으면 나중에 정리/삭제 권장.
+ * 아래 레거시 CRUD는 "현재 퍼블릭 토픽 설계"랑 안 맞아서 일단 유지
  * --------------------------------*/
 
 export type CreateTopicRequest = {
@@ -234,7 +229,6 @@ export type UpdateTopicRequest = {
 
 /** (레거시) 토픽 생성 */
 export async function createTopic(data: CreateTopicRequest) {
-   // 기존: /topic
    const res = await moovy.post('/topic', data)
    return res.data as Topic
 }
@@ -245,7 +239,7 @@ export async function updateTopic(id: number, data: UpdateTopicRequest) {
    return res.data as Topic
 }
 
-/** (레거시) 토픽 삭제 (기존 - 호환성 유지) */
+/** (레거시) 토픽 삭제 */
 export async function deleteTopic(id: number) {
    const res = await moovy.delete(`/topic/${id}`)
    return res.data
@@ -253,7 +247,7 @@ export async function deleteTopic(id: number) {
 
 /** 토픽 삭제 (관리자용) */
 export async function deleteAdminTopic(id: number) {
-   const res = await moovy.delete(`/admin/topics/${id}`)
+   const res = await adminHttp.delete(`/topics/${id}`)
    return res.data as {
       success: boolean
       data: {
@@ -278,7 +272,7 @@ export async function uploadTopicImages(files: File[]) {
 
 /** TMDB 영화 검색 (관리자) */
 export async function searchTmdbMovies(query: string, page: number = 1) {
-   const res = await moovy.get('/admin/tmdb/search', {
+   const res = await adminHttp.get('/tmdb/search', {
       params: { q: query, page },
    })
    return res.data as {
@@ -306,7 +300,7 @@ export async function searchTmdbMovies(query: string, page: number = 1) {
 
 /** TMDB 영화 상세 정보 조회 (관리자) */
 export async function getTmdbMovieDetails(tmdbId: number) {
-   const res = await moovy.get(`/admin/tmdb/movies/${tmdbId}`)
+   const res = await adminHttp.get(`/tmdb/movies/${tmdbId}`)
    return res.data as {
       success: boolean
       data: {
@@ -328,7 +322,7 @@ export async function getTmdbMovieDetails(tmdbId: number) {
 
 /** 전체 인기작 스냅샷 조회 (관리자) */
 export async function getPopularSnapshot(params?: { source?: string; date?: string; limit?: number }) {
-   const res = await moovy.get('/admin/topics/popular', { params })
+   const res = await adminHttp.get('/topics/popular', { params })
    return res.data as {
       success: boolean
       data: {
@@ -354,7 +348,7 @@ export async function getPopularSnapshot(params?: { source?: string; date?: stri
 
 /** 현재 상영작 스냅샷 조회 (관리자) */
 export async function getNowPlayingSnapshot(params?: { date?: string; limit?: number }) {
-   const res = await moovy.get('/admin/topics/now-playing', { params })
+   const res = await adminHttp.get('/topics/now-playing', { params })
    return res.data as {
       success: boolean
       data: {
@@ -380,7 +374,7 @@ export async function getNowPlayingSnapshot(params?: { date?: string; limit?: nu
 
 /** 관리자 토픽 생성 (새로운 형식) */
 export async function createAdminTopic(data: { tmdb_id?: number; content_id?: number; start_at: string; end_at: string; is_admin_recommended?: boolean }) {
-   const res = await moovy.post('/admin/topics', data)
+   const res = await adminHttp.post('/topics', data)
    return res.data as {
       success: boolean
       data: {
